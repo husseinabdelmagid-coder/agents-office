@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T20:18:13Z",
+  "updatedAt": "2026-10-06T20:19:18Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -16,15 +16,15 @@
       "name": "Eve",
       "title": "Personal assistant",
       "status": "working",
-      "task": "Using Read",
+      "task": "Handling a live request",
       "color": "#8a6fd1"
     },
     {
       "id": "3c92912d-8aa9-439d-b2fb-5282635b30d3",
       "name": "Matt",
       "title": "Coach",
-      "status": "working",
-      "task": "Using AwaitShell",
+      "status": "idle",
+      "task": "Standing by",
       "color": "#ee8a3a"
     },
     {
