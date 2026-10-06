@@ -256,10 +256,10 @@ function findPath(sx,sy,tx,ty){
 /* ---------- agents ---------- */
 var AG=[
  {id:'eve',name:'Eve',role:'Main assistant · Jarvis',color:'#8a6fd1',shirt:'#8a6fd1',pants:'#3f4250',hair:'#3b2a22',skin:'#f1c8a5',style:'bun',
-  plan:[['eve','Triaging inbox & calendar for Hussein',14,'work'],['reception','Briefing the day’s agenda at reception',9,'work'],
-        ['meet1','Running the daily stand-up',12,'meet'],['eve','Drafting the evening summary',13,'work'],['kitchen','Coffee + quick sync with Sam',8,'idle'],['rt0','Reviewing El Profesor’s findings',10,'meet']]},
+  plan:[['eve','Triaging inbox & calendar for Hussein',14,'work'],['reception','Briefing the day's agenda at reception',9,'work'],
+        ['meet1','Running the daily stand-up',12,'meet'],['eve','Drafting the evening summary',13,'work'],['kitchen','Coffee + quick sync with Sam',8,'idle'],['rt0','Reviewing El Profesor's findings',10,'meet']]},
  {id:'matt',name:'Matt',role:'Fitness coach',color:'#ee8a3a',shirt:'#ee8a3a',pants:'#2f3440',hair:'#2a1d16',skin:'#d8a27c',style:'short',
-  plan:[['gym','Designing today’s mobility routine',12,'work'],['matt','Logging workouts & sleep data',12,'work'],
+  plan:[['gym','Designing today's mobility routine',12,'work'],['matt','Logging workouts & sleep data',12,'work'],
         ['tread','Testing an interval cardio block',10,'work'],['sofa2','Reviewing the weekly nutrition plan',11,'idle'],['meet2','Stand-up: sharing training load',9,'meet'],['cooler','Hydration break',6,'idle']]},
  {id:'prof',name:'El Profesor',role:'Deep research',color:'#c9473f',shirt:'#c9473f',pants:'#2b2d33',hair:'#1f1a17',skin:'#e7b896',style:'prof',
   plan:[['prof','Deep-dive literature review (14 sources)',15,'work'],['shelf','Pulling references from the library',9,'work'],
@@ -482,7 +482,7 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
 /* ---------- Live mode ----------
    Reads ./agents-status.json (same folder as this HTML), written on the box by
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
-   can't be fetched (file://, missing, offline) the office falls back to the demo. */
+   cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false};
 var LIVE_URL='./agents-status.json',LIVE_POLL=4000,LIVE_STALE=15000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam'};
@@ -533,7 +533,7 @@ function liveBadge(){var m=document.getElementById('mode'),b=document.getElement
     m.textContent=fresh?'● Live':'○ Live (stale)';m.className='sim '+(fresh?'live':'stale');
     var t=LIVE.updated?new Date(LIVE.updated):null,ts=t?hhmm(t.getHours()*60+t.getMinutes())+':'+('0'+t.getSeconds()).slice(-2):'?';
     m.title='agents-status.json updated '+ts;
-    n.textContent='Live — reading agents-status.json (updated '+ts+(fresh?'':', stale')+'). Box '+(bx.reachable===false?'gateway unreachable':bx.isBusy?(bx.busyOnlyAwaitingApproval?'waiting on your approval':'busy'):'idle')+'. Status comes from real agent turns (and box-side sims) synced into agents-status.json — the Demo button’s scripted routine stays local and does not write this file.';}
+    n.textContent='Live — reading agents-status.json (updated '+ts+(fresh?'':', stale')+'). Box '+(bx.reachable===false?'gateway unreachable':bx.isBusy?(bx.busyOnlyAwaitingApproval?'waiting on your approval':'busy'):'idle')+'. Status comes from real agent turns (and box-side sims) synced into agents-status.json — the Demo button's scripted routine stays local and does not write this file.';}
   else if(LIVE.wanted){m.textContent='○ Live unavailable';m.className='sim off';m.title='';
     n.textContent='Live mode is on but agents-status.json could not be read next to this file (e.g. opened from Files/file://, or the file is missing). Showing the simulated demo; retrying every few seconds.';}
   else{m.textContent='● Simulated';m.className='sim';m.title='';n.textContent=DEMO_NOTE;}}
