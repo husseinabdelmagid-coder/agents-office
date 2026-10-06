@@ -81,7 +81,8 @@ body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
   <div class="chips" id="chips"></div>
   <span class="clock" id="clock">09:00</span>
   <span class="sim" id="mode">● Simulated</span>
-  <button class="hbtn" id="bLive" title="Demo = simulated routine · Live = read ./agents-status.json">Demo</button>
+  <button class="hbtn" id="bSim" title="While Live is on: simulate Matt working locally (and flash a tip). Demo routine never writes Live JSON.">Sim</button>
+  <button class="hbtn" id="bLive" title="Demo = local scripted routine (does not update Live JSON) · Live = agents-status.json from the box">Demo</button>
   <button class="hbtn" id="bLabels">Labels</button>
   <button class="hbtn" id="bPause">Pause</button>
 </header>
@@ -487,13 +488,26 @@ var LIVE_URL='./agents-status.json',LIVE_POLL=4000,LIVE_STALE=15000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam'};
 var LIVE_NAMES={'eve':'eve','matt':'matt','el profesor':'prof','sam':'sam'};
 var IDLE_SPOT={eve:'sofa1',matt:'sofa2',prof:'sofa3',sam:'rt2'};
-var DEMO_NOTE='Simulated demo — agents follow a scripted routine and are not connected to live Grok Bot sessions. Tap an agent or a card to follow them.';
+var DEMO_NOTE='Simulated demo — scripted routine only (does not update agents-status.json / Live). Tap an agent or a card to follow them.';
 function nowHM(){var d=new Date();return hhmm(d.getHours()*60+d.getMinutes());}
 function agById(id){for(var i=0;i<AG.length;i++)if(AG[i].id===id)return AG[i];return null;}
 function goLive(a,spotId,task,kind){var s=SPOTS[spotId];if(!s)return;
   if(a.liveSpot!==spotId){a.liveSpot=spotId;a.path=findPath(a.x,a.y,s.x,s.y);a.mode='walk';a.spot=s;a.nextTask=task;a.nextKind=kind;a.dur=1e9;a.t=0;a.task='Heading to: '+task.toLowerCase();a.kind='walk';}
   else if(a.mode==='walk'){a.nextTask=task;a.nextKind=kind;}
   else{a.task=task;a.kind=kind;}}
+
+var LOCAL_SIM={}; /* id -> {task,until} — browser-only overlay on top of Live JSON */
+function applyLocalSim(){
+  var now=Date.now();
+  Object.keys(LOCAL_SIM).forEach(function(id){ if(LOCAL_SIM[id].until<now) delete LOCAL_SIM[id]; });
+  AG.forEach(function(a){
+    var s=LOCAL_SIM[a.id];
+    if(!s) return;
+    a.liveStatus='working';
+    goLive(a,a.id,s.task,'work');
+  });
+}
+
 function applyLive(d){var seen={};
   d.agents.forEach(function(r){if(!r||typeof r!=='object')return;var id=LIVE_IDS[r.id]||LIVE_NAMES[String(r.name||'').toLowerCase()],a=id&&agById(id);if(!a||seen[id])return;seen[id]=1;
     var st=(r.status==='working'||r.status==='awaiting_approval')?r.status:'idle';
@@ -501,7 +515,7 @@ function applyLive(d){var seen={};
     var prev=a.liveStatus;a.liveStatus=st;
     if(st==='idle')goLive(a,IDLE_SPOT[id],task,'live_idle');else goLive(a,id,task,st==='working'?'work':'wait');
     if(prev!==st){log(a,(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task);if(st!=='idle')showToast(a,task);}});
-  AG.forEach(function(a){if(!seen[a.id]){if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');}});}
+  AG.forEach(function(a){if(!seen[a.id]){if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');}});applyLocalSim();}
 function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;});log({name:'Office',color:'#7fd0ff'},'Live status connected');}
 function leaveLive(why){if(!LIVE.on)return;LIVE.on=false;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;a.step=(a.step+a.plan.length-1)%a.plan.length;advance(a);});
   log({name:'Office',color:'#a09a90'},why||'Back to simulated demo');}
@@ -519,13 +533,23 @@ function liveBadge(){var m=document.getElementById('mode'),b=document.getElement
     m.textContent=fresh?'● Live':'○ Live (stale)';m.className='sim '+(fresh?'live':'stale');
     var t=LIVE.updated?new Date(LIVE.updated):null,ts=t?hhmm(t.getHours()*60+t.getMinutes())+':'+('0'+t.getSeconds()).slice(-2):'?';
     m.title='agents-status.json updated '+ts;
-    n.textContent='Live — reading agents-status.json (updated '+ts+(fresh?'':', stale')+'). Box '+(bx.reachable===false?'gateway unreachable':bx.isBusy?(bx.busyOnlyAwaitingApproval?'waiting on your approval':'busy'):'idle')+'. Status comes from live agent activity (who's running a turn), synced into agents-status.json.';}
+    n.textContent='Live — reading agents-status.json (updated '+ts+(fresh?'':', stale')+'). Box '+(bx.reachable===false?'gateway unreachable':bx.isBusy?(bx.busyOnlyAwaitingApproval?'waiting on your approval':'busy'):'idle')+'. Status comes from real agent turns (and box-side sims) synced into agents-status.json — the Demo button’s scripted routine stays local and does not write this file.';}
   else if(LIVE.wanted){m.textContent='○ Live unavailable';m.className='sim off';m.title='';
     n.textContent='Live mode is on but agents-status.json could not be read next to this file (e.g. opened from Files/file://, or the file is missing). Showing the simulated demo; retrying every few seconds.';}
   else{m.textContent='● Simulated';m.className='sim';m.title='';n.textContent=DEMO_NOTE;}}
 function setLive(want){LIVE.wanted=!!want;clearInterval(LIVE.timer);LIVE.timer=null;
   if(LIVE.wanted){livePoll();LIVE.timer=setInterval(livePoll,LIVE_POLL);}else leaveLive('Switched to demo');liveBadge();}
 document.getElementById('bLive').onclick=function(){setLive(!LIVE.wanted);};
+
+document.getElementById('bSim').onclick=function(){
+  if(!LIVE.wanted){ setLive(true); }
+  LOCAL_SIM['matt']={task:'Simulated exercise (browser overlay)', until:Date.now()+5*60*1000};
+  if(LIVE.data) applyLive(LIVE.data); else applyLocalSim();
+  log({name:'Office',color:'#ee8a3a'},'Local sim: Matt working — overlay only in this browser. Box office-sim.py updates Live JSON for everyone.');
+  showToast({name:'Matt',color:'#ee8a3a'},'Simulated exercise (local overlay)');
+  liveBadge();
+};
+
 
 buildScene();buildGrid();initAgents();buildUI();updateUI();setInterval(updateUI,300);
 AG.forEach(function(a){log(a,a.task);});showToast(AG[0],AG[0].task);
