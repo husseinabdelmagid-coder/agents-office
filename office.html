@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Headquarters · 20261006-bal16-neo</title>
+<title>Agents Headquarters · 20261006-bal17-cards</title>
 <style>
 :root{--chrome:#1b1c20;--chrome2:#25272c;--ink:#2d2a26;--muted:#857d71;--paper:#f8f5ef;--card:#fff;--line:#e8e1d4}
 *{box-sizing:border-box}
@@ -40,15 +40,15 @@ canvas#c{position:absolute;left:0;top:0;width:100%;height:100%;display:block;tou
 .toast em{font-style:normal;color:#9c978e;font-size:10px;display:block;letter-spacing:.06em;text-transform:uppercase}
 aside{flex:0 0 300px;width:300px;background:var(--paper);border-left:1px solid #000;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 20px}
 aside h3{margin:2px 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 11px;margin-bottom:9px;cursor:pointer;transition:box-shadow .2s,border-color .2s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 11px;margin-bottom:9px;cursor:pointer;transition:box-shadow .2s,border-color .2s;display:flex;flex-direction:column;box-sizing:border-box;min-height:112px}
 .card.sel{border-color:#c9bfae;box-shadow:0 3px 12px rgba(80,60,30,.12)}
 .crow{display:flex;align-items:center;gap:9px}
 .av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex:0 0 auto}
-.nm{font-weight:650;font-size:13.5px}.rl{font-size:11px;color:var(--muted)}
+.nm{font-weight:650;font-size:13.5px}.rl{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
 .st{margin-left:auto;font-size:10px;padding:3px 7px;border-radius:999px;background:#f0ebe1;color:#6e665a;white-space:nowrap}
 .st.walk{background:#fdf0dc;color:#a46a1d}.st.meet{background:#e6effa;color:#3d6aa4}.st.work{background:#e5f3e3;color:#3f7a3a}.st.wait{background:#fbe5e2;color:#a4423d}.st.live_idle{background:#eeeae3;color:#7d766b}
-.task{font-size:12px;margin:8px 0 6px;line-height:1.35;color:#3d3933;min-height:16px}
-.bar{height:5px;border-radius:3px;background:#efe9de;overflow:hidden}.bar i{display:block;height:100%;width:0;border-radius:3px}
+.task{font-size:12px;margin:8px 0 6px;line-height:1.35;color:#3d3933;min-height:2.7em;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.bar{height:5px;border-radius:3px;background:#efe9de;overflow:hidden;margin-top:auto}.bar i{display:block;height:100%;width:0;border-radius:3px}
 .feed{list-style:none;margin:0;padding:0;font-size:11.5px}
 .feed li{padding:6px 0;border-top:1px solid var(--line);color:#4b463f;line-height:1.35}
 .feed li span{color:var(--muted);font-variant-numeric:tabular-nums;margin-right:6px}
@@ -58,7 +58,7 @@ aside h3{margin:2px 0 10px;font-size:11px;letter-spacing:.14em;text-transform:up
   main{flex-direction:column}
   .stage{flex:0 0 60%;min-height:300px}
   aside{flex:1 1 auto;width:auto;border-left:0;border-top:1px solid #000}
-  #cards{display:grid;grid-template-columns:1fr 1fr;gap:9px}#cards .card{margin:0}
+  #cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:stretch}#cards .card{margin:0;height:100%;min-height:112px}
 }
 @media (max-width:560px){.chips{display:none}.clock{display:none}#cards{grid-template-columns:1fr}}
 
@@ -507,8 +507,8 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261006-bal16-neo';
-var OFFICE_COMMIT='b6c2fa2dcfe87bb8393f376c7da402bb3bd1f7f8';
+var OFFICE_BUILD='20261006-bal17-cards';
+var OFFICE_COMMIT='pending';
 var LIVE_SLOT_SECS=12;var LIVE_PTR_FALLBACK=['https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json'];
 var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam','e86192fb-f95f-40d2-ad1a-21023a9adac2':'neo'};
