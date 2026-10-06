@@ -55,9 +55,25 @@ aside h3{margin:2px 0 10px;font-size:11px;letter-spacing:.14em;text-transform:up
   #cards{display:grid;grid-template-columns:1fr 1fr;gap:9px}#cards .card{margin:0}
 }
 @media (max-width:560px){.chips{display:none}.clock{display:none}#cards{grid-template-columns:1fr}}
+
+#gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#1a1625;color:#f2ebe3;font-family:system-ui,sans-serif}
+#gate .box{background:#2a2438;padding:28px 24px;border-radius:16px;width:min(360px,92vw);box-shadow:0 20px 60px #0008}
+#gate h1{margin:0 0 8px;font-size:1.25rem}
+#gate p{margin:0 0 16px;opacity:.75;font-size:.9rem}
+#gate input{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:10px;border:1px solid #564a6e;background:#1a1625;color:#f2ebe3;font-size:1rem}
+#gate button{margin-top:12px;width:100%;padding:12px;border:0;border-radius:10px;background:#8a6fd1;color:#fff;font-weight:600;cursor:pointer}
+#gate .err{color:#f07178;margin-top:10px;font-size:.85rem;min-height:1.2em}
+body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
+
 </style>
 </head>
-<body>
+<body class="gated">
+
+<div id="gate"><div class="box"><h1>Agents Office</h1><p>Enter the password to open the live office.</p>
+<input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" autofocus>
+<button id="gateGo" type="button">Unlock</button>
+<div class="err" id="gateErr"></div></div></div>
+
 <div class="app">
 <header>
   <div class="dots"><i></i><i></i><i></i></div>
@@ -503,7 +519,7 @@ function liveBadge(){var m=document.getElementById('mode'),b=document.getElement
     m.textContent=fresh?'● Live':'○ Live (stale)';m.className='sim '+(fresh?'live':'stale');
     var t=LIVE.updated?new Date(LIVE.updated):null,ts=t?hhmm(t.getHours()*60+t.getMinutes())+':'+('0'+t.getSeconds()).slice(-2):'?';
     m.title='agents-status.json updated '+ts;
-    n.textContent='Live — reading agents-status.json (updated '+ts+(fresh?'':', stale')+'). Box '+(bx.reachable===false?'gateway unreachable':bx.isBusy?(bx.busyOnlyAwaitingApproval?'waiting on your approval':'busy'):'idle')+'. Status comes from the box gateway health only (which agent is active), so task text is generic.';}
+    n.textContent='Live — reading agents-status.json (updated '+ts+(fresh?'':', stale')+'). Box '+(bx.reachable===false?'gateway unreachable':bx.isBusy?(bx.busyOnlyAwaitingApproval?'waiting on your approval':'busy'):'idle')+'. Status comes from live agent activity (who's running a turn), synced into agents-status.json.';}
   else if(LIVE.wanted){m.textContent='○ Live unavailable';m.className='sim off';m.title='';
     n.textContent='Live mode is on but agents-status.json could not be read next to this file (e.g. opened from Files/file://, or the file is missing). Showing the simulated demo; retrying every few seconds.';}
   else{m.textContent='● Simulated';m.className='sim';m.title='';n.textContent=DEMO_NOTE;}}
@@ -518,5 +534,30 @@ requestAnimationFrame(frame);
 if(/[?&]live=1(&|$)/.test(location.search))setLive(true);
 })();
 </script>
+
+<script>
+(function(){
+  var HASH="c96f94c35bcacbee5d92086e4d2f3a023fe5f18545588af6dd3ea04c6b64c187";
+  var KEY='agents-office-auth-v1';
+  function showApp(){
+    document.body.classList.remove('gated');
+    var g=document.getElementById('gate'); if(g) g.remove();
+  }
+  async function sha256(text){
+    var buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+  }
+  async function tryUnlock(pw){
+    var h=await sha256(pw||'');
+    if(h!==HASH){ document.getElementById('gateErr').textContent='Wrong password'; return false; }
+    try{ sessionStorage.setItem(KEY,'1'); }catch(e){}
+    showApp(); return true;
+  }
+  try{ if(sessionStorage.getItem(KEY)==='1'){ showApp(); return; } }catch(e){}
+  document.getElementById('gateGo').onclick=function(){ tryUnlock(document.getElementById('gatePw').value); };
+  document.getElementById('gatePw').addEventListener('keydown', function(e){ if(e.key==='Enter') tryUnlock(this.value); });
+})();
+</script>
+
 </body>
 </html>
