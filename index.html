@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Headquarters · Virtual Office</title>
+<title>Agents Headquarters · Virtual Office · 20261006-rail3</title>
 <style>
 :root{--chrome:#1b1c20;--chrome2:#25272c;--ink:#2d2a26;--muted:#857d71;--paper:#f8f5ef;--card:#fff;--line:#e8e1d4}
 *{box-sizing:border-box}
@@ -66,7 +69,7 @@ aside h3{margin:2px 0 10px;font-size:11px;letter-spacing:.14em;text-transform:up
 body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
 
 </style>
-<!-- matt-idle-snap-v2 -->
+<!-- rail-bind-20261006-rail3 -->
 </head>
 <body class="gated">
 
@@ -464,9 +467,19 @@ function buildUI(){var chips=document.getElementById('chips'),cards=document.get
     d.onclick=function(){select(a);};cards.appendChild(d);cardEls[a.id]={el:d,st:d.querySelector('.st'),task:d.querySelector('.task'),bar:d.querySelector('.bar i')};});
   uiInit=true;}
 function updateUI(){document.getElementById('clock').textContent=LIVE.on?nowHM():hhmm(simMin);liveBadge();
-  AG.forEach(function(a){var c=cardEls[a.id];if(!c)return;var kind=a.mode==='walk'?'walk':a.kind;
-    c.st.textContent=STATUS_TXT[kind]||'Working';c.st.className='st '+kind;c.task.textContent=a.task;
-    c.bar.style.width=(a.mode==='walk'?6:LIVE.on?(a.kind==='work'?(a.t%8)/8*100:a.kind==='wait'?100:0):Math.min(100,a.t/a.dur*100)).toFixed(0)+'%';
+  AG.forEach(function(a){var c=cardEls[a.id];if(!c)return;
+    var kind, task;
+    if(LIVE.on){
+      var st=a.liveStatus||'idle';
+      kind=st==='working'?'work':st==='awaiting_approval'?'wait':'live_idle';
+      task=a.liveTask||(st==='idle'?'Standing by':(a.task||'Handling a live request'));
+      /* Never show Demo/sim exercise leftovers on the rail while Live is on */
+      if(st==='idle'){task='Standing by';a.task='Standing by';a.kind='live_idle';}
+    }else{
+      kind=a.mode==='walk'?'walk':a.kind; task=a.task;
+    }
+    c.st.textContent=STATUS_TXT[kind]||(LIVE.on?'Idle':'Working');c.st.className='st '+kind;c.task.textContent=task;
+    c.bar.style.width=(a.mode==='walk'&&!LIVE.on?6:LIVE.on?(kind==='work'?(a.t%8)/8*100:kind==='wait'?100:0):Math.min(100,a.t/a.dur*100)).toFixed(0)+'%';
     c.el.className='card'+(selected===a?' sel':'');a.chip.className='chip'+(selected===a?' sel':'');});}
 function log(a,txt){feed.unshift('<li><span>'+(LIVE.on?nowHM():hhmm(simMin))+'</span><b style="color:'+a.color+'">'+a.name+'</b> — '+txt.replace(/</g,'&lt;')+'</li>');feed=feed.slice(0,8);feedEl.innerHTML=feed.join('');}
 var toast=document.getElementById('toast');
@@ -485,6 +498,7 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false};
+var OFFICE_BUILD='20261006-rail3';
 var LIVE_URL='./agents-status.json',LIVE_POLL=4000,LIVE_STALE=15000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam'};
 var LIVE_NAMES={'eve':'eve','matt':'matt','el profesor':'prof','sam':'sam'};
@@ -507,18 +521,19 @@ function applyLive(d){var seen={};
   d.agents.forEach(function(r){if(!r||typeof r!=='object')return;var id=LIVE_IDS[r.id]||LIVE_NAMES[String(r.name||'').toLowerCase()],a=id&&agById(id);if(!a||seen[id])return;seen[id]=1;
     var st=(r.status==='working'||r.status==='awaiting_approval')?r.status:'idle';
     var task=String(r.task||(st==='working'?'Handling a live request':st==='awaiting_approval'?'Waiting on your approval':'Standing by')).slice(0,140);
-    var prev=a.liveStatus;a.liveStatus=st;
-    if(st==='idle')goLive(a,IDLE_SPOT[id],task,'live_idle');else goLive(a,id,task,st==='working'?'work':'wait');
+    var prev=a.liveStatus;a.liveStatus=st;a.liveTask=task;
+    if(st==='idle'){goLive(a,IDLE_SPOT[id],task,'live_idle');a.task=task;a.kind='live_idle';a.mode='dwell';}
+    else{goLive(a,id,task,st==='working'?'work':'wait');a.liveTask=task;if(a.mode!=='walk'){a.task=task;a.kind=st==='working'?'work':'wait';}}
     if(prev!==st){log(a,(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task);showToast(a,task);}});
-  AG.forEach(function(a){if(!seen[a.id]){if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');}});applyLocalSim();}
-function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;});log({name:'Office',color:'#7fd0ff'},'Live status connected');}
+  AG.forEach(function(a){if(!seen[a.id]){if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';a.liveTask='Standing by';goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');a.task='Standing by';a.kind='live_idle';}});applyLocalSim();updateUI();}
+function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus='idle';a.liveTask='Standing by';a.task='Standing by';a.kind='live_idle';a.mode='dwell';a.path=[];});log({name:'Office',color:'#7fd0ff'},'Live status connected · build '+OFFICE_BUILD);updateUI();}
 function leaveLive(why){if(!LIVE.on)return;LIVE.on=false;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;a.step=(a.step+a.plan.length-1)%a.plan.length;advance(a);});
   log({name:'Office',color:'#a09a90'},why||'Back to simulated demo');}
 function onLive(d){if(!LIVE.wanted)return;LIVE.data=d;LIVE.updated=Date.parse(d.updatedAt)||0;if(!LIVE.on)enterLive();applyLive(d);liveBadge();}
 function onLiveFail(){leaveLive('Live status unavailable — showing demo');liveBadge();}
 function livePoll(){if(!LIVE.wanted||LIVE.busy)return;
   LIVE.busy=true;
-  try{fetch(LIVE_URL+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  try{fetch(LIVE_URL+'?t='+Date.now()+'&v='+OFFICE_BUILD,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(function(d){LIVE.busy=false;if(!d||!Array.isArray(d.agents))throw new Error('bad status file');onLive(d);})
     .catch(function(){LIVE.busy=false;onLiveFail();});}
   catch(e){LIVE.busy=false;onLiveFail();}}
