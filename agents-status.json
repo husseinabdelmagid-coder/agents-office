@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T16:22:42Z",
+  "updatedAt": "2026-10-06T16:22:57Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -16,7 +16,7 @@
       "name": "Eve",
       "title": "Personal assistant",
       "status": "working",
-      "task": "Handling a live request",
+      "task": "Using Shell",
       "color": "#8a6fd1"
     },
     {
