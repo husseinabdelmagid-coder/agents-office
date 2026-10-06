@@ -498,8 +498,8 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261006-bal5';
-var LIVE_URLS=['https://cdn.jsdelivr.net/gh/husseinabdelmagid-coder/agents-office@main/agents-status.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json','./agents-status.json'],LIVE_POLL=4000,LIVE_STALE=45000,LIVE_FETCH_MS=10000,LIVE_SHA=null,LIVE_SHA_AT=0;
+var OFFICE_BUILD='20261006-bal6';
+var LIVE_URLS=['https://cdn.jsdelivr.net/gh/husseinabdelmagid-coder/agents-office@main/agents-status.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json','./agents-status.json'],LIVE_POLL=4000,LIVE_STALE=45000,LIVE_FETCH_MS=10000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam'};
 var LIVE_NAMES={'eve':'eve','matt':'matt','el profesor':'prof','sam':'sam'};
 var IDLE_SPOT={eve:'sofa1',matt:'sofa2',prof:'sofa3',sam:'rt2'};
@@ -541,42 +541,16 @@ function onLive(d){if(!LIVE.wanted)return;var ts=Date.parse(d.updatedAt)||Date.n
 function onLiveFail(why){LIVE.fail=(LIVE.fail||0)+1;liveBadge();
   if(!LIVE.on&&!LIVE.data){leaveLive(why||'Live status unavailable — showing demo');liveBadge();}}
 function livePoll(){if(!LIVE.wanted)return;
-  /* Never abort an in-flight poll on the next tick — that caused permanent "Live reconnecting" */
-  if(LIVE.busy)return;
+  if(LIVE.busy)return; /* overlapping ticks caused permanent reconnecting on bal4 */
   LIVE.busy=true;
   var ctrl=typeof AbortController!=='undefined'?new AbortController():null;LIVE.ctrl=ctrl;
   var to=setTimeout(function(){try{if(ctrl)ctrl.abort();}catch(e){}},LIVE_FETCH_MS);
   var opts={cache:'no-store'};if(ctrl)opts.signal=ctrl.signal;
   var q='?t='+Date.now()+'&v='+OFFICE_BUILD;
-  function pickBest(rows){
-    var best=null,bestTs=-1;
-    (rows||[]).forEach(function(d){if(!d||!Array.isArray(d.agents))return;var ts=Date.parse(d.updatedAt)||0;if(ts>=bestTs){bestTs=ts;best=d;}});
-    return best;
-  }
-  function fetchUrls(urls){
-    return Promise.all(urls.map(function(u){return fetch(u+q,opts).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).catch(function(){return null;});}));
-  }
-  /* Prefer cached commit SHA (refresh ~60s). Always also hit @main / local mirrors so API rate limits cannot block Live. */
-  var urls=LIVE_URLS.slice();
-  var shaPromise;
-  if(LIVE_SHA&&Date.now()-LIVE_SHA_AT<60000){
-    shaPromise=Promise.resolve(LIVE_SHA);
-  }else{
-    shaPromise=fetch('https://api.github.com/repos/husseinabdelmagid-coder/agents-office/commits/main?per_page=1',{cache:'no-store',headers:{'Accept':'application/vnd.github+json'},signal:ctrl&&ctrl.signal})
-      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-      .then(function(j){var sha=(Array.isArray(j)?j[0]:j).sha;if(sha){LIVE_SHA=sha;LIVE_SHA_AT=Date.now();}return sha;})
-      .catch(function(){return LIVE_SHA;});
-  }
-  shaPromise.then(function(sha){
-      var list=urls.slice();
-      if(sha){
-        list.unshift('https://cdn.jsdelivr.net/gh/husseinabdelmagid-coder/agents-office@'+sha+'/agents-status.json');
-        list.unshift('https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/'+sha+'/agents-status.json');
-      }
-      return fetchUrls(list);
-    })
+  Promise.all(LIVE_URLS.map(function(u){return fetch(u+q,opts).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).catch(function(){return null;});}))
     .then(function(rows){
-      var best=pickBest(rows);
+      var best=null,bestTs=-1;
+      rows.forEach(function(d){if(!d||!Array.isArray(d.agents))return;var ts=Date.parse(d.updatedAt)||0;if(ts>=bestTs){bestTs=ts;best=d;}});
       if(!best)throw new Error('bad status file');
       onLive(best);
     })
@@ -622,6 +596,7 @@ if(/[?&]live=1(&|$)/.test(location.search))setLive(true);
   function showApp(){
     document.body.classList.remove('gated');
     var g=document.getElementById('gate'); if(g) g.remove();
+    try{ if(typeof setLive==='function') setLive(true); }catch(e){}
   }
   async function sha256(text){
     var buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
