@@ -505,8 +505,8 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261006-bal19-buildtag';
-var OFFICE_COMMIT='8d3e19acc19405047cda8782e6e7866dd0cc559d';
+var OFFICE_BUILD='20261006-bal20-livefix';
+var OFFICE_COMMIT='pending';
 var LIVE_SLOT_SECS=12;var LIVE_PTR_FALLBACK=['https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json'];
 var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam','e86192fb-f95f-40d2-ad1a-21023a9adac2':'neo'};
@@ -535,7 +535,7 @@ function applyLive(d){var seen={};
     var st=raw; var prev=a.liveStatus;a.liveStatus=st;a.liveTask=task;
     if(st==='idle'){goLive(a,IDLE_SPOT[id],task,'live_idle');a.task=task;a.kind='live_idle';a.mode='dwell';}
     else{goLive(a,id,task,st==='working'?'work':'wait');a.liveTask=task;if(a.mode!=='walk'){a.task=task;a.kind=st==='working'?'work':'wait';}}
-    if(prev!==st){log(a,(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task);showToast(a,task);}});
+    var prevTask=a._feedTask||'';a._feedTask=task;if(prev!==st||prevTask!==task){log(a,(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task);showToast(a,task);}});
   AG.forEach(function(a){if(!seen[a.id]){
       if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';a.liveTask='Standing by';a._idleHits=0;goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');a.task='Standing by';a.kind='live_idle';}});applyLocalSim();updateUI();}
 function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus='idle';a.liveTask='Standing by';a.task='Standing by';a.kind='live_idle';a.mode='dwell';a.path=[];});log({name:'Office',color:'#7fd0ff'},'Live status connected · build '+OFFICE_BUILD);updateUI();}
@@ -570,7 +570,9 @@ function livePoll(){if(!LIVE.wanted)return;
     var best=null,bestTs=-1;
     ptrs.forEach(function(p){if(!p||!p.sha)return;var ts=Date.parse(p.updatedAt)||0;if(ts>=bestTs){bestTs=ts;best=p;}});
     if(best&&best.sha){
-      return fetchJson('https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/'+best.sha+'/agents-status.json')
+      return fetchJson('https://raw.githack.com/husseinabdelmagid-coder/agents-office/'+best.sha+'/agents-status.json')
+        .then(function(d){if(d&&Array.isArray(d.agents))return d;
+          return fetchJson('https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/'+best.sha+'/agents-status.json');})
         .then(function(d){return d&&Array.isArray(d.agents)?d:null;});
     }
     return null;
