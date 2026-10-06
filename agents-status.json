@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T19:40:46Z",
+  "updatedAt": "2026-10-06T19:41:06Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -16,7 +16,7 @@
       "name": "Eve",
       "title": "Personal assistant",
       "status": "working",
-      "task": "Office systems check \u2014 step 13/15 (86%)",
+      "task": "Office systems check \u2014 step 14/15 (93%)",
       "color": "#8a6fd1"
     },
     {
@@ -24,7 +24,7 @@
       "name": "Matt",
       "title": "Coach",
       "status": "working",
-      "task": "Interval cardio block \u2014 step 13/15 (86%)",
+      "task": "Interval cardio block \u2014 step 14/15 (93%)",
       "color": "#ee8a3a"
     },
     {
@@ -32,7 +32,7 @@
       "name": "El Profesor",
       "title": "Deep researcher",
       "status": "working",
-      "task": "Deep research sweep \u2014 step 13/15 (86%)",
+      "task": "Deep research sweep \u2014 step 14/15 (93%)",
       "color": "#c9473f"
     },
     {
@@ -40,7 +40,7 @@
       "name": "Sam",
       "title": "Career advisor",
       "status": "working",
-      "task": "CV polish pass \u2014 step 13/15 (86%)",
+      "task": "CV polish pass \u2014 step 14/15 (93%)",
       "color": "#3f8fcf"
     }
   ]
