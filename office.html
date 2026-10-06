@@ -498,8 +498,8 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261006-bal6';
-var LIVE_URLS=['https://cdn.jsdelivr.net/gh/husseinabdelmagid-coder/agents-office@main/agents-status.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json','./agents-status.json'],LIVE_POLL=4000,LIVE_STALE=45000,LIVE_FETCH_MS=10000;
+var OFFICE_BUILD='20261006-bal7';
+var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json','https://cdn.jsdelivr.net/gh/husseinabdelmagid-coder/agents-office@main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam'};
 var LIVE_NAMES={'eve':'eve','matt':'matt','el profesor':'prof','sam':'sam'};
 var IDLE_SPOT={eve:'sofa1',matt:'sofa2',prof:'sofa3',sam:'rt2'};
@@ -543,19 +543,24 @@ function onLiveFail(why){LIVE.fail=(LIVE.fail||0)+1;liveBadge();
 function livePoll(){if(!LIVE.wanted)return;
   if(LIVE.busy)return; /* overlapping ticks caused permanent reconnecting on bal4 */
   LIVE.busy=true;
-  var ctrl=typeof AbortController!=='undefined'?new AbortController():null;LIVE.ctrl=ctrl;
-  var to=setTimeout(function(){try{if(ctrl)ctrl.abort();}catch(e){}},LIVE_FETCH_MS);
-  var opts={cache:'no-store'};if(ctrl)opts.signal=ctrl.signal;
   var q='?t='+Date.now()+'&v='+OFFICE_BUILD;
-  Promise.all(LIVE_URLS.map(function(u){return fetch(u+q,opts).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).catch(function(){return null;});}))
+  /* Per-URL AbortController so one slow CDN cannot cancel a fresher mirror mid-flight */
+  Promise.all(LIVE_URLS.map(function(u){
+      var ctrl=typeof AbortController!=='undefined'?new AbortController():null;
+      var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},LIVE_FETCH_MS):null;
+      var opts={cache:'no-store'};if(ctrl)opts.signal=ctrl.signal;
+      return fetch(u+q,opts).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+        .catch(function(){return null;})
+        .then(function(d){if(to)clearTimeout(to);return d;});
+    }))
     .then(function(rows){
       var best=null,bestTs=-1;
       rows.forEach(function(d){if(!d||!Array.isArray(d.agents))return;var ts=Date.parse(d.updatedAt)||0;if(ts>=bestTs){bestTs=ts;best=d;}});
       if(!best)throw new Error('bad status file');
       onLive(best);
     })
-    .catch(function(err){if(err&&err.name==='AbortError')return;onLiveFail('Live status unavailable — retrying');})
-    .then(function(){clearTimeout(to);if(LIVE.ctrl===ctrl){LIVE.busy=false;LIVE.ctrl=null;}});
+    .catch(function(){onLiveFail('Live status unavailable — retrying');})
+    .then(function(){LIVE.busy=false;LIVE.ctrl=null;});
 }
 function liveBadge(){var m=document.getElementById('mode'),b=document.getElementById('bLive'),n=document.getElementById('note');
   b.textContent=LIVE.wanted?'Live':'Demo';b.className='hbtn'+(LIVE.wanted?' on':'');
