@@ -497,9 +497,9 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    Reads ./agents-status.json (same folder as this HTML), written on the box by
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
-var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false};
-var OFFICE_BUILD='20261006-rail3';
-var LIVE_URL='./agents-status.json',LIVE_POLL=4000,LIVE_STALE=15000;
+var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
+var OFFICE_BUILD='20261006-poll1';
+var LIVE_URL='./agents-status.json',LIVE_POLL=4000,LIVE_STALE=15000,LIVE_FETCH_MS=8000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam'};
 var LIVE_NAMES={'eve':'eve','matt':'matt','el profesor':'prof','sam':'sam'};
 var IDLE_SPOT={eve:'sofa1',matt:'sofa2',prof:'sofa3',sam:'rt2'};
@@ -529,26 +529,40 @@ function applyLive(d){var seen={};
 function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus='idle';a.liveTask='Standing by';a.task='Standing by';a.kind='live_idle';a.mode='dwell';a.path=[];});log({name:'Office',color:'#7fd0ff'},'Live status connected · build '+OFFICE_BUILD);updateUI();}
 function leaveLive(why){if(!LIVE.on)return;LIVE.on=false;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;a.step=(a.step+a.plan.length-1)%a.plan.length;advance(a);});
   log({name:'Office',color:'#a09a90'},why||'Back to simulated demo');}
-function onLive(d){if(!LIVE.wanted)return;LIVE.data=d;LIVE.updated=Date.parse(d.updatedAt)||0;if(!LIVE.on)enterLive();applyLive(d);liveBadge();}
-function onLiveFail(){leaveLive('Live status unavailable — showing demo');liveBadge();}
-function livePoll(){if(!LIVE.wanted||LIVE.busy)return;
+function onLive(d){if(!LIVE.wanted)return;LIVE.fail=0;LIVE.data=d;LIVE.updated=Date.parse(d.updatedAt)||Date.now();if(!LIVE.on)enterLive();
+  try{applyLive(d);}catch(e){console.warn('applyLive',e);}liveBadge();}
+/* Transient fetch/CDN blips must NOT drop Live — that made polling look dead until Demo→Live */
+function onLiveFail(why){LIVE.fail=(LIVE.fail||0)+1;liveBadge();
+  if(!LIVE.on&&!LIVE.data){leaveLive(why||'Live status unavailable — showing demo');liveBadge();}}
+function livePoll(){if(!LIVE.wanted)return;
+  if(LIVE.busy){/* hung request: force-abort so the loop never wedges forever */
+    try{if(LIVE.ctrl)LIVE.ctrl.abort();}catch(e){}
+    LIVE.busy=false;LIVE.ctrl=null;}
   LIVE.busy=true;
-  try{fetch(LIVE_URL+'?t='+Date.now()+'&v='+OFFICE_BUILD,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-    .then(function(d){LIVE.busy=false;if(!d||!Array.isArray(d.agents))throw new Error('bad status file');onLive(d);})
-    .catch(function(){LIVE.busy=false;onLiveFail();});}
-  catch(e){LIVE.busy=false;onLiveFail();}}
+  var ctrl=typeof AbortController!=='undefined'?new AbortController():null;LIVE.ctrl=ctrl;
+  var to=setTimeout(function(){try{if(ctrl)ctrl.abort();}catch(e){}},LIVE_FETCH_MS);
+  var opts={cache:'no-store'};if(ctrl)opts.signal=ctrl.signal;
+  fetch(LIVE_URL+'?t='+Date.now()+'&v='+OFFICE_BUILD,opts).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(d){if(!d||!Array.isArray(d.agents))throw new Error('bad status file');onLive(d);})
+    .catch(function(err){if(err&&err.name==='AbortError'&&!LIVE.wanted)return;onLiveFail('Live status unavailable — retrying');})
+    .then(function(){clearTimeout(to);LIVE.busy=false;if(LIVE.ctrl===ctrl)LIVE.ctrl=null;});
+}
 function liveBadge(){var m=document.getElementById('mode'),b=document.getElementById('bLive'),n=document.getElementById('note');
   b.textContent=LIVE.wanted?'Live':'Demo';b.className='hbtn'+(LIVE.wanted?' on':'');
-  if(LIVE.on){var age=Date.now()-LIVE.updated,fresh=LIVE.updated&&age<LIVE_STALE,bx=LIVE.data.box||{};
+  if(LIVE.on){var age=Date.now()-LIVE.updated,fresh=LIVE.updated&&age<LIVE_STALE,bx=(LIVE.data&&LIVE.data.box)||{};
     m.textContent=fresh?'● Live':'○ Live (stale)';m.className='sim '+(fresh?'live':'stale');
     var t=LIVE.updated?new Date(LIVE.updated):null,ts=t?hhmm(t.getHours()*60+t.getMinutes())+':'+('0'+t.getSeconds()).slice(-2):'?';
     m.title='agents-status.json updated '+ts;
     n.textContent='Live — reading agents-status.json (updated '+ts+(fresh?'':', stale')+'). Box '+(bx.reachable===false?'gateway unreachable':bx.isBusy?(bx.busyOnlyAwaitingApproval?'waiting on your approval':'busy'):'idle')+'. Status comes from real agent turns (and box-side sims) synced into agents-status.json — the Demo button scripted routine stays local and does not write this file.';}
-  else if(LIVE.wanted){m.textContent='○ Live unavailable';m.className='sim off';m.title='';
-    n.textContent='Live mode is on but agents-status.json could not be read next to this file (e.g. opened from Files/file://, or the file is missing). Showing the simulated demo; retrying every few seconds.';}
+  else if(LIVE.wanted){m.textContent='○ Live reconnecting';m.className='sim off';m.title='';
+    n.textContent='Live is on and still polling agents-status.json every few seconds (retry #'+(LIVE.fail||0)+'). Showing the simulated demo only until the next successful fetch — no need to toggle Demo/Live.';}
   else{m.textContent='● Simulated';m.className='sim';m.title='';n.textContent=DEMO_NOTE;}}
 function setLive(want){LIVE.wanted=!!want;clearInterval(LIVE.timer);LIVE.timer=null;
-  if(LIVE.wanted){livePoll();LIVE.timer=setInterval(livePoll,LIVE_POLL);}else leaveLive('Switched to demo');liveBadge();}
+  try{if(LIVE.ctrl)LIVE.ctrl.abort();}catch(e){}
+  LIVE.ctrl=null;LIVE.busy=false;LIVE.fail=0;
+  if(LIVE.wanted){livePoll();LIVE.timer=setInterval(livePoll,LIVE_POLL);}
+  else{leaveLive('Switched to demo');}
+  liveBadge();}
 document.getElementById('bLive').onclick=function(){setLive(!LIVE.wanted);};
 
 document.getElementById('bSim').onclick=function(){
