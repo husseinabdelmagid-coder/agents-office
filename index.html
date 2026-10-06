@@ -492,21 +492,15 @@ var DEMO_NOTE='Simulated demo — scripted routine only (does not update agents-
 function nowHM(){var d=new Date();return hhmm(d.getHours()*60+d.getMinutes());}
 function agById(id){for(var i=0;i<AG.length;i++)if(AG[i].id===id)return AG[i];return null;}
 function goLive(a,spotId,task,kind){var s=SPOTS[spotId];if(!s)return;
-  if(a.liveSpot!==spotId){a.liveSpot=spotId;a.path=findPath(a.x,a.y,s.x,s.y);a.mode='walk';a.spot=s;a.nextTask=task;a.nextKind=kind;a.dur=1e9;a.t=0;a.task='Heading to: '+task.toLowerCase();a.kind='walk';}
+  /* Idle snaps in place so we never show a stale "heading to exercise" while Live says standby */
+  if(kind==='live_idle'||kind==='idle'){
+    a.liveSpot=spotId;a.path=[];a.mode='dwell';a.spot=s;a.x=s.x;a.y=s.y;a.task=task;a.kind=kind;a.nextTask=task;a.nextKind=kind;a.dur=1e9;a.t=0;return;
+  }
+  if(a.liveSpot!==spotId){a.liveSpot=spotId;a.path=findPath(a.x,a.y,s.x,s.y);a.mode='walk';a.spot=s;a.nextTask=task;a.nextKind=kind;a.dur=1e9;a.t=0;a.task='Heading to: '+String(task).toLowerCase();a.kind='walk';}
   else if(a.mode==='walk'){a.nextTask=task;a.nextKind=kind;}
   else{a.task=task;a.kind=kind;}}
 
-var LOCAL_SIM={}; /* id -> {task,until} — browser-only overlay on top of Live JSON */
-function applyLocalSim(){
-  var now=Date.now();
-  Object.keys(LOCAL_SIM).forEach(function(id){ if(LOCAL_SIM[id].until<now) delete LOCAL_SIM[id]; });
-  AG.forEach(function(a){
-    var s=LOCAL_SIM[a.id];
-    if(!s) return;
-    a.liveStatus='working';
-    goLive(a,a.id,s.task,'work');
-  });
-}
+function applyLocalSim(){/* removed: local overlay fought Live JSON */}
 
 function applyLive(d){var seen={};
   d.agents.forEach(function(r){if(!r||typeof r!=='object')return;var id=LIVE_IDS[r.id]||LIVE_NAMES[String(r.name||'').toLowerCase()],a=id&&agById(id);if(!a||seen[id])return;seen[id]=1;
@@ -514,7 +508,7 @@ function applyLive(d){var seen={};
     var task=String(r.task||(st==='working'?'Handling a live request':st==='awaiting_approval'?'Waiting on your approval':'Standing by')).slice(0,140);
     var prev=a.liveStatus;a.liveStatus=st;
     if(st==='idle')goLive(a,IDLE_SPOT[id],task,'live_idle');else goLive(a,id,task,st==='working'?'work':'wait');
-    if(prev!==st){log(a,(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task);if(st!=='idle')showToast(a,task);}});
+    if(prev!==st){log(a,(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task);showToast(a,task);}});
   AG.forEach(function(a){if(!seen[a.id]){if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');}});applyLocalSim();}
 function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;});log({name:'Office',color:'#7fd0ff'},'Live status connected');}
 function leaveLive(why){if(!LIVE.on)return;LIVE.on=false;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;a.step=(a.step+a.plan.length-1)%a.plan.length;advance(a);});
@@ -542,12 +536,8 @@ function setLive(want){LIVE.wanted=!!want;clearInterval(LIVE.timer);LIVE.timer=n
 document.getElementById('bLive').onclick=function(){setLive(!LIVE.wanted);};
 
 document.getElementById('bSim').onclick=function(){
-  if(!LIVE.wanted){ setLive(true); }
-  LOCAL_SIM['matt']={task:'Simulated exercise (browser overlay)', until:Date.now()+5*60*1000};
-  if(LIVE.data) applyLive(LIVE.data); else applyLocalSim();
-  log({name:'Office',color:'#ee8a3a'},'Local sim: Matt working — overlay only in this browser. Box office-sim.py updates Live JSON for everyone.');
-  showToast({name:'Matt',color:'#ee8a3a'},'Simulated exercise (local overlay)');
-  liveBadge();
+  log({name:'Office',color:'#ee8a3a'},'Sim tip: the Demo routine and in-page Sim do not write Live. Real status comes from agents-status.json only.');
+  showToast({name:'Office',color:'#ee8a3a'},'Live shows real agent turns only — not Demo exercises');
 };
 
 
