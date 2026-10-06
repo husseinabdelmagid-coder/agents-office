@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-06T15:26:05Z",
+  "updatedAt": "2026-10-06T15:26:12Z",
   "source": "grok-gateway-sse+health+voice-calls",
   "box": {
     "reachable": true,
     "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
-    "activeAgentName": "Eve",
+    "activeAgentId": "3c92912d-8aa9-439d-b2fb-5282635b30d3",
+    "activeAgentName": "Matt",
     "lastBusyAt": "2026-10-06T05:33:19.377000Z",
     "liveFeed": "ok"
   },
@@ -15,16 +15,16 @@
       "id": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
       "name": "Eve",
       "title": "Personal assistant",
-      "status": "working",
-      "task": "Using Shell",
+      "status": "idle",
+      "task": "Standing by",
       "color": "#8a6fd1"
     },
     {
       "id": "3c92912d-8aa9-439d-b2fb-5282635b30d3",
       "name": "Matt",
       "title": "Coach",
-      "status": "idle",
-      "task": "Standing by",
+      "status": "working",
+      "task": "Exercise simulation (pipeline test)",
       "color": "#ee8a3a"
     },
     {
