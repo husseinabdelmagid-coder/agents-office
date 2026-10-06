@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T19:52:52Z",
+  "updatedAt": "2026-10-06T19:52:56Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -23,8 +23,8 @@
       "id": "3c92912d-8aa9-439d-b2fb-5282635b30d3",
       "name": "Matt",
       "title": "Coach",
-      "status": "working",
-      "task": "Change-only sync probe",
+      "status": "idle",
+      "task": "Standing by",
       "color": "#ee8a3a"
     },
     {
