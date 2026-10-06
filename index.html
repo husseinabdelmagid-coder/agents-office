@@ -498,7 +498,7 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261006-poll1';
+var OFFICE_BUILD='20261006-eve1';
 var LIVE_URL='./agents-status.json',LIVE_POLL=4000,LIVE_STALE=15000,LIVE_FETCH_MS=8000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam'};
 var LIVE_NAMES={'eve':'eve','matt':'matt','el profesor':'prof','sam':'sam'};
@@ -519,13 +519,22 @@ function applyLocalSim(){/* removed: local overlay fought Live JSON */}
 
 function applyLive(d){var seen={};
   d.agents.forEach(function(r){if(!r||typeof r!=='object')return;var id=LIVE_IDS[r.id]||LIVE_NAMES[String(r.name||'').toLowerCase()],a=id&&agById(id);if(!a||seen[id])return;seen[id]=1;
-    var st=(r.status==='working'||r.status==='awaiting_approval')?r.status:'idle';
-    var task=String(r.task||(st==='working'?'Handling a live request':st==='awaiting_approval'?'Waiting on your approval':'Standing by')).slice(0,140);
-    var prev=a.liveStatus;a.liveStatus=st;a.liveTask=task;
+    var raw=(r.status==='working'||r.status==='awaiting_approval')?r.status:'idle';
+    var task=String(r.task||(raw==='working'?'Handling a live request':raw==='awaiting_approval'?'Waiting on your approval':'Standing by')).slice(0,140);
+    /* Debounce idle: one stale Standing-by sample must not wipe a Working agent (esp. Eve mid-turn) */
+    if(raw==='idle'&&(a.liveStatus==='working'||a.liveStatus==='awaiting_approval')){
+      a._idleHits=(a._idleHits||0)+1;
+      if(a._idleHits<3){raw=a.liveStatus;task=a.liveTask||task;}
+      else{a._idleHits=0;}
+    }else{a._idleHits=0;}
+    var st=raw; var prev=a.liveStatus;a.liveStatus=st;a.liveTask=task;
     if(st==='idle'){goLive(a,IDLE_SPOT[id],task,'live_idle');a.task=task;a.kind='live_idle';a.mode='dwell';}
     else{goLive(a,id,task,st==='working'?'work':'wait');a.liveTask=task;if(a.mode!=='walk'){a.task=task;a.kind=st==='working'?'work':'wait';}}
     if(prev!==st){log(a,(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task);showToast(a,task);}});
-  AG.forEach(function(a){if(!seen[a.id]){if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';a.liveTask='Standing by';goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');a.task='Standing by';a.kind='live_idle';}});applyLocalSim();updateUI();}
+  AG.forEach(function(a){if(!seen[a.id]){
+      a._idleHits=(a._idleHits||0)+1;
+      if(a._idleHits<3&&(a.liveStatus==='working'||a.liveStatus==='awaiting_approval'))return;
+      if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';a.liveTask='Standing by';a._idleHits=0;goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');a.task='Standing by';a.kind='live_idle';}});applyLocalSim();updateUI();}
 function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus='idle';a.liveTask='Standing by';a.task='Standing by';a.kind='live_idle';a.mode='dwell';a.path=[];});log({name:'Office',color:'#7fd0ff'},'Live status connected · build '+OFFICE_BUILD);updateUI();}
 function leaveLive(why){if(!LIVE.on)return;LIVE.on=false;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;a.step=(a.step+a.plan.length-1)%a.plan.length;advance(a);});
   log({name:'Office',color:'#a09a90'},why||'Back to simulated demo');}
