@@ -1,2 +1,2 @@
-# agents-office
-Agents Office live status
+# Agents Office
+Live page: https://husseinabdelmagid-coder.github.io/agents-office/
