@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Headquarters · 20261006-bal16-neo</title>
+<title>Agents Headquarters · 20261006-bal16c-corner</title>
 <style>
 :root{--chrome:#1b1c20;--chrome2:#25272c;--ink:#2d2a26;--muted:#857d71;--paper:#f8f5ef;--card:#fff;--line:#e8e1d4}
 *{box-sizing:border-box}
@@ -27,7 +27,6 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:14px;height:46px;paddin
 .clock{font-variant-numeric:tabular-nums;color:#bdb8ae;white-space:nowrap}
 .sim{color:#9fd59a;white-space:nowrap}.sim.live{color:#7fd0ff}.sim.stale{color:#e7b84f}.sim.off{color:#a09a90}
 .hbtn.on{border-color:#5fae6a;color:#fff;background:#24352a}
-.build-tag{margin-left:6px;padding:5px 10px;border-radius:8px;border:1px solid #3d9cff;background:#0d2a44;color:#7fd0ff;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.03em;white-space:nowrap;max-width:48vw;overflow:hidden;text-overflow:ellipsis}
 .gate-build{margin-top:14px;padding:8px 10px;border-radius:8px;border:1px solid #564a6e;background:#1a1625;color:#b8a9d6;font-size:12px;font-variant-numeric:tabular-nums;text-align:center;letter-spacing:.02em}
 .corner-build{position:fixed;left:10px;bottom:10px;z-index:50;padding:6px 10px;border-radius:8px;border:1px solid #3d9cff;background:#0d2a44cc;color:#7fd0ff;font:600 11px/1.2 system-ui,sans-serif;font-variant-numeric:tabular-nums;pointer-events:none;backdrop-filter:blur(4px)}
 main{flex:1;display:flex;min-height:0}
@@ -80,8 +79,8 @@ body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
 <input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" autofocus>
 <button id="gateGo" type="button">Unlock</button>
 <div class="err" id="gateErr"></div>
-<div class="gate-build" id="gateBuild">build…</div></div></div>
-<div class="corner-build" id="cornerBuild" aria-hidden="true">build…</div>
+<div class="gate-build" id="gateBuild">Bell 16 only</div></div></div>
+<div class="corner-build" id="cornerBuild" aria-hidden="true">Bell 16 only</div>
 
 <div class="app">
 <header>
@@ -94,7 +93,6 @@ body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
   <button class="hbtn" id="bLive" title="Demo = local scripted routine (does not update Live JSON) · Live = agents-status.json from the box">Demo</button>
   <button class="hbtn" id="bLabels">Labels</button>
   <button class="hbtn" id="bPause">Pause</button>
-  <span class="build-tag" id="buildTag" title="Office build">Build …</span>
 </header>
 <main>
   <div class="stage" id="stage">
@@ -507,8 +505,8 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261006-bal16-neo';
-var OFFICE_COMMIT='b6c2fa2dcfe87bb8393f376c7da402bb3bd1f7f8';
+var OFFICE_BUILD='20261006-bal16c-corner';
+var OFFICE_COMMIT='pending';
 var LIVE_SLOT_SECS=12;var LIVE_PTR_FALLBACK=['https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json'];
 var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam','e86192fb-f95f-40d2-ad1a-21023a9adac2':'neo'};
@@ -611,7 +609,7 @@ document.getElementById('bSim').onclick=function(){
 };
 
 
-function paintBuild(){var label='Build '+OFFICE_BUILD+(OFFICE_COMMIT&&OFFICE_COMMIT!=='pending'?' · '+OFFICE_COMMIT.slice(0,8):'');var tip='Office build '+OFFICE_BUILD+(OFFICE_COMMIT&&OFFICE_COMMIT!=='pending'?' · commit '+OFFICE_COMMIT:'');['buildTag','gateBuild','cornerBuild'].forEach(function(id){var el=document.getElementById(id);if(!el)return;el.textContent=label;el.title=tip;});}
+function paintBuild(){var label='Bell 16 only';var tip='Bell 16 only';var g=document.getElementById('gateBuild');if(g){g.textContent=label;g.title=tip;}var c=document.getElementById('cornerBuild');if(c){c.textContent=label;c.title=tip;}}
 paintBuild();buildScene();buildGrid();initAgents();buildUI();updateUI();setInterval(updateUI,300);
 AG.forEach(function(a){log(a,a.task);});showToast(AG[0],AG[0].task);
 layout();window.addEventListener('resize',layout);window.addEventListener('orientationchange',function(){setTimeout(layout,250);});
