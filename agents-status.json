@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-06T15:26:12Z",
-  "source": "grok-gateway-sse+health+voice-calls",
+  "updatedAt": "2026-10-06T15:28:11Z",
+  "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
@@ -15,8 +15,8 @@
       "id": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
       "name": "Eve",
       "title": "Personal assistant",
-      "status": "idle",
-      "task": "Standing by",
+      "status": "working",
+      "task": "Using Shell",
       "color": "#8a6fd1"
     },
     {
@@ -24,7 +24,7 @@
       "name": "Matt",
       "title": "Coach",
       "status": "working",
-      "task": "Exercise simulation (pipeline test)",
+      "task": "Testing an interval cardio block (sim)",
       "color": "#ee8a3a"
     },
     {
