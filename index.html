@@ -505,8 +505,8 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261006-bal20-livefix';
-var OFFICE_COMMIT='33e48757231529c6a2d133935b6b1dc0c9625516';
+var OFFICE_BUILD='20261006-bal21-livepoll';
+var OFFICE_COMMIT='pending';
 var LIVE_SLOT_SECS=12;var LIVE_PTR_FALLBACK=['https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json'];
 var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam','e86192fb-f95f-40d2-ad1a-21023a9adac2':'neo'};
@@ -566,24 +566,29 @@ function livePoll(){if(!LIVE.wanted)return;
     var s=Math.floor(Date.now()/1000/LIVE_SLOT_SECS), base='https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live/slot-', gbase='https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live/slot-';
     return [base+s+'.json', base+(s-1)+'.json', gbase+s+'.json', gbase+(s-1)+'.json'].concat(LIVE_PTR_FALLBACK);
   }
+  /* bal21: race slot/pointer-pinned SHA + main-tip mirrors; pick newest updatedAt */
+  var tipUrls=[
+    'https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/agents-status.json',
+    'https://cdn.jsdelivr.net/gh/husseinabdelmagid-coder/agents-office@main/agents-status.json',
+    'https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'
+  ];
   Promise.all(livePtrUrls().map(fetchJson)).then(function(ptrs){
     var best=null,bestTs=-1;
     ptrs.forEach(function(p){if(!p||!p.sha)return;var ts=Date.parse(p.updatedAt)||0;if(ts>=bestTs){bestTs=ts;best=p;}});
+    var pinned=Promise.resolve(null);
     if(best&&best.sha){
-      return fetchJson('https://raw.githack.com/husseinabdelmagid-coder/agents-office/'+best.sha+'/agents-status.json')
+      pinned=fetchJson('https://raw.githack.com/husseinabdelmagid-coder/agents-office/'+best.sha+'/agents-status.json')
         .then(function(d){if(d&&Array.isArray(d.agents))return d;
           return fetchJson('https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/'+best.sha+'/agents-status.json');})
         .then(function(d){return d&&Array.isArray(d.agents)?d:null;});
     }
-    return null;
-  }).then(function(pinned){
-    if(pinned){onLive(pinned);return null;}
-    return Promise.all(LIVE_URLS.map(fetchJson)).then(function(rows){
-      var best=null,bestTs=-1;
-      rows.forEach(function(d){if(!d||!Array.isArray(d.agents))return;var ts=Date.parse(d.updatedAt)||0;if(ts>=bestTs){bestTs=ts;best=d;}});
-      if(!best)throw new Error('bad status file');
-      onLive(best);
-    });
+    return Promise.all([pinned, Promise.all(tipUrls.concat(LIVE_URLS).map(fetchJson))]);
+  }).then(function(pair){
+    var rows=[pair[0]].concat(pair[1]||[]);
+    var best=null,bestTs=-1;
+    rows.forEach(function(d){if(!d||!Array.isArray(d.agents))return;var ts=Date.parse(d.updatedAt)||0;if(ts>=bestTs){bestTs=ts;best=d;}});
+    if(!best)throw new Error('bad status file');
+    onLive(best);
   }).catch(function(){onLiveFail('Live status unavailable — retrying');})
     .then(function(){LIVE.busy=false;LIVE.ctrl=null;});
 }
