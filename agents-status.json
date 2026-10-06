@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-06T19:22:09Z",
+  "updatedAt": "2026-10-06T19:22:29Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
-    "isBusy": true,
+    "isBusy": false,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
-    "activeAgentName": "Sam",
+    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
+    "activeAgentName": "Eve",
     "lastBusyAt": "2026-10-06T05:33:19.377000Z",
     "liveFeed": "ok"
   },
@@ -39,8 +39,8 @@
       "id": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
       "name": "Sam",
       "title": "Career advisor",
-      "status": "working",
-      "task": "Handling a live request",
+      "status": "idle",
+      "task": "Standing by",
       "color": "#3f8fcf"
     }
   ]
