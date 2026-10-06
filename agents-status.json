@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T19:48:46Z",
+  "updatedAt": "2026-10-06T19:49:40Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -43,5 +43,6 @@
       "task": "Standing by",
       "color": "#3f8fcf"
     }
-  ]
+  ],
+  "_lagProbe": 1791316180.6512766
 }
