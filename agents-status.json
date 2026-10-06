@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-06T15:09:05Z",
-  "source": "grok-gateway-health",
+  "updatedAt": "2026-10-06T15:19:08Z",
+  "source": "grok-gateway-health+voice-calls",
   "box": {
     "reachable": true,
     "isBusy": false,
