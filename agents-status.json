@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-06T15:45:22Z",
+  "updatedAt": "2026-10-06T15:46:32Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "3a48a61f-5e48-4510-80f4-83a668552dec",
-    "activeAgentName": "El Profesor",
+    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
+    "activeAgentName": "Eve",
     "lastBusyAt": "2026-10-06T05:33:19.377000Z",
     "liveFeed": "ok"
   },
@@ -16,7 +16,7 @@
       "name": "Eve",
       "title": "Personal assistant",
       "status": "working",
-      "task": "Using AwaitShell",
+      "task": "Handling a live request",
       "color": "#8a6fd1"
     },
     {
@@ -31,8 +31,8 @@
       "id": "3a48a61f-5e48-4510-80f4-83a668552dec",
       "name": "El Profesor",
       "title": "Deep researcher",
-      "status": "working",
-      "task": "Handling a live request",
+      "status": "idle",
+      "task": "Standing by",
       "color": "#c9473f"
     },
     {
