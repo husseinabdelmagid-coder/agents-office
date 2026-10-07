@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Headquarters · 20261007-bal32-tipurls-cdn</title>
+<title>Agents Headquarters · 20261007-bal33-real-avatars</title>
 <style>
 :root{--chrome:#1b1c20;--chrome2:#25272c;--ink:#2d2a26;--muted:#857d71;--paper:#f8f5ef;--card:#fff;--line:#e8e1d4}
 *{box-sizing:border-box}
@@ -18,9 +18,9 @@ header{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px
 .dots i:nth-child(1){background:#e2665b}.dots i:nth-child(2){background:#e7b84f}.dots i:nth-child(3){background:#6bbf5f}
 .title{font-weight:700;letter-spacing:.14em;font-size:11px;color:#efece6;white-space:nowrap}
 .title small{font-weight:500;letter-spacing:.04em;color:#8e8a83;margin-left:6px}
-.chips{display:flex;gap:6px;flex:1 1 160px;min-width:160px;justify-content:flex-end;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chip{flex:0 0 auto}
+.chips{display:flex;gap:6px;flex:1 1 160px;min-width:0;justify-content:flex-end;flex-wrap:wrap;row-gap:6px;overflow:visible}.chip{flex:0 0 auto}
 .chip{display:flex;align-items:center;gap:6px;padding:4px 9px 4px 5px;border-radius:7px;background:var(--chrome2);border:1px solid #33353b;cursor:pointer;white-space:nowrap;color:#d6d3cc}
-.chip b{width:16px;height:16px;border-radius:4px;display:block}
+.chip b{width:16px;height:16px;border-radius:4px;display:block;flex:0 0 auto}.chip img.chip-av{width:22px;height:22px;border-radius:50%;object-fit:cover;display:block;flex:0 0 auto;background:#1a1b1f}
 .chip.sel{border-color:#cfc8ba;color:#fff}
 .hbtn{background:var(--chrome2);border:1px solid #33353b;color:#d6d3cc;border-radius:7px;padding:5px 10px;font:inherit;cursor:pointer;white-space:nowrap}
 .hbtn:active{background:#33353b}
@@ -42,7 +42,7 @@ aside h3{margin:2px 0 10px;font-size:11px;letter-spacing:.14em;text-transform:up
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 11px;margin-bottom:9px;cursor:pointer;transition:box-shadow .2s,border-color .2s}
 .card.sel{border-color:#c9bfae;box-shadow:0 3px 12px rgba(80,60,30,.12)}
 .crow{display:flex;align-items:center;gap:9px}
-.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex:0 0 auto}
+.av{width:32px;height:32px;border-radius:50%;object-fit:cover;display:block;flex:0 0 auto;background:#e7e1d6}.cdot{width:10px;height:10px;border-radius:3px;display:block;flex:0 0 auto}
 .nm{font-weight:650;font-size:13.5px}.rl{font-size:11px;color:var(--muted)}
 .st{margin-left:auto;font-size:10px;padding:3px 7px;border-radius:999px;background:#f0ebe1;color:#6e665a;white-space:nowrap}
 .st.walk{background:#fdf0dc;color:#a46a1d}.st.meet{background:#e6effa;color:#3d6aa4}.st.work{background:#e5f3e3;color:#3f7a3a}.st.wait{background:#fbe5e2;color:#a4423d}.st.live_idle{background:#eeeae3;color:#7d766b}
@@ -52,14 +52,14 @@ aside h3{margin:2px 0 10px;font-size:11px;letter-spacing:.14em;text-transform:up
 .feed li{padding:6px 0;border-top:1px solid var(--line);color:#4b463f;line-height:1.35}
 .feed li span{color:var(--muted);font-variant-numeric:tabular-nums;margin-right:6px}
 .note{font-size:10.5px;color:var(--muted);margin-top:14px;line-height:1.45}
-@media (max-width:900px){.chips{flex:1 1 100%;order:5;justify-content:center;min-width:0;padding-top:2px}.chips .chip span{display:none}.title small{display:none}}
+@media (max-width:900px){.chips{flex:1 1 100%;order:5;justify-content:center;min-width:0;padding-top:2px;flex-wrap:wrap;row-gap:6px;overflow:visible}.title small{display:none}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){
   main{flex-direction:column}
   .stage{flex:0 0 60%;min-height:300px}
   aside{flex:1 1 auto;width:auto;border-left:0;border-top:1px solid #000}
   #cards{display:grid;grid-template-columns:1fr 1fr;gap:9px}#cards .card{margin:0}
 }
-@media (max-width:560px){.chips{display:flex;flex:1 1 100%;order:5;justify-content:center;min-width:0}.chips .chip span{display:none}.clock{display:none}#cards{grid-template-columns:1fr}}
+@media (max-width:560px){.chips{display:flex;flex:1 1 100%;order:5;justify-content:center;min-width:0;flex-wrap:wrap;row-gap:6px;overflow:visible}.clock{display:none}#cards{grid-template-columns:1fr}}
 
 #gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#1a1625;color:#f2ebe3;font-family:system-ui,sans-serif}
 #gate .box{background:#2a2438;padding:28px 24px;border-radius:16px;width:min(360px,92vw);box-shadow:0 20px 60px #0008}
@@ -492,11 +492,13 @@ function frame(ts){
 }
 
 /* ---------- UI ---------- */
+var AVATAR={eve:'avatars/eve.png',matt:'avatars/matt.png',prof:'avatars/el-profesor.png',sam:'avatars/sam.png',neo:'avatars/neo.png'};
 var uiInit=false,cardEls={},feedEl=document.getElementById('feed'),feed=[];
 function hhmm(m){m=Math.floor(m)%(24*60);var h=Math.floor(m/60),mm=m%60;return (h<10?'0':'')+h+':'+(mm<10?'0':'')+mm;}
 function buildUI(){var chips=document.getElementById('chips'),cards=document.getElementById('cards');
-  AG.forEach(function(a){var c=document.createElement('div');c.className='chip';c.innerHTML='<b style="background:'+a.color+'"></b><span>'+a.name+'</span>';c.onclick=function(){select(a);};chips.appendChild(c);a.chip=c;
-    var d=document.createElement('div');d.className='card';d.innerHTML='<div class="crow"><div class="av" style="background:'+a.color+'">'+a.name.charAt(0)+(a.id==='prof'?'P':'')+'</div><div><div class="nm">'+a.name+'</div><div class="rl">'+a.role+'</div></div><span class="st"></span></div><div class="task"></div><div class="bar"><i style="background:'+a.color+'"></i></div>';
+  AG.forEach(function(a){var src=AVATAR[a.id]||'';
+    var c=document.createElement('div');c.className='chip';c.innerHTML=(src?'<img class="chip-av" alt="" src="'+src+'">':'')+'<b style="background:'+a.color+'"></b><span>'+a.name+'</span>';c.onclick=function(){select(a);};chips.appendChild(c);a.chip=c;
+    var d=document.createElement('div');d.className='card';d.innerHTML='<div class="crow">'+(src?'<img class="av" alt="" src="'+src+'">':'<div class="av" style="background:'+a.color+'"></div>')+'<i class="cdot" style="background:'+a.color+'"></i><div><div class="nm">'+a.name+'</div><div class="rl">'+a.role+'</div></div><span class="st"></span></div><div class="task"></div><div class="bar"><i style="background:'+a.color+'"></i></div>';
     d.onclick=function(){select(a);};cards.appendChild(d);cardEls[a.id]={el:d,st:d.querySelector('.st'),task:d.querySelector('.task'),bar:d.querySelector('.bar i')};});
   uiInit=true;}
 function updateUI(){document.getElementById('clock').textContent=LIVE.on?nowHM():hhmm(simMin);liveBadge();
@@ -531,8 +533,8 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261007-bal32-tipurls-cdn';
-var OFFICE_COMMIT='2e6d0ca897675de6dd8d075908f8689ef9e32f88';
+var OFFICE_BUILD='20261007-bal33-real-avatars';
+var OFFICE_COMMIT='pending';
 var LIVE_SLOT_SECS=12;var LIVE_PTR_FALLBACK=['https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json'];
 var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam','e86192fb-f95f-40d2-ad1a-21023a9adac2':'neo'};
