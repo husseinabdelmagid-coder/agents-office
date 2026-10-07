@@ -1,15 +1,14 @@
 {
-  "updatedAt": "2026-10-07T17:02:23Z",
+  "updatedAt": "2026-10-07T17:02:53Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": false,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": null,
-    "activeAgentName": null,
-    "lastBusyAt": null,
-    "liveFeed": "ok",
-    "error": "gateway unreachable (TimeoutError)"
+    "activeAgentId": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
+    "activeAgentName": "Neo",
+    "lastBusyAt": "2026-10-06T20:54:51.514000Z",
+    "liveFeed": "ok"
   },
   "agents": [
     {
