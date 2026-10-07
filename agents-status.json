@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-07T16:23:31Z",
+  "updatedAt": "2026-10-07T16:25:51Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
-    "activeAgentName": "Neo",
+    "activeAgentId": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
+    "activeAgentName": "Sam",
     "lastBusyAt": "2026-10-06T20:54:51.514000Z",
     "liveFeed": "ok"
   },
@@ -15,8 +15,8 @@
       "id": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
       "name": "Eve",
       "title": "Personal assistant",
-      "status": "working",
-      "task": "Using AwaitShell",
+      "status": "idle",
+      "task": "Standing by",
       "color": "#8a6fd1"
     },
     {
@@ -47,8 +47,8 @@
       "id": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
       "name": "Neo",
       "title": "Coding Wizard",
-      "status": "working",
-      "task": "Using AwaitShell",
+      "status": "idle",
+      "task": "Standing by",
       "color": "#2a9d8f"
     }
   ]
