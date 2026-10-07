@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-07T16:33:21Z",
+  "updatedAt": "2026-10-07T16:39:38Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -31,8 +31,8 @@
       "id": "3a48a61f-5e48-4510-80f4-83a668552dec",
       "name": "El Profesor",
       "title": "Deep researcher",
-      "status": "working",
-      "task": "Using AwaitShell",
+      "status": "idle",
+      "task": "Standing by",
       "color": "#c9473f"
     },
     {
@@ -48,7 +48,7 @@
       "name": "Neo",
       "title": "Coding Wizard",
       "status": "working",
-      "task": "Handling a live request",
+      "task": "Using CloudAgent",
       "color": "#2a9d8f"
     }
   ]
