@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-07T09:17:17Z",
+  "updatedAt": "2026-10-07T09:17:47Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
-    "isBusy": false,
+    "isBusy": true,
     "busyOnlyAwaitingApproval": false,
     "activeAgentId": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
     "activeAgentName": "Neo",
@@ -47,8 +47,8 @@
       "id": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
       "name": "Neo",
       "title": "Coding Wizard",
-      "status": "idle",
-      "task": "Standing by",
+      "status": "working",
+      "task": "Handling a live request",
       "color": "#2a9d8f"
     }
   ]
