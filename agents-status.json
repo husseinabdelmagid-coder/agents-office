@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-07T16:30:00Z",
+  "updatedAt": "2026-10-07T16:30:50Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "3a48a61f-5e48-4510-80f4-83a668552dec",
-    "activeAgentName": "El Profesor",
+    "activeAgentId": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
+    "activeAgentName": "Neo",
     "lastBusyAt": "2026-10-06T20:54:51.514000Z",
     "liveFeed": "ok"
   },
@@ -47,8 +47,8 @@
       "id": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
       "name": "Neo",
       "title": "Coding Wizard",
-      "status": "idle",
-      "task": "Standing by",
+      "status": "working",
+      "task": "Handling a live request",
       "color": "#2a9d8f"
     }
   ]
