@@ -1,15 +1,14 @@
 {
-  "updatedAt": "2026-10-07T20:44:55Z",
+  "updatedAt": "2026-10-07T20:45:20Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
-    "reachable": false,
+    "reachable": true,
     "isBusy": false,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": null,
-    "activeAgentName": null,
-    "lastBusyAt": null,
-    "liveFeed": "starting",
-    "error": "gateway unreachable (URLError)"
+    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
+    "activeAgentName": "Eve",
+    "lastBusyAt": "2026-10-07T20:44:53.640000Z",
+    "liveFeed": "ok"
   },
   "agents": [
     {
@@ -23,7 +22,7 @@
     {
       "id": "3c92912d-8aa9-439d-b2fb-5282635b30d3",
       "name": "Matt",
-      "title": "Coach",
+      "title": "Fitness Coach",
       "status": "idle",
       "task": "Standing by",
       "color": "#ee8a3a"
