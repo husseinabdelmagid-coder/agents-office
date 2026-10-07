@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Headquarters · 20261007-bal23-ipad-chips</title>
+<title>Agents Headquarters · 20261007-bal25-office-logo</title>
 <style>
 :root{--chrome:#1b1c20;--chrome2:#25272c;--ink:#2d2a26;--muted:#857d71;--paper:#f8f5ef;--card:#fff;--line:#e8e1d4}
 *{box-sizing:border-box}
@@ -29,12 +29,13 @@ header{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px
 .hbtn.on{border-color:#5fae6a;color:#fff;background:#24352a}
 .gate-build{margin-top:14px;padding:8px 10px;border-radius:8px;border:1px solid #564a6e;background:#1a1625;color:#b8a9d6;font-size:12px;font-variant-numeric:tabular-nums;text-align:center;letter-spacing:.02em}
 .corner-build{position:fixed;left:10px;bottom:10px;z-index:50;padding:6px 10px;border-radius:8px;border:1px solid #3d9cff;background:#0d2a44cc;color:#7fd0ff;font:600 11px/1.2 system-ui,sans-serif;font-variant-numeric:tabular-nums;pointer-events:none;backdrop-filter:blur(4px)}
+.office-logo{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1;width:min(292px,72%);height:auto;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5));user-select:none}
 main{flex:1;display:flex;min-height:0}
 .stage{flex:1;position:relative;min-width:0;background:radial-gradient(ellipse at 50% 45%,#24252a 0%,#141518 70%)}
 .tools{position:absolute;left:8px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:2}
 .tools span{width:26px;height:26px;border-radius:6px;background:#22242a;border:1px solid #31333a;display:flex;align-items:center;justify-content:center;color:#a9a59d;font-size:13px}
 canvas#c{position:absolute;left:0;top:0;width:100%;height:100%;display:block;touch-action:manipulation;cursor:default}
-.toast{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:rgba(24,25,29,.92);border:1px solid #34363c;color:#e9e6df;border-radius:999px;padding:7px 16px 7px 8px;font-size:12px;max-width:92%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .35s}
+.toast{position:absolute;z-index:3;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:rgba(24,25,29,.92);border:1px solid #34363c;color:#e9e6df;border-radius:999px;padding:7px 16px 7px 8px;font-size:12px;max-width:92%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .35s}
 .toast b{width:20px;height:20px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff}
 .toast em{font-style:normal;color:#9c978e;font-size:10px;display:block;letter-spacing:.06em;text-transform:uppercase}
 aside{flex:0 0 300px;width:300px;background:var(--paper);border-left:1px solid #000;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 20px}
@@ -97,6 +98,47 @@ body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
 <main>
   <div class="stage" id="stage">
     <canvas id="c"></canvas>
+    <svg class="office-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" role="img" aria-label="The Office">
+      <rect x="2" y="2" width="756" height="296" rx="36" fill="#ffffff"/>
+      <rect x="13" y="13" width="734" height="274" rx="27" fill="#000000"/>
+      <path fill="#ffffff" d="M70.4208984375 67.6337890625V108.0H60.337890625V67.6337890625H44.7861328125V59.8408203125H86.0068359375V67.6337890625ZM100.7142578125 78.400390625Q102.6625 74.162109375 105.601953125 72.248046875Q108.54140625 70.333984375 112.6087890625 70.333984375Q118.4876953125 70.333984375 121.6322265625 73.95703125Q124.7767578125 77.580078125 124.7767578125 84.552734375V108.0H115.2064453125V87.287109375Q115.2064453125 77.5458984375 108.609765625 77.5458984375Q105.1234375 77.5458984375 102.98720703125 80.53662109375Q100.8509765625 83.52734375 100.8509765625 88.2099609375V108.0H91.246484375V57.27734375H100.8509765625V71.1201171875Q100.8509765625 74.845703125 100.5775390625 78.400390625ZM148.746875 108.68359375Q140.40703125 108.68359375 135.9294921875 103.74462890625Q131.451953125 98.8056640625 131.451953125 89.337890625Q131.451953125 80.177734375 135.9978515625 75.255859375Q140.54375 70.333984375 148.88359375 70.333984375Q156.8474609375 70.333984375 161.0515625 75.61474609375Q165.2556640625 80.8955078125 165.2556640625 91.0810546875V91.3544921875H141.5349609375Q141.5349609375 96.7548828125 143.53447265625 99.50634765625Q145.533984375 102.2578125 149.225390625 102.2578125Q154.3181640625 102.2578125 155.651171875 97.8486328125L164.7087890625 98.634765625Q160.778125 108.68359375 148.746875 108.68359375ZM148.746875 76.3837890625Q145.3630859375 76.3837890625 143.53447265625 78.7421875Q141.705859375 81.1005859375 141.6033203125 85.3388671875H155.9587890625Q155.6853515625 80.861328125 153.80546875 78.62255859375Q151.9255859375 76.3837890625 148.746875 76.3837890625Z"/>
+      <path fill="#ffffff" d="M148.904296875 178.619140625Q148.904296875 194.517578125 142.6171875 206.5859375Q136.330078125 218.654296875 124.623046875 225.0498046875Q112.916015625 231.4453125 97.306640625 231.4453125Q73.314453125 231.4453125 59.6923828125 217.3173828125Q46.0703125 203.189453125 46.0703125 178.619140625Q46.0703125 154.12109375 59.65625 140.390625Q73.2421875 126.66015625 97.451171875 126.66015625Q121.66015625 126.66015625 135.2822265625 140.53515625Q148.904296875 154.41015625 148.904296875 178.619140625ZM127.15234375 178.619140625Q127.15234375 162.142578125 119.34765625 152.7841796875Q111.54296875 143.42578125 97.451171875 143.42578125Q83.142578125 143.42578125 75.337890625 152.7119140625Q67.533203125 161.998046875 67.533203125 178.619140625Q67.533203125 195.384765625 75.5185546875 205.0322265625Q83.50390625 214.6796875 97.306640625 214.6796875Q111.615234375 214.6796875 119.3837890625 205.28515625Q127.15234375 195.890625 127.15234375 178.619140625ZM187.70078125 165.5390625V230.0H167.46640625V165.5390625H156.0484375V151.80859375H167.46640625V143.642578125Q167.46640625 133.01953125 173.103125 127.888671875Q178.73984375 122.7578125 190.230078125 122.7578125Q195.9390625 122.7578125 203.093359375 123.9140625V136.994140625Q200.13046875 136.34375 197.167578125 136.34375Q191.964453125 136.34375 189.8326171875 138.4033203125Q187.70078125 140.462890625 187.70078125 145.666015625V151.80859375H203.093359375V165.5390625ZM235.3859375 165.5390625V230.0H215.1515625V165.5390625H203.73359375V151.80859375H215.1515625V143.642578125Q215.1515625 133.01953125 220.78828125 127.888671875Q226.425 122.7578125 237.915234375 122.7578125Q243.62421875 122.7578125 250.778515625 123.9140625V136.994140625Q247.815625 136.34375 244.852734375 136.34375Q239.649609375 136.34375 237.5177734375 138.4033203125Q235.3859375 140.462890625 235.3859375 145.666015625V151.80859375H250.778515625V165.5390625ZM259.22343750000005 230.0V151.80859375H279.53007812500005V230.0ZM259.22343750000005 137.716796875V122.7578125H279.53007812500005V137.716796875ZM331.334375 231.4453125Q313.55703125 231.4453125 303.8734375 220.8583984375Q294.18984375 210.271484375 294.18984375 191.337890625Q294.18984375 171.970703125 303.945703125 161.1669921875Q313.7015625 150.36328125 331.6234375 150.36328125Q345.426171875 150.36328125 354.459375 157.30078125Q363.492578125 164.23828125 365.805078125 176.451171875L345.35390625 177.462890625Q344.48671875 171.46484375 341.01796875 167.8876953125Q337.54921875 164.310546875 331.18984375 164.310546875Q315.508203125 164.310546875 315.508203125 190.54296875Q315.508203125 217.5703125 331.47890625 217.5703125Q337.26015625 217.5703125 341.1625 213.9208984375Q345.06484375 210.271484375 346.004296875 203.044921875L366.383203125 203.984375Q365.29921875 212.005859375 360.6380859375 218.29296875Q355.976953125 224.580078125 348.3890625 228.0126953125Q340.801171875 231.4453125 331.334375 231.4453125ZM411.466796875 231.4453125Q393.833984375 231.4453125 384.3671875 221.0029296875Q374.900390625 210.560546875 374.900390625 190.54296875Q374.900390625 171.17578125 384.51171875 160.76953125Q394.123046875 150.36328125 411.755859375 150.36328125Q428.59375 150.36328125 437.482421875 161.5283203125Q446.37109375 172.693359375 446.37109375 194.228515625V194.806640625H396.21875Q396.21875 206.224609375 400.4462890625 212.0419921875Q404.673828125 217.859375 412.478515625 217.859375Q423.24609375 217.859375 426.064453125 208.537109375L445.21484375 210.19921875Q436.904296875 231.4453125 411.466796875 231.4453125ZM411.466796875 163.154296875Q404.3125 163.154296875 400.4462890625 168.140625Q396.580078125 173.126953125 396.36328125 182.087890625H426.71484375Q426.13671875 172.62109375 422.162109375 167.8876953125Q418.1875 163.154296875 411.466796875 163.154296875Z"/>
+      <rect x="468" y="26" width="262" height="248" rx="22" fill="none" stroke="#ffffff" stroke-width="8"/>
+      <g fill="#ffffff" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" transform="translate(468,26)">
+        <circle cx="96" cy="42" r="17" stroke="none"/>
+        <path stroke="none" d="
+          M68 70
+          h52
+          a9 9 0 0 1 9 9
+          v34
+          h-8
+          v86
+          h-18
+          v-58
+          h-10
+          v58
+          h-18
+          v-86
+          h-8
+          v-34
+          a9 9 0 0 1 9-9
+          z"/>
+        <rect x="16" y="104" width="36" height="32" rx="3" stroke="none"/>
+        <path d="M24 104 v-8 h20 v8" fill="none" stroke-width="5"/>
+        <path d="M68 96 L46 118" fill="none" stroke-width="12"/>
+        <rect x="132" y="138" width="64" height="10" rx="2" stroke="none"/>
+        <rect x="140" y="138" width="10" height="64" rx="2" stroke="none"/>
+        <rect x="230" y="86" width="12" height="74" rx="3" stroke="none"/>
+        <rect x="176" y="152" width="66" height="10" rx="2" stroke="none"/>
+        <rect x="186" y="152" width="10" height="54" rx="2" stroke="none"/>
+        <rect x="222" y="152" width="10" height="54" rx="2" stroke="none"/>
+        <circle cx="198" cy="70" r="15" stroke="none"/>
+        <rect x="182" y="88" width="32" height="52" rx="10" stroke="none"/>
+        <rect x="146" y="124" width="48" height="11" rx="5.5" stroke="none"/>
+        <rect x="150" y="146" width="40" height="12" rx="5" stroke="none"/>
+        <rect x="146" y="154" width="12" height="42" rx="5" stroke="none"/>
+      </g>
+    </svg>
     <div class="tools"><span>⌂</span><span>✥</span><span>◎</span></div>
     <div class="toast" id="toast"><b id="tDot">E</b><div><em id="tWho">Eve</em><span id="tTxt">Opening the office…</span></div></div>
   </div>
@@ -505,8 +547,8 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261007-bal23-ipad-chips';
-var OFFICE_COMMIT='2f82516afeff17f3fd4cf26afb43e1c0c1fad9fb';
+var OFFICE_BUILD='20261007-bal25-office-logo';
+var OFFICE_COMMIT='pending';
 var LIVE_SLOT_SECS=12;var LIVE_PTR_FALLBACK=['https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json'];
 var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
 var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam','e86192fb-f95f-40d2-ad1a-21023a9adac2':'neo'};
