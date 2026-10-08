@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T04:57:23Z",
+  "updatedAt": "2026-10-08T04:57:48Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -16,7 +16,7 @@
       "name": "Eve",
       "title": "Personal assistant",
       "status": "working",
-      "task": "Using WebSearch",
+      "task": "Handling a live request",
       "color": "#8a6fd1"
     },
     {
