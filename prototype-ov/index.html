@@ -266,6 +266,7 @@
   <button class="hbtn" id="bMinutes" type="button">Minutes</button>
   <button class="hbtn" id="bApprovals" type="button">Approvals</button>
   <button class="hbtn" id="bRoutines" type="button">Routines</button>
+  <button class="hbtn" id="bTogether" type="button" aria-pressed="false" title="Demo: gather the office in the west meeting room as if everyone shares one task. Turning it off sends idle agents back to the gaming room.">Together</button>
   <button class="hbtn" id="bNight" type="button" aria-pressed="false">Night</button>
   <button class="hbtn" id="bWalk" type="button" aria-pressed="false">Walk in</button>
 </header>
@@ -311,7 +312,7 @@
     <div class="faces" id="minuteFaces"></div>
     <div class="decision"><b>Decision</b>Keep this Officeverse-style view on /prototype-ov/ so the Live office stays the current Pages home.</div>
     <div class="decision"><b>Action</b>Eve drafts the weekly brief. Matt logs the training block. El Profesor files the research note. Sam updates the pipeline. Neo watches the Pages publish.</div>
-    <p class="note">Example only. Either wooden meeting table opens this card. Agents are not actually in a meeting.</p>
+    <p class="note">Example only. Either meeting table opens this card. Working agents who share one task sit together in the west room. Idle agents stay in the gaming room unless the Together demo is on.</p>
     <div class="rowbtns"><button class="deny" type="button" data-close>Close</button></div>
   </article>
 
@@ -357,7 +358,7 @@
 <script>
 (function () {
   'use strict';
-  var BUILD = '20261014-ov2';
+  var BUILD = '20261014-ov3';
   var AGENTS = [
     {id:'eve', name:'Eve', role:'Personal assistant', color:'#8a6fd1', shirt:'#8a6fd1', pants:'#3f4250', hair:'#3b2a22', skin:'#f1c8a5', style:'bun', avatar:'../avatars/eve.png', uuid:'e0d3f0e6-e6a5-4b4d-a002-87befa812360'},
     {id:'matt', name:'Matt', role:'Fitness coach', color:'#ee8a3a', shirt:'#ee8a3a', pants:'#2f3440', hair:'#2a1d16', skin:'#d8a27c', style:'short', avatar:'../avatars/matt.png', uuid:'3c92912d-8aa9-439d-b2fb-5282635b30d3'},
@@ -394,16 +395,31 @@
     sam:  {id:'sam-desk', kind:'desk', x:-6.35, z:1.45, yaw:0, sit:true, out:[{x:-7.15,z:1.45},{x:-7.85,z:1.45},{x:-7.85,z:SOUTH}]},
     neo:  {id:'neo-desk', kind:'desk', x:-3.55, z:0.25, yaw:0, sit:true, out:[{x:-2.75,z:0.25},{x:-2.4,z:0.25},{x:-2.4,z:SOUTH}]}
   };
+  function meetOut(pts) {
+    return pts.concat([
+      {x:-9.4, z:-5.45},
+      {x:-9.4, z:-4.7},
+      {x:-7.85, z:-4.7},
+      {x:-7.85, z:SOUTH}
+    ]);
+  }
+  var meetSpots = [
+    {id:'meetN1', kind:'meet', x:-10.0, z:-7.67, yaw:0, sit:true, out:meetOut([{x:-11.25,z:-7.67},{x:-11.25,z:-5.5}])},
+    {id:'meetN2', kind:'meet', x:-8.8, z:-7.67, yaw:0, sit:true, out:meetOut([{x:-7.55,z:-7.67},{x:-7.55,z:-5.5}])},
+    {id:'meetS1', kind:'meet', x:-10.0, z:-6.23, yaw:Math.PI, sit:true, out:meetOut([{x:-10.0,z:-5.5}])},
+    {id:'meetS2', kind:'meet', x:-8.8, z:-6.23, yaw:Math.PI, sit:true, out:meetOut([{x:-8.8,z:-5.5}])},
+    {id:'meetW', kind:'meet', x:-10.8, z:-6.95, yaw:Math.PI / 2, sit:true, out:meetOut([{x:-11.25,z:-6.95},{x:-11.25,z:-5.5}])}
+  ];
   var gameSpots = [
-    {id:'beanL', kind:'game', x:6.2, z:7.05, yaw:0.35, sit:true, out:[{x:6.2,z:5.05},{x:6.4,z:5.05},{x:6.4,z:SOUTH}]},
-    {id:'beanR', kind:'game', x:8.15, z:7.25, yaw:-0.15, sit:true, out:[{x:8.15,z:5.15},{x:6.4,z:5.15},{x:6.4,z:SOUTH}]},
-    {id:'arcadeA', kind:'game', x:10.05, z:5.45, yaw:Math.PI / 2, sit:false, out:[{x:8.7,z:5.45},{x:6.4,z:5.45},{x:6.4,z:SOUTH}]},
-    {id:'arcadeB', kind:'game', x:10.05, z:6.95, yaw:Math.PI / 2, sit:false, out:[{x:8.7,z:6.95},{x:8.7,z:5.15},{x:6.4,z:5.15},{x:6.4,z:SOUTH}]},
-    {id:'pong', kind:'game', x:4.3, z:6.35, yaw:0, sit:false, out:[{x:5.6,z:6.35},{x:6.4,z:5.2},{x:6.4,z:SOUTH}]}
+    {id:'beanL', kind:'game', x:5.6, z:8.2, yaw:0.5, sit:true, out:[{x:5.6,z:5.1},{x:6.4,z:5.1},{x:6.4,z:SOUTH}]},
+    {id:'beanR', kind:'game', x:9.45, z:8.15, yaw:-0.3, sit:true, out:[{x:9.45,z:5.15},{x:6.4,z:5.15},{x:6.4,z:SOUTH}]},
+    {id:'arcadeA', kind:'game', x:9.9, z:5.5, yaw:Math.PI / 2, sit:false, out:[{x:8.3,z:5.5},{x:6.4,z:5.5},{x:6.4,z:SOUTH}]},
+    {id:'arcadeB', kind:'game', x:9.9, z:6.7, yaw:Math.PI / 2, sit:false, out:[{x:9.9,z:5.5},{x:6.4,z:5.5},{x:6.4,z:SOUTH}]},
+    {id:'foos', kind:'game', x:4.15, z:6.15, yaw:0, sit:false, out:[{x:5.35,z:6.15},{x:6.4,z:6.15},{x:6.4,z:SOUTH}]}
   ];
 
   var scene, camera, renderer, sun, hemi, ambient, fill;
-  var night = false, walkMode = false;
+  var night = false, walkMode = false, togetherForced = false;
   var yaw = 0.62, pitch = 0.78, dist = 26;
   var camTarget = null;
   var colliders = [];
@@ -535,9 +551,9 @@
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     scene.add(floor);
-    addBox(8.6, 0.02, 4.6, 7.4, 0.01, 6.7, std('#c9b48a', 0.96), {cast:false, col:false});
+    addBox(8.4, 0.02, 4.0, 7.25, 0.01, 6.55, std('#c9b48a', 0.96), {cast:false, col:false});
     addBox(8.2, 0.02, 3.6, -6.6, 0.01, 0.35, std('#d8c6a4', 0.96), {cast:false});
-    addBox(2.7, 0.025, 1.9, 10.55, 0.015, -7.95, std('#2c3138', 0.72), {cast:false});
+    addBox(10.0, 0.025, 4.05, 6.4, 0.015, -6.5, std('#2c3138', 0.72), {cast:false});
 
     var wall = std('#f3f2ee', 0.9);
     var wallTop = std('#cdd0d4', 0.7);
@@ -559,7 +575,7 @@
     wallZ(12, -9, 9);
 
     var glass = new THREE.MeshStandardMaterial({
-      color: 0xf4efe6, transparent: true, opacity: 0.2, roughness: 0.08, metalness: 0.04,
+      color: 0xf4efe6, transparent: true, opacity: 0.16, roughness: 0.08, metalness: 0.04,
       depthWrite: false, side: THREE.DoubleSide
     });
     var frame = std('#3a3e45', 0.45);
@@ -577,17 +593,31 @@
       addBox(0.08, 2.3, 0.06, x, 1.15, z1, frame, {cast:false});
       addBox(0.08, 0.06, z1 - z0, x, 2.25, (z0 + z1) / 2, frame, {cast:false});
     }
-    [[-12, -8.0], [-6.2, 0], [0.15, 3.4], [5.2, 9.15]].forEach(function (s) { glassRunX(-3.4, s[0], s[1]); });
-    glassRunZ(0, -9, -3.4);
-    glassRunZ(9.15, -6.9, -3.4);
+    var meetRooms = [
+      {x0:-11.8, x1:-7.0, z0:-8.75, z1:-5.15, door0:-10.15, door1:-8.65},
+      {x0:-6.6, x1:-1.8, z0:-8.75, z1:-5.15, door0:-4.95, door1:-3.45}
+    ];
+    meetRooms.forEach(function (r) {
+      glassRunX(r.z0, r.x0, r.x1);
+      glassRunX(r.z1, r.x0, r.door0);
+      glassRunX(r.z1, r.door1, r.x1);
+      glassRunZ(r.x0, r.z0, r.z1);
+      glassRunZ(r.x1, r.z0, r.z1);
+    });
 
-    wallZ(9.15, -9, -6.9);
-    wallX(-6.9, 9.15, 10.15);
-    wallX(-6.9, 11.35, 12);
+    var sx0 = 1.2, sx1 = 11.6, sz0 = -8.7, sz1 = -4.3;
+    glassRunX(sz0, sx0, sx1);
+    glassRunX(sz1, sx0, 5.6);
+    glassRunX(sz1, 7.2, sx1);
+    glassRunZ(sx0, sz0, sz1);
+    glassRunZ(sx1, sz0, sz1);
 
-    wallZ(2.6, 4.25, 9);
-    wallX(4.25, 2.6, 5.6);
-    wallX(4.25, 7.2, 12);
+    var gx0 = 2.8, gx1 = 11.7, gz0 = 4.35, gz1 = 8.7;
+    glassRunX(gz0, gx0, 5.6);
+    glassRunX(gz0, 7.2, gx1);
+    glassRunX(gz1, gx0, gx1);
+    glassRunZ(gx0, gz0, gz1);
+    glassRunZ(gx1, gz0, gz1);
 
     var wood = std('#b07f55', 0.55);
     var woodTop = std('#c4946a', 0.5);
@@ -605,7 +635,7 @@
       ball.castShadow = true;
       scene.add(ball);
     }
-    [[-11.15, -8.15], [-11.15, 8.05], [3.2, -1.35], [10.6, -5.05], [1.15, 6.4], [8.3, -7.7]].forEach(function (p, i) {
+    [[-11.45, -4.35], [-0.2, -6.6], [1.15, 2.4], [-11.2, 8.05], [0.9, 7.2]].forEach(function (p, i) {
       plant(p[0], p[1], i % 2 ? 0.9 : 1.1);
     });
 
@@ -660,25 +690,34 @@
       desk(s.x, s.z, a.id);
     });
 
-    function meetTable(x, z) {
+    function meetChair(x, z, face) {
+      addBox(0.4, 0.07, 0.4, x, 0.46, z, chairC);
+      if (face === 's') addBox(0.4, 0.34, 0.07, x, 0.68, z - 0.2, chairC);
+      else if (face === 'n') addBox(0.4, 0.34, 0.07, x, 0.68, z + 0.2, chairC);
+      else if (face === 'e') addBox(0.07, 0.34, 0.4, x - 0.2, 0.68, z, chairC);
+      else addBox(0.07, 0.34, 0.4, x + 0.2, 0.68, z, chairC);
+    }
+    function meetTable(x, z, northZ) {
       var tableHit = {kind:'meeting'};
-      addBox(3.2, 0.08, 1.2, x, 0.74, z, woodTop, {col:true, hit:tableHit});
-      [[-1.2, -0.55], [1.2, -0.55], [-1.2, 0.55], [1.2, 0.55], [0, -0.72], [0, 0.72]].forEach(function (c) {
-        addBox(0.42, 0.08, 0.42, x + c[0], 0.46, z + c[1], chairC);
-        addBox(0.42, 0.32, 0.07, x + c[0], 0.66, z + c[1] - 0.16, chairC);
-      });
+      addBox(1.9, 0.08, 0.8, x, 0.74, z, woodTop, {col:true, hit:tableHit});
+      meetChair(x - 0.6, z - 0.72, 's');
+      meetChair(x + 0.6, z - 0.72, 's');
+      meetChair(x - 0.6, z + 0.72, 'n');
+      meetChair(x + 0.6, z + 0.72, 'n');
+      meetChair(x - 1.4, z, 'e');
+      meetChair(x + 1.4, z, 'w');
       var chart = chartTex();
       var chartMat = new THREE.MeshStandardMaterial({map:chart, emissive:0xffffff, emissiveMap:chart, emissiveIntensity:0.35, roughness:0.4});
       screens.push(chartMat);
-      addBox(1.4, 0.8, 0.06, x, 1.5, -8.8, black, {hit:tableHit});
-      addBox(1.26, 0.66, 0.02, x, 1.5, -8.76, chartMat, {cast:false, hit:tableHit});
-      var meetLight = new THREE.PointLight(0xffb36b, 0, 6.5, 2);
-      meetLight.position.set(x, 2.15, z);
+      addBox(1.15, 0.62, 0.05, x, 1.45, northZ + 0.16, black, {hit:tableHit});
+      addBox(1.02, 0.5, 0.02, x, 1.45, northZ + 0.2, chartMat, {cast:false, hit:tableHit});
+      var meetLight = new THREE.PointLight(0xffb36b, 0, 5.5, 2);
+      meetLight.position.set(x, 2.1, z);
       scene.add(meetLight);
       warmLights.push(meetLight);
     }
-    meetTable(-6.1, -6.15);
-    meetTable(4.55, -6.2);
+    meetTable(-9.4, -6.95, -8.75);
+    meetTable(-4.2, -6.95, -8.75);
 
     function rack(x, z) {
       var shell = new THREE.MeshStandardMaterial({color:0x2e333a, roughness:0.42, metalness:0.55});
@@ -689,7 +728,7 @@
       for (var r = 0; r < 7; r++) {
         for (var c = 0; c < 2; c++) {
           var col = cols[(r + c) % 2];
-          var mat = new THREE.MeshStandardMaterial({color:col, emissive:col, emissiveIntensity:0.8, roughness:0.3});
+          var mat = new THREE.MeshStandardMaterial({color:col, emissive:col, emissiveIntensity:0.9, roughness:0.3});
           var led = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.028, 0.018), mat);
           led.position.set(x - 0.16 + c * 0.32, 0.32 + r * 0.22, z + 0.205);
           scene.add(led);
@@ -697,11 +736,9 @@
         }
       }
     }
-    rack(9.95, -8.48);
-    rack(10.7, -8.48);
-    rack(11.45, -8.48);
-    var rackLight = new THREE.PointLight(0x7ec8ff, 0.45, 3.4, 2);
-    rackLight.position.set(10.7, 1.55, -7.55);
+    [2.4, 4.0, 5.6, 7.2, 8.8, 10.4].forEach(function (x) { rack(x, -6.55); });
+    var rackLight = new THREE.PointLight(0x7ec8ff, 0.7, 9, 2);
+    rackLight.position.set(6.4, 1.8, -6.2);
     scene.add(rackLight);
 
     function bean(x, z, color) {
@@ -713,8 +750,8 @@
       scene.add(m);
       colliders.push({minX:x - 0.32, maxX:x + 0.32, minZ:z - 0.32, maxZ:z + 0.32});
     }
-    bean(6.2, 7.05, '#5b85c4');
-    bean(8.15, 7.25, '#c47a4a');
+    bean(5.6, 8.2, '#5b85c4');
+    bean(9.45, 8.15, '#c47a4a');
 
     function arcade(x, z) {
       var cab = new THREE.MeshStandardMaterial({color:0x2a2d33, roughness:0.48, metalness:0.28});
@@ -729,30 +766,47 @@
       scene.add(scr);
       addBox(0.22, 0.05, 0.4, x - 0.32, 0.7, z, black);
     }
-    arcade(11.15, 5.45);
-    arcade(11.15, 6.95);
+    arcade(10.85, 5.5);
+    arcade(10.85, 6.7);
 
-    var blue = std('#3d7ea6', 0.45);
-    addBox(1.3, 0.06, 1.85, 4.3, 0.74, 7.6, blue, {col:true});
-    addBox(1.3, 0.012, 0.02, 4.3, 0.78, 7.6, std('#f7f6f2', 0.4));
-    addBox(1.28, 0.12, 0.02, 4.3, 0.86, 7.6, std('#f7f6f2', 0.5));
-    [[3.8, 6.85], [4.8, 6.85], [3.8, 8.35], [4.8, 8.35]].forEach(function (p) {
-      addBox(0.06, 0.7, 0.06, p[0], 0.36, p[1], black);
-    });
+    function foosball(x, z) {
+      var pitch = std('#3f8f45', 0.5);
+      addBox(1.5, 0.08, 0.74, x, 0.78, z, pitch, {col:true});
+      addBox(1.56, 0.1, 0.07, x, 0.88, z - 0.38, woodDark);
+      addBox(1.56, 0.1, 0.07, x, 0.88, z + 0.38, woodDark);
+      addBox(0.07, 0.1, 0.74, x - 0.76, 0.88, z, woodDark);
+      addBox(0.07, 0.1, 0.74, x + 0.76, 0.88, z, woodDark);
+      [[-0.64, -0.28], [0.64, -0.28], [-0.64, 0.28], [0.64, 0.28]].forEach(function (p) {
+        addBox(0.06, 0.74, 0.06, x + p[0], 0.37, z + p[1], black);
+      });
+      [-0.42, -0.14, 0.14, 0.42].forEach(function (dx, i) {
+        var rod = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.86, 8), black);
+        rod.rotation.x = Math.PI / 2;
+        rod.position.set(x + dx, 0.98, z);
+        rod.castShadow = true;
+        scene.add(rod);
+        var team = std(i < 2 ? '#c9473f' : '#3f8fcf', 0.5);
+        [-0.18, 0.16].forEach(function (dz) {
+          addBox(0.05, 0.1, 0.07, x + dx, 0.98, z + dz, team, {cast:true});
+        });
+      });
+    }
+    foosball(4.15, 7.15);
+    foosball(7.85, 7.05);
 
-    addBox(1.25, 0.08, 0.36, 9.05, 0.42, 8.55, wood, {col:true});
-    addBox(1.15, 0.66, 0.06, 9.05, 0.95, 8.48, black);
+    addBox(1.2, 0.08, 0.34, 8.35, 0.42, 8.28, wood, {col:true});
+    addBox(1.1, 0.62, 0.06, 8.35, 0.92, 8.18, black);
     var tv = screenTex('#ffd7a8');
     var tvMat = new THREE.MeshStandardMaterial({map:tv, emissive:0xffffff, emissiveMap:tv, emissiveIntensity:0.4, roughness:0.4});
     screens.push(tvMat);
-    var tvScreen = new THREE.Mesh(new THREE.PlaneGeometry(1.02, 0.54), tvMat);
-    tvScreen.position.set(9.05, 0.95, 8.44);
+    var tvScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.98, 0.5), tvMat);
+    tvScreen.position.set(8.35, 0.92, 8.14);
     tvScreen.rotation.y = Math.PI;
     scene.add(tvScreen);
-    addBox(0.5, 0.1, 0.26, 9.05, 0.1, 8.05, black, {col:true});
+    addBox(0.48, 0.1, 0.24, 8.35, 0.1, 8.0, black, {col:false});
 
     var gameLight = new THREE.PointLight(0xffc089, 0, 8, 2);
-    gameLight.position.set(7.4, 2.2, 6.8);
+    gameLight.position.set(7.2, 2.2, 6.7);
     scene.add(gameLight);
     warmLights.push(gameLight);
 
@@ -761,12 +815,13 @@
       if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
       tex.anisotropy = 4;
       var aspect = (tex.image && tex.image.height) ? tex.image.width / tex.image.height : 2.5;
-      var h = 0.95;
-      var w = Math.min(2.7, h * aspect);
+      var h = 0.9;
+      var w = Math.min(2.2, h * aspect);
       h = w / aspect;
       var mat = new THREE.MeshBasicMaterial({map:tex, transparent:true});
       var mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
-      mesh.position.set(9.7, 1.7, 4.36);
+      mesh.position.set(-11.78, 1.55, 0.2);
+      mesh.rotation.y = Math.PI / 2;
       scene.add(mesh);
     });
   }
@@ -923,7 +978,7 @@
     while (agent.path.length && Math.hypot(agent.path[0].x - agent.pos.x, agent.path[0].z - agent.pos.z) < 0.08) agent.path.shift();
     agent.dest = spot;
     agent.mode = agent.path.length ? 'walk' : (spot.sit ? 'sit' : 'stand');
-    agent.walkLabel = spot.kind === 'game' ? 'Walking to the gaming room' : 'Heading to desk';
+    agent.walkLabel = spot.kind === 'game' ? 'Walking to the gaming room' : spot.kind === 'meet' ? 'Walking to the meeting' : 'Heading to desk';
     if (!agent.path.length) arrive(agent);
   }
   function arrive(agent) {
@@ -946,7 +1001,43 @@
     var ix = Math.max(0, agents.indexOf(agent));
     return pool[ix % pool.length];
   }
+  function taskKey(agent) {
+    var t = String(agent.task || '').trim().toLowerCase();
+    if (!t || t === 'standing by' || t === 'connecting…') return '';
+    return t;
+  }
+  function collabReason() {
+    if (togetherForced) return {on:true, why:'demo'};
+    var working = agents.filter(function (a) { return a.status === 'working'; });
+    if (working.length < 2) return {on:false, why:''};
+    var key = taskKey(working[0]);
+    if (!key) return {on:false, why:''};
+    var same = working.every(function (a) { return taskKey(a) === key; });
+    return same ? {on:true, why:'live', task:working[0].task} : {on:false, why:''};
+  }
+  function wantsMeet(agent) {
+    if (togetherForced) return true;
+    if (agent.status !== 'working') return false;
+    var working = agents.filter(function (a) { return a.status === 'working'; });
+    if (working.length < 2) return false;
+    var key = taskKey(working[0]);
+    if (!key) return false;
+    return working.every(function (a) { return taskKey(a) === key; });
+  }
+  function meetingSeat(agent) {
+    var ids = [];
+    agents.forEach(function (a) { if (wantsMeet(a)) ids.push(a.id); });
+    var i = ids.indexOf(agent.id);
+    if (i < 0) i = 0;
+    return meetSpots[i % meetSpots.length];
+  }
   function retarget(agent) {
+    if (wantsMeet(agent)) {
+      var seat = meetingSeat(agent);
+      if (agent.dest && agent.dest.id === seat.id && (agent.mode === 'walk' || (agent.spot && agent.spot.id === seat.id))) return;
+      go(agent, seat);
+      return;
+    }
     if (agent.status === 'idle') {
       if (agent.departAt && performance.now() < agent.departAt) return;
       if (agent.dest && agent.dest.kind === 'game' && (agent.mode === 'walk' || (agent.spot && agent.spot.kind === 'game'))) return;
@@ -960,6 +1051,7 @@
     if (a.mode === 'walk') return a.walkLabel || 'Walking';
     if (a.status === 'working') return (a.task && a.task !== 'Standing by') ? a.task : 'Typing';
     if (a.status === 'awaiting_approval') return a.task && a.task !== 'Standing by' ? a.task : 'Needs approval';
+    if (a.spot && a.spot.kind === 'meet') return (a.task && a.task !== 'Standing by') ? a.task : 'In the meeting';
     if (a.spot && a.spot.kind === 'game') return (a.task && a.task !== 'Standing by') ? a.task : 'In the gaming room';
     if (a.status === 'unknown') return 'Connecting…';
     return a.task || 'Standing by';
@@ -1148,7 +1240,6 @@
         a.log.unshift({t: Date.now(), status: raw, task: task});
         a.log = a.log.slice(0, 40);
       }
-      retarget(a);
     });
     agents.forEach(function (a) {
       if (seen[a.id]) return;
@@ -1157,8 +1248,8 @@
       }
       a.status = 'idle';
       a.task = 'Standing by';
-      retarget(a);
     });
+    agents.forEach(retarget);
     paintLive();
     if (selected) paintPanel();
   }
@@ -1184,11 +1275,26 @@
     var boxLine = LIVE.data
       ? ('Box ' + (bx.reachable === false ? 'gateway unreachable' : bx.isBusy ? (bx.busyOnlyAwaitingApproval ? 'waiting on approval' : 'busy') : 'idle') + '. ')
       : '';
-    $('liveDetail').textContent = boxLine +
+    var collab = collabReason();
+    var collabLine = collab.on
+      ? (collab.why === 'demo'
+        ? 'Together demo is on: the office is gathered in the west meeting room. '
+        : 'Shared task: working agents are together in the west meeting room. ')
+      : '';
+    $('liveDetail').textContent = boxLine + collabLine +
       'Sources: raw.githack and raw.githubusercontent agents-status.json, live-pointer, and live/slot on main. No jsDelivr. ' +
       (LIVE.source ? ('Latest from ' + LIVE.source + '. ') : '') +
       (LIVE.updated ? ('Updated ' + new Date(LIVE.updated).toISOString() + '. ') : '') +
       'Build ' + BUILD + '.';
+  }
+  function setTogether(on) {
+    togetherForced = on == null ? !togetherForced : !!on;
+    var btn = $('bTogether');
+    btn.setAttribute('aria-pressed', togetherForced ? 'true' : 'false');
+    btn.textContent = togetherForced ? 'Desks' : 'Together';
+    agents.forEach(function (a) { a.departAt = 0; retarget(a); });
+    paintLive();
+    if (selected) paintPanel();
   }
 
   function fetchJson(u) {
@@ -1363,6 +1469,7 @@
     $('bMinutes').onclick = function () { openCard('minutes'); };
     $('bApprovals').onclick = function () { openCard('approve'); };
     $('bRoutines').onclick = function () { openCard('routines'); };
+    $('bTogether').onclick = function () { setTogether(); };
     $('bNight').onclick = function () { setNight(!night); };
     $('bWalk').onclick = function () { setWalk(!walkMode); };
     $('pClose').onclick = function () { $('panel').hidden = true; selected = null; paintChips(); };
@@ -1607,7 +1714,8 @@
   LIVE.timer = setInterval(livePoll, LIVE_POLL);
   window.__ov = {
     agents: agents, player: player, setNight: setNight, setWalk: setWalk,
-    live: function () { return LIVE; }, build: BUILD, leds: leds, gameSpots: gameSpots, go: go, scene: scene,
+    live: function () { return LIVE; }, build: BUILD, leds: leds, gameSpots: gameSpots, meetSpots: meetSpots,
+    go: go, setTogether: setTogether, collab: collabReason, scene: scene,
     setCam: function (x, y, z, yw, pi, d) {
       camTarget.set(x, y, z);
       if (yw != null) yaw = yw;
