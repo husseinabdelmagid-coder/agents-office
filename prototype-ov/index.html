@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Office · Officeverse prototype</title>
+<title>Agents Headquarters · 20261014-bal34-officeverse</title>
 <style>
   :root {
     --accent: #8a6fd1;
@@ -79,14 +82,14 @@
   .dots i:nth-child(1) { background: #e2665b; }
   .dots i:nth-child(2) { background: #e7b84f; }
   .dots i:nth-child(3) { background: #6bbf5f; }
-  a.title {
+  .title {
     font-weight: 700; letter-spacing: .14em; font-size: 11px; color: #efece6;
     text-decoration: none; white-space: nowrap;
   }
-  a.title small { font-weight: 500; letter-spacing: .04em; color: #8e8a83; margin-left: 6px; }
-  .chips { display: flex; gap: 6px; flex: 1 1 200px; min-width: 0; flex-wrap: wrap; }
+  .title small { font-weight: 500; letter-spacing: .04em; color: #8e8a83; margin-left: 6px; }
+  .chips { display: flex; gap: 6px; flex: 1 1 160px; min-width: 0; justify-content: flex-end; flex-wrap: wrap; row-gap: 6px; overflow: visible; }
   header.hq .chip {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto;
     padding: 4px 9px 4px 5px; border-radius: 7px; min-height: 32px;
     background: var(--chrome2); border: 1px solid #33353b; color: #d6d3cc;
     cursor: pointer; white-space: nowrap;
@@ -104,6 +107,23 @@
     border-radius: 7px; padding: 5px 10px; min-height: 32px; white-space: nowrap;
   }
   .hbtn[aria-pressed="true"] { border-color: #5fae6a; color: #fff; background: #24352a; }
+  .hbtn.demo { font-size: 11px; padding: 3px 8px; min-height: 28px; opacity: .9; }
+  .demo-hide { display: none !important; }
+  .corner-build {
+    position: fixed; left: 10px; bottom: 10px; z-index: 40;
+    padding: 6px 10px; border-radius: 8px; border: 1px solid #3d9cff;
+    background: #0d2a44cc; color: #7fd0ff; font: 600 11px/1.2 system-ui, sans-serif;
+    font-variant-numeric: tabular-nums; pointer-events: none;
+  }
+  #gate { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: #1a1625; color: #f2ebe3; font-family: system-ui, sans-serif; }
+  #gate .box { background: #2a2438; padding: 28px 24px; border-radius: 16px; width: min(360px, 92vw); box-shadow: 0 20px 60px #0008; }
+  #gate h1 { margin: 0 0 8px; font-size: 1.25rem; }
+  #gate p { margin: 0 0 16px; opacity: .75; font-size: .9rem; }
+  #gate input { width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 10px; border: 1px solid #564a6e; background: #1a1625; color: #f2ebe3; font-size: 1rem; }
+  #gate button { margin-top: 12px; width: 100%; padding: 12px; border: 0; border-radius: 10px; background: #8a6fd1; color: #fff; font-weight: 600; cursor: pointer; }
+  #gate .err { color: #f07178; margin-top: 10px; font-size: .85rem; min-height: 1.2em; }
+  .gate-build { margin-top: 14px; padding: 8px 10px; border-radius: 8px; border: 1px solid #564a6e; background: #1a1625; color: #b8a9d6; font-size: 12px; font-variant-numeric: tabular-nums; text-align: center; }
+  body.gated > :not(#gate) { visibility: hidden !important; pointer-events: none; }
   #liveChip { display: inline-flex; align-items: center; gap: 6px; }
   #liveText.fresh { color: #7fd0ff; }
   #liveText.stale { color: #e7b84f; }
@@ -249,11 +269,14 @@
   }
   #nosupport[hidden] { display: none !important; }
   @media (max-width: 1100px) {
-    #panel, #livePop { top: calc(100px + env(safe-area-inset-top)); }
-    a.title small { display: none; }
+    #panel, #livePop { top: calc(108px + env(safe-area-inset-top)); }
+  }
+  @media (max-width: 900px) {
+    .chips { flex: 1 1 100%; order: 5; justify-content: center; min-width: 0; padding-top: 2px; flex-wrap: wrap; row-gap: 6px; overflow: visible; }
+    .title small { display: none; }
   }
   @media (max-width: 800px) {
-    .chips { flex: 1 1 100%; order: 5; justify-content: center; }
+    .chips { flex: 1 1 100%; order: 5; justify-content: center; min-width: 0; flex-wrap: wrap; row-gap: 6px; overflow: visible; }
     #panel {
       top: auto; left: 0; right: 0; bottom: 0; width: auto;
       max-height: 64dvh; border-radius: 18px 18px 0 0; border-left: 0;
@@ -261,24 +284,33 @@
     #walkbar { left: 140px; right: 12px; width: auto; transform: none; }
     #scrim { align-items: flex-end; }
   }
+  @media (max-width: 560px) {
+    .chips { display: flex; flex: 1 1 100%; order: 5; justify-content: center; min-width: 0; flex-wrap: wrap; row-gap: 6px; overflow: visible; }
+  }
 </style>
 </head>
-<body>
+<body class="gated">
+<div id="gate"><div class="box"><h1>Agents Office</h1><p>Enter the password to open the live office.</p>
+<input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" autofocus>
+<button id="gateGo" type="button">Unlock</button>
+<div class="err" id="gateErr"></div>
+<div class="gate-build" id="gateBuild">Build 20261014-bal34-officeverse</div></div></div>
+<div class="corner-build" id="cornerBuild">Build 20261014-bal34-officeverse</div>
 <div id="view"></div>
 <div id="labels"></div>
 
 <header class="hq">
   <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
-  <a class="title" href="../index.html" title="Open the current Live office (unchanged)">AGENTS HEADQUARTERS<small>prototype</small></a>
+  <div class="title">AGENTS HEADQUARTERS<small>virtual office</small></div>
   <div class="chips" id="agentChips"></div>
   <button class="hbtn" id="liveChip" type="button" aria-expanded="false">
     <span class="dot" id="liveDot"></span>
     <span id="liveText">Connecting live…</span>
   </button>
-  <button class="hbtn" id="bMinutes" type="button">Minutes</button>
-  <button class="hbtn" id="bApprovals" type="button">Approvals</button>
-  <button class="hbtn" id="bRoutines" type="button">Routines</button>
-  <button class="hbtn" id="bTogether" type="button" aria-pressed="false" title="Demo override. Shared tasks already gather on their own. This button pulls the whole office into the west meeting room. Turning it off sends idle agents to the gaming room, Matt to the gym when he is working, and Dr. Strange to the clinic when he is working.">Together</button>
+  <button class="hbtn demo-hide" id="bMinutes" type="button">Minutes</button>
+  <button class="hbtn demo-hide" id="bApprovals" type="button">Approvals</button>
+  <button class="hbtn demo-hide" id="bRoutines" type="button">Routines</button>
+  <button class="hbtn demo" id="bTogether" type="button" aria-pressed="false" title="Demo override. Shared tasks already gather on their own. This button pulls the whole office into the west meeting room. Turning it off sends idle agents to the gaming room, Matt to the gym when he is working, and Dr. Strange to the clinic when he is working.">Together</button>
   <button class="hbtn" id="bNight" type="button" aria-pressed="false">Night</button>
   <button class="hbtn" id="bWalk" type="button" aria-pressed="false">Walk in</button>
 </header>
@@ -301,7 +333,7 @@
   </div>
   <div class="tabs" role="tablist">
     <button type="button" id="tabMon" role="tab" aria-selected="true">Monitor</button>
-    <button type="button" id="tabChat" role="tab" aria-selected="false">Chat</button>
+    <button class="demo-hide" type="button" id="tabChat" role="tab" aria-selected="false">Chat</button>
   </div>
   <div id="paneMon">
     <div class="taskbox"><b>Current task · live</b><span id="pTask">…</span></div>
@@ -310,7 +342,7 @@
   </div>
   <div id="paneChat" hidden>
     <div class="chatlog" id="pChat"></div>
-    <form class="composer" id="chatForm">
+    <form class="composer demo-hide" id="chatForm">
       <input id="chatInput" maxlength="240" placeholder="Example message — nothing is sent" autocomplete="off" enterkeyhint="send">
       <button class="send" type="submit">Send</button>
     </form>
@@ -368,21 +400,23 @@
   <button class="send" id="sayBtn" type="button" disabled>Say</button>
 </div>
 <div id="joy" hidden aria-hidden="true"><div id="knob"></div></div>
-<div id="nosupport" hidden><div><h1>WebGL isn’t available</h1><p>This prototype needs WebGL to draw the office.</p></div></div>
+<div id="nosupport" hidden><div><h1>WebGL isn’t available</h1><p>This office needs WebGL to draw the floor.</p></div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
 <script>if (!window.THREE) document.write('<script src="https://unpkg.com/three@0.160.1/build/three.min.js"><\/script>');</script>
 <script>
 (function () {
   'use strict';
-  var BUILD = '20261014-ov5';
+  var BUILD = '20261014-bal34-officeverse';
+  var AT_PROTO = /\/prototype-ov\//.test(location.pathname);
+  function asset(p) { return (AT_PROTO ? '../' : '') + p; }
   var AGENTS = [
-    {id:'eve', name:'Eve', role:'Personal assistant', color:'#8a6fd1', shirt:'#8a6fd1', pants:'#3f4250', hair:'#3b2a22', skin:'#f1c8a5', style:'bun', avatar:'../avatars/eve.png', uuid:'e0d3f0e6-e6a5-4b4d-a002-87befa812360'},
-    {id:'matt', name:'Matt', role:'Fitness coach', color:'#ee8a3a', shirt:'#ee8a3a', pants:'#2f3440', hair:'#2a1d16', skin:'#d8a27c', style:'short', avatar:'../avatars/matt.png', uuid:'3c92912d-8aa9-439d-b2fb-5282635b30d3'},
-    {id:'prof', name:'El Profesor', role:'Deep research', color:'#c9473f', shirt:'#c9473f', pants:'#2b2d33', hair:'#1f1a17', skin:'#e7b896', style:'prof', avatar:'../avatars/el-profesor.png', uuid:'3a48a61f-5e48-4510-80f4-83a668552dec'},
-    {id:'sam', name:'Sam', role:'Career advisor', color:'#3f8fcf', shirt:'#3f8fcf', pants:'#4b4237', hair:'#6b4a2e', skin:'#f0c39c', style:'side', avatar:'../avatars/sam.png', uuid:'d5d825f5-d637-4a7e-b2e8-48e5d5048e5e'},
-    {id:'neo', name:'Neo', role:'Coding wizard', color:'#2a9d8f', shirt:'#2a9d8f', pants:'#2f3440', hair:'#1a1a1a', skin:'#e7b896', style:'short', avatar:'../avatars/neo.png', uuid:'e86192fb-f95f-40d2-ad1a-21023a9adac2'},
-    {id:'strange', name:'Dr. Strange', role:'Medical advisor', color:'#0f766e', shirt:'#e7eef0', pants:'#0f766e', hair:'#2a2420', skin:'#e7b896', style:'prof', initials:'DS', uuid:'a04bdbb3-b652-4846-ad72-f8f0149c0689'}
+    {id:'eve', name:'Eve', role:'Personal assistant', color:'#8a6fd1', shirt:'#8a6fd1', pants:'#3f4250', hair:'#3b2a22', skin:'#f1c8a5', style:'bun', avatar:asset('avatars/eve.png'), uuid:'e0d3f0e6-e6a5-4b4d-a002-87befa812360'},
+    {id:'matt', name:'Matt', role:'Fitness coach', color:'#ee8a3a', shirt:'#ee8a3a', pants:'#2f3440', hair:'#2a1d16', skin:'#d8a27c', style:'short', avatar:asset('avatars/matt.png'), uuid:'3c92912d-8aa9-439d-b2fb-5282635b30d3'},
+    {id:'prof', name:'El Profesor', role:'Deep research', color:'#c9473f', shirt:'#c9473f', pants:'#2b2d33', hair:'#1f1a17', skin:'#e7b896', style:'prof', avatar:asset('avatars/el-profesor.png'), uuid:'3a48a61f-5e48-4510-80f4-83a668552dec'},
+    {id:'sam', name:'Sam', role:'Career advisor', color:'#3f8fcf', shirt:'#3f8fcf', pants:'#4b4237', hair:'#6b4a2e', skin:'#f0c39c', style:'side', avatar:asset('avatars/sam.png'), uuid:'d5d825f5-d637-4a7e-b2e8-48e5d5048e5e'},
+    {id:'neo', name:'Neo', role:'Coding wizard', color:'#2a9d8f', shirt:'#2a9d8f', pants:'#2f3440', hair:'#1a1a1a', skin:'#e7b896', style:'short', avatar:asset('avatars/neo.png'), uuid:'e86192fb-f95f-40d2-ad1a-21023a9adac2'},
+    {id:'strange', name:'Dr. Strange', role:'Medical advisor', color:'#6a4c93', shirt:'#6a4c93', pants:'#2c2438', hair:'#2a2420', skin:'#e7b896', style:'prof', avatar:asset('avatars/dr-strange.png'), uuid:'a04bdbb3-b652-4846-ad72-f8f0149c0689'}
   ];
   var LIVE_IDS = {
     'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve',
@@ -930,7 +964,7 @@
     addBox(0.22, 0.04, 0.22, -0.85, 1.36, 5.35, woodDark, {cast:false});
 
     var loader = new THREE.TextureLoader();
-    loader.load('the-office-banner.png', function (tex) {
+    loader.load(AT_PROTO ? 'the-office-banner.png' : 'prototype-ov/the-office-banner.png', function (tex) {
       if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
       tex.anisotropy = 4;
       var aspect = (tex.image && tex.image.height) ? tex.image.width / tex.image.height : 2.5;
@@ -1011,7 +1045,7 @@
     el.className = 'tagwrap';
     el.innerHTML = '<div class="bubble" hidden></div><button type="button" class="pill"><span class="dot"></span><span class="nm"></span></button>';
     $('labels').appendChild(el);
-    el.querySelector('.pill').addEventListener('click', function () { openAgent(id, 'chat'); });
+    el.querySelector('.pill').addEventListener('click', function () { openAgent(id, 'monitor'); });
     return el;
   }
 
@@ -1371,25 +1405,34 @@
 
   function applyLive(data, source) {
     var ts = Date.parse(data.updatedAt) || Date.now();
-    if (LIVE.updated && ts + 500 < LIVE.updated) return;
+    /* Drop out-of-order CDN copies so an older Working snapshot cannot overwrite a fresher Idle. */
+    if (LIVE.updated && ts + 500 < LIVE.updated) { paintLive(); return; }
     LIVE.data = data;
     LIVE.updated = ts;
     LIVE.fail = 0;
     LIVE.source = source || LIVE.source;
     var seen = {};
     (data.agents || []).forEach(function (r) {
-      if (!r) return;
-      var id = LIVE_IDS[r.id] || LIVE_NAMES[String(r.name || '').toLowerCase()];
+      if (!r || typeof r !== 'object') return;
+      var nameKey = String(r.name || r.key || '').trim().toLowerCase();
+      var id = LIVE_IDS[r.id] || LIVE_NAMES[nameKey];
       var a = null;
       for (var i = 0; i < agents.length; i++) if (agents[i].id === id) a = agents[i];
       if (!a || seen[id]) return;
       seen[id] = 1;
       var raw = (r.status === 'working' || r.status === 'awaiting_approval') ? r.status : 'idle';
-      var task = String(r.task || (raw === 'working' ? 'Handling a live request' : raw === 'awaiting_approval' ? 'Waiting on your approval' : 'Standing by')).slice(0, 180);
+      var task = String(r.task || (raw === 'working' ? 'Handling a live request' : raw === 'awaiting_approval' ? 'Waiting on your approval' : 'Standing by')).slice(0, 140);
+      /* Trust file idle immediately. The publisher already covers tool-gap flicker; do not hold a sticky Working. */
+      if (raw !== 'idle') a._idleHits = 0;
       var changed = a.status !== raw || a.task !== task;
       a.status = raw;
       a.task = task;
-      if (r.title) a.cfg.role = r.title;
+      if (r.title) a.cfg.role = String(r.title).slice(0, 80);
+      if (typeof r.color === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(r.color)) {
+        a.cfg.color = r.color;
+        var swatch = document.querySelector('#agentChips .chip[data-id="' + a.id + '"] b');
+        if (swatch) swatch.style.background = r.color;
+      }
       if (changed || !a.log.length) {
         a.log.unshift({t: Date.now(), status: raw, task: task});
         a.log = a.log.slice(0, 40);
@@ -1400,6 +1443,7 @@
       if (a.status !== 'idle' || a.task !== 'Standing by') {
         a.log.unshift({t: Date.now(), status: 'idle', task: 'Standing by'});
       }
+      a._idleHits = 0;
       a.status = 'idle';
       a.task = 'Standing by';
     });
@@ -1467,13 +1511,22 @@
     var gbase = 'https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live/slot-';
     return [base + s + '.json', base + (s - 1) + '.json', gbase + s + '.json', gbase + (s - 1) + '.json'].concat(LIVE_PTR_FALLBACK);
   }
+  /* bal15 slotted pointers avoid a sticky CDN false-idle/working read.
+     bal32 tip order is raw.githack then raw.githubusercontent (no jsDelivr).
+     Newest updatedAt wins. On a tie, raw.githubusercontent wins over githack. */
+  function sourceRank(src) {
+    src = src || '';
+    if (src.indexOf('raw') >= 0 && src.indexOf('githack') < 0) return 2;
+    if (src.indexOf('githack') >= 0) return 1;
+    return 0;
+  }
   function livePoll() {
     if (LIVE.busy) return;
     LIVE.busy = true;
     Promise.all(livePtrUrls().map(fetchJson)).then(function (ptrs) {
       var best = null, bestTs = -1;
       ptrs.forEach(function (p) {
-        if (!p || !p.sha) return;
+        if (!p || typeof p !== 'object' || !p.sha) return;
         var ts = Date.parse(p.updatedAt) || 0;
         if (ts >= bestTs) { bestTs = ts; best = p; }
       });
@@ -1493,17 +1546,21 @@
     }).then(function (pair) {
       if (!pair) throw new Error('no pair');
       var rows = [pair[0]].concat(pair[1] || []);
-      var best = null, bestTs = -1, src = '';
+      var best = null, bestTs = -1, src = '', bestRank = -1;
       rows.forEach(function (row) {
         var d = row && row.d;
-        if (!d || !Array.isArray(d.agents)) return;
+        if (!d || typeof d !== 'object' || !Array.isArray(d.agents)) return;
         var ts = Date.parse(d.updatedAt) || 0;
-        if (ts >= bestTs) { bestTs = ts; best = d; src = row.src; }
+        var rank = sourceRank(row.src);
+        if (ts > bestTs || (ts === bestTs && rank >= bestRank)) {
+          bestTs = ts; best = d; src = row.src; bestRank = rank;
+        }
       });
       if (!best) throw new Error('bad status');
       applyLive(best, src);
     }).catch(function () {
-      LIVE.fail++;
+      /* A blip must not clear the last good snapshot. */
+      LIVE.fail = (LIVE.fail || 0) + 1;
       paintLive();
     }).then(function () { LIVE.busy = false; });
   }
@@ -1629,8 +1686,7 @@
     if (!hits.length) return;
     var ud = hits[0].object.userData || {};
     if (ud.kind === 'monitor' && ud.agentId) openAgent(ud.agentId, 'monitor');
-    else if (ud.kind === 'agent' && ud.agentId) openAgent(ud.agentId, 'chat');
-    else if (ud.kind === 'meeting') openCard('minutes');
+    else if (ud.kind === 'agent' && ud.agentId) openAgent(ud.agentId, 'monitor');
   }
 
   function bindUI() {
@@ -1737,7 +1793,9 @@
         ? '<img class="chip-av" alt="" src="' + a.avatar + '">'
         : '<span class="mono" style="background:' + a.color + '">' + esc(a.initials || 'DS') + '</span>';
       c.innerHTML = face + '<b style="background:' + a.color + '"></b><span>' + esc(a.name) + '</span>';
-      c.onclick = function () { openAgent(a.id, 'chat'); };
+      c.onclick = function () { openAgent(a.id, 'monitor'); };
+      var faceImg = c.querySelector('img.chip-av');
+      if (faceImg) faceImg.addEventListener('error', function () { faceImg.remove(); });
       chipBox.appendChild(c);
     });
     renderRoutines();
@@ -1889,8 +1947,12 @@
     console.error(err);
     $('nosupport').hidden = false;
   }
-  livePoll();
-  LIVE.timer = setInterval(livePoll, LIVE_POLL);
+  function setLive(want) {
+    if (!want || LIVE.timer) return;
+    livePoll();
+    LIVE.timer = setInterval(livePoll, LIVE_POLL);
+  }
+  window.setLive = setLive;
   window.__ov = {
     agents: agents, player: player, setNight: setNight, setWalk: setWalk,
     live: function () { return LIVE; }, build: BUILD, leds: leds, gameSpots: gameSpots, meetSpots: meetSpots,
@@ -1905,6 +1967,32 @@
     walkDist: function () { return walkDist; },
     setWalkDist: function (d) { walkDist = clamp(d, 1.6, 8.5); }
   };
+})();
+</script>
+<script>
+(function () {
+  var HASH = "c96f94c35bcacbee5d92086e4d2f3a023fe5f18545588af6dd3ea04c6b64c187";
+  var KEY = 'agents-office-auth-v1';
+  function showApp() {
+    document.body.classList.remove('gated');
+    var g = document.getElementById('gate');
+    if (g) g.remove();
+    try { if (typeof setLive === 'function') setLive(true); } catch (e) {}
+  }
+  async function sha256(text) {
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+  }
+  async function tryUnlock(pw) {
+    var h = await sha256(pw || '');
+    if (h !== HASH) { document.getElementById('gateErr').textContent = 'Wrong password'; return false; }
+    try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+    showApp();
+    return true;
+  }
+  try { if (sessionStorage.getItem(KEY) === '1') { showApp(); return; } } catch (e) {}
+  document.getElementById('gateGo').onclick = function () { tryUnlock(document.getElementById('gatePw').value); };
+  document.getElementById('gatePw').addEventListener('keydown', function (e) { if (e.key === 'Enter') tryUnlock(this.value); });
 })();
 </script>
 </body>
