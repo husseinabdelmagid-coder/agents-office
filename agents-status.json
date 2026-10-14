@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T18:19:53Z",
+  "updatedAt": "2026-10-14T18:20:12Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -50,6 +50,14 @@
       "status": "idle",
       "task": "Standing by",
       "color": "#2a9d8f"
+    },
+    {
+      "id": "a04bdbb3-b652-4846-ad72-f8f0149c0689",
+      "name": "Dr. Strange",
+      "title": "Medical advisor",
+      "status": "idle",
+      "task": "Standing by",
+      "color": "#6a4c93"
     }
   ]
 }
