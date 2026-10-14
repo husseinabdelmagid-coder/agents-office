@@ -7,18 +7,21 @@
 <title>Agents Office · Officeverse prototype</title>
 <style>
   :root {
-    --accent: #f2791f;
-    --ink: #1c1f27;
-    --muted: #5e656f;
-    --line: rgba(20, 22, 28, .08);
+    --accent: #8a6fd1;
+    --ink: #2d2a26;
+    --muted: #857d71;
+    --line: #e8e1d4;
     --card: #ffffff;
-    --good: #1f9d55;
-    --wait: #d99214;
-    --idle: #8b919a;
-    --shadow: 0 10px 30px rgba(28, 31, 39, .12);
+    --paper: #f8f5ef;
+    --chrome: #1b1c20;
+    --chrome2: #25272c;
+    --good: #6bbf5f;
+    --wait: #e7b84f;
+    --idle: #8e8a83;
+    --shadow: 0 10px 30px rgba(40, 32, 20, .16);
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: #e7eaee; color: var(--ink); }
+  html, body { margin: 0; height: 100%; background: #e6dcc8; color: var(--ink); }
   body {
     overflow: hidden;
     font: 15px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -37,9 +40,9 @@
     transform: translate(-50%, -108%);
     will-change: transform;
   }
-  .bubble, .pill, .action {
+  .bubble, .pill {
     border-radius: 999px;
-    box-shadow: 0 6px 16px rgba(20, 22, 28, .16);
+    box-shadow: 0 6px 16px rgba(40, 32, 20, .16);
     white-space: nowrap;
   }
   .pill {
@@ -55,13 +58,8 @@
     background: var(--idle); flex: 0 0 auto;
     box-shadow: 0 0 0 2px rgba(255,255,255,.14);
   }
-  .dot.on { background: #3ddc84; }
-  .dot.wait { background: #f5c14a; }
-  .action {
-    max-width: 200px; overflow: hidden; text-overflow: ellipsis;
-    background: rgba(28, 31, 39, .88); color: #fff;
-    padding: 2px 8px; font-size: 11px; font-weight: 600;
-  }
+  .dot.on { background: #6bbf5f; }
+  .dot.wait { background: #e7b84f; }
   .bubble {
     max-width: min(260px, 70vw); white-space: normal;
     background: #fff; color: var(--ink);
@@ -69,46 +67,54 @@
     font-size: 13px; text-align: center;
     border: 1px solid var(--line);
   }
-  .top {
-    position: fixed; z-index: 20;
-    top: calc(10px + env(safe-area-inset-top));
-    left: calc(10px + env(safe-area-inset-left));
-    right: calc(10px + env(safe-area-inset-right));
-    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-    pointer-events: none;
+  header.hq {
+    position: fixed; z-index: 20; top: 0; left: 0; right: 0;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
+    min-height: 46px;
+    padding: calc(6px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 6px calc(12px + env(safe-area-inset-left));
+    background: var(--chrome); border-bottom: 1px solid #000; color: #d9d6d0; font-size: 12px;
   }
-  .top > * { pointer-events: auto; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 8px;
-    min-height: 40px; padding: 0 12px;
-    background: rgba(255,255,255,.94);
-    border: 1px solid var(--line); border-radius: 999px;
-    box-shadow: var(--shadow);
-    text-decoration: none; color: inherit;
-    backdrop-filter: blur(10px);
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 11px; height: 11px; border-radius: 50%; display: block; background: #4a4c52; }
+  .dots i:nth-child(1) { background: #e2665b; }
+  .dots i:nth-child(2) { background: #e7b84f; }
+  .dots i:nth-child(3) { background: #6bbf5f; }
+  a.title {
+    font-weight: 700; letter-spacing: .14em; font-size: 11px; color: #efece6;
+    text-decoration: none; white-space: nowrap;
   }
-  .chip strong { font-weight: 750; }
-  .chip small { display: block; color: var(--muted); font-size: 11px; font-weight: 600; margin-top: -1px; }
-  .chip.brand { padding-right: 14px; }
-  .mark {
-    width: 22px; height: 22px; border-radius: 6px; background: var(--accent);
-    display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 13px;
+  a.title small { font-weight: 500; letter-spacing: .04em; color: #8e8a83; margin-left: 6px; }
+  .chips { display: flex; gap: 6px; flex: 1 1 200px; min-width: 0; flex-wrap: wrap; }
+  header.hq .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 9px 4px 5px; border-radius: 7px; min-height: 32px;
+    background: var(--chrome2); border: 1px solid #33353b; color: #d6d3cc;
+    cursor: pointer; white-space: nowrap;
   }
-  .tools { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
-  .tools button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: transparent; }
-  #liveText.fresh { color: var(--good); }
-  #liveText.stale { color: var(--wait); }
-  #liveText.bad { color: #b42318; }
+  header.hq .chip b { width: 16px; height: 16px; border-radius: 4px; display: block; flex: 0 0 auto; }
+  header.hq .chip img.chip-av {
+    width: 22px; height: 22px; border-radius: 50%; object-fit: cover; display: block; flex: 0 0 auto; background: #1a1b1f;
+  }
+  header.hq .chip.sel { border-color: #cfc8ba; color: #fff; }
+  .hbtn {
+    background: var(--chrome2); border: 1px solid #33353b; color: #d6d3cc;
+    border-radius: 7px; padding: 5px 10px; min-height: 32px; white-space: nowrap;
+  }
+  .hbtn[aria-pressed="true"] { border-color: #5fae6a; color: #fff; background: #24352a; }
+  #liveChip { display: inline-flex; align-items: center; gap: 6px; }
+  #liveText.fresh { color: #7fd0ff; }
+  #liveText.stale { color: #e7b84f; }
+  #liveText.bad { color: #e2665b; }
   #panel {
     position: fixed; z-index: 24;
-    top: calc(64px + env(safe-area-inset-top));
+    top: calc(56px + env(safe-area-inset-top));
     right: calc(10px + env(safe-area-inset-right));
     width: min(380px, calc(100vw - 20px));
-    max-height: calc(100dvh - 84px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    max-height: calc(100dvh - 76px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     overflow: auto;
-    background: rgba(255,255,255,.97);
-    border: 1px solid var(--line); border-radius: 18px;
-    box-shadow: 0 24px 60px rgba(20,22,28,.18);
+    background: var(--paper);
+    border: 1px solid #000; border-radius: 0 0 0 16px;
+    box-shadow: 0 24px 60px rgba(20, 16, 10, .28);
     padding: 14px;
   }
   #panel[hidden] { display: none !important; }
@@ -125,11 +131,11 @@
   }
   .tabs { display: flex; gap: 6px; margin: 12px 0; }
   .tabs button {
-    flex: 1; min-height: 36px; border-radius: 999px; border: 1px solid var(--line); background: #f4f5f7;
+    flex: 1; min-height: 36px; border-radius: 999px; border: 1px solid var(--line); background: #efe9de;
   }
   .tabs button[aria-selected="true"] { background: var(--ink); color: #fff; border-color: transparent; }
   .taskbox {
-    background: #f6f7f9; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;
+    background: #f3eee6; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;
   }
   .taskbox b { display: block; font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
   .term {
@@ -143,7 +149,7 @@
   .note { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
   .chatlog { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow: auto; margin-bottom: 10px; }
   .msg { max-width: 92%; padding: 8px 10px; border-radius: 14px; font-size: 14px; }
-  .msg.ag { background: #f2f3f6; align-self: flex-start; }
+  .msg.ag { background: #efe9de; align-self: flex-start; }
   .msg.you { background: var(--accent); color: #fff; align-self: flex-end; }
   .msg .who { display: block; font-size: 11px; font-weight: 700; opacity: .7; margin-bottom: 2px; }
   .composer { display: flex; gap: 8px; }
@@ -171,13 +177,13 @@
   }
   .card h2 { margin: 4px 0 8px; font-size: 22px; }
   .eyebrow {
-    margin: 0; color: #b15a12; font-size: 11px; font-weight: 800;
+    margin: 0; color: #6d5aa8; font-size: 11px; font-weight: 800;
     letter-spacing: .08em; text-transform: uppercase;
   }
   .faces { display: flex; gap: 8px; margin: 8px 0 12px; }
   .faces figure { margin: 0; text-align: center; font-size: 11px; color: var(--muted); }
   .faces img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; display: block; }
-  .decision { background: #f7f8fa; border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
+  .decision { background: #f3eee6; border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
   .decision b { display: block; font-size: 12px; color: var(--muted); }
   .apitem { border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-top: 8px; }
   .rowbtns { display: flex; gap: 8px; margin-top: 10px; }
@@ -218,7 +224,7 @@
   }
   #livePop {
     position: fixed; z-index: 26;
-    top: calc(60px + env(safe-area-inset-top));
+    top: calc(56px + env(safe-area-inset-top));
     left: calc(10px + env(safe-area-inset-left));
     width: min(420px, calc(100vw - 20px));
     background: #fff; border-radius: 14px; padding: 12px 14px;
@@ -227,14 +233,18 @@
   }
   #nosupport {
     position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
-    background: #e7eaee; padding: 24px; text-align: center;
+    background: #e6dcc8; padding: 24px; text-align: center;
   }
   #nosupport[hidden] { display: none !important; }
+  @media (max-width: 1100px) {
+    #panel, #livePop { top: calc(100px + env(safe-area-inset-top)); }
+    a.title small { display: none; }
+  }
   @media (max-width: 800px) {
-    .tools { margin-left: 0; width: 100%; }
+    .chips { flex: 1 1 100%; order: 5; justify-content: center; }
     #panel {
       top: auto; left: 0; right: 0; bottom: 0; width: auto;
-      max-height: 64dvh; border-radius: 18px 18px 0 0;
+      max-height: 64dvh; border-radius: 18px 18px 0 0; border-left: 0;
     }
     #walkbar { left: 140px; right: 12px; width: auto; transform: none; }
     #scrim { align-items: flex-end; }
@@ -245,23 +255,20 @@
 <div id="view"></div>
 <div id="labels"></div>
 
-<div class="top">
-  <a class="chip brand" href="../index.html" title="Open the current Live office (unchanged)">
-    <span class="mark">A</span>
-    <span><strong>Agents Office</strong><small>Officeverse prototype</small></span>
-  </a>
-  <button class="chip" id="liveChip" type="button" aria-expanded="false">
+<header class="hq">
+  <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+  <a class="title" href="../index.html" title="Open the current Live office (unchanged)">AGENTS HEADQUARTERS<small>prototype</small></a>
+  <div class="chips" id="agentChips"></div>
+  <button class="hbtn" id="liveChip" type="button" aria-expanded="false">
     <span class="dot" id="liveDot"></span>
     <span id="liveText">Connecting live…</span>
   </button>
-  <div class="tools">
-    <button class="chip" id="bMinutes" type="button">Minutes</button>
-    <button class="chip" id="bApprovals" type="button">Approvals</button>
-    <button class="chip" id="bRoutines" type="button">Routines</button>
-    <button class="chip" id="bNight" type="button" aria-pressed="false">Night</button>
-    <button class="chip" id="bWalk" type="button" aria-pressed="false">Walk in</button>
-  </div>
-</div>
+  <button class="hbtn" id="bMinutes" type="button">Minutes</button>
+  <button class="hbtn" id="bApprovals" type="button">Approvals</button>
+  <button class="hbtn" id="bRoutines" type="button">Routines</button>
+  <button class="hbtn" id="bNight" type="button" aria-pressed="false">Night</button>
+  <button class="hbtn" id="bWalk" type="button" aria-pressed="false">Walk in</button>
+</header>
 
 <div id="livePop" hidden>
   <p class="eyebrow">Live status</p>
@@ -304,7 +311,7 @@
     <div class="faces" id="minuteFaces"></div>
     <div class="decision"><b>Decision</b>Keep this Officeverse-style view on /prototype-ov/ so the Live office stays the current Pages home.</div>
     <div class="decision"><b>Action</b>Eve drafts the weekly brief. Matt logs the training block. El Profesor files the research note. Sam updates the pipeline. Neo watches the Pages publish.</div>
-    <p class="note">Example only. Agents are not actually in the meeting room unless you walk in and look around.</p>
+    <p class="note">Example only. Either wooden meeting table opens this card. Agents are not actually in a meeting.</p>
     <div class="rowbtns"><button class="deny" type="button" data-close>Close</button></div>
   </article>
 
@@ -350,7 +357,7 @@
 <script>
 (function () {
   'use strict';
-  var BUILD = '20261013-ov1';
+  var BUILD = '20261014-ov2';
   var AGENTS = [
     {id:'eve', name:'Eve', role:'Personal assistant', color:'#8a6fd1', shirt:'#8a6fd1', pants:'#3f4250', hair:'#3b2a22', skin:'#f1c8a5', style:'bun', avatar:'../avatars/eve.png', uuid:'e0d3f0e6-e6a5-4b4d-a002-87befa812360'},
     {id:'matt', name:'Matt', role:'Fitness coach', color:'#ee8a3a', shirt:'#ee8a3a', pants:'#2f3440', hair:'#2a1d16', skin:'#d8a27c', style:'short', avatar:'../avatars/matt.png', uuid:'3c92912d-8aa9-439d-b2fb-5282635b30d3'},
@@ -378,21 +385,21 @@
     'https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'
   ];
   var LIVE_POLL = 3000, LIVE_STALE = 45000, LIVE_FETCH_MS = 12000;
-  var SOUTH = 4.55;
+  var SOUTH = 3.45;
 
   var deskSpots = {
     eve:  {id:'eve-desk', kind:'desk', x:-9.35, z:-0.85, yaw:0, sit:true, out:[{x:-8.55,z:-0.85},{x:-7.85,z:-0.85},{x:-7.85,z:SOUTH}]},
     matt: {id:'matt-desk', kind:'desk', x:-6.35, z:-0.85, yaw:0, sit:true, out:[{x:-7.15,z:-0.85},{x:-7.85,z:-0.85},{x:-7.85,z:SOUTH}]},
-    prof: {id:'prof-desk', kind:'desk', x:-9.35, z:2.15, yaw:0, sit:true, out:[{x:-8.55,z:2.15},{x:-7.85,z:2.15},{x:-7.85,z:SOUTH}]},
-    sam:  {id:'sam-desk', kind:'desk', x:-6.35, z:2.15, yaw:0, sit:true, out:[{x:-7.15,z:2.15},{x:-7.85,z:2.15},{x:-7.85,z:SOUTH}]},
-    neo:  {id:'neo-desk', kind:'desk', x:-3.55, z:0.65, yaw:0, sit:true, out:[{x:-2.75,z:0.65},{x:-2.4,z:0.65},{x:-2.4,z:SOUTH}]}
+    prof: {id:'prof-desk', kind:'desk', x:-9.35, z:1.45, yaw:0, sit:true, out:[{x:-8.55,z:1.45},{x:-7.85,z:1.45},{x:-7.85,z:SOUTH}]},
+    sam:  {id:'sam-desk', kind:'desk', x:-6.35, z:1.45, yaw:0, sit:true, out:[{x:-7.15,z:1.45},{x:-7.85,z:1.45},{x:-7.85,z:SOUTH}]},
+    neo:  {id:'neo-desk', kind:'desk', x:-3.55, z:0.25, yaw:0, sit:true, out:[{x:-2.75,z:0.25},{x:-2.4,z:0.25},{x:-2.4,z:SOUTH}]}
   };
-  var loungeSpots = [
-    {id:'sofaG', kind:'lounge', x:6.3, z:6.15, yaw:0, sit:true, out:[{x:6.3,z:6.78},{x:4.65,z:6.78},{x:4.65,z:SOUTH}]},
-    {id:'sofaT', kind:'lounge', x:9.85, z:6.15, yaw:0, sit:true, out:[{x:9.85,z:6.82},{x:11.25,z:6.82},{x:11.25,z:SOUTH}]},
-    {id:'round', kind:'lounge', x:5.05, z:7.2, yaw:0.5, sit:true, out:[{x:4.65,z:7.2},{x:4.65,z:SOUTH}]},
-    {id:'cafe', kind:'lounge', x:7.45, z:7.55, yaw:-0.6, sit:false, out:[{x:7.45,z:SOUTH}]},
-    {id:'pong', kind:'lounge', x:9.15, z:8.15, yaw:1.2, sit:false, out:[{x:7.45,z:8.15},{x:7.45,z:SOUTH}]}
+  var gameSpots = [
+    {id:'beanL', kind:'game', x:6.2, z:7.05, yaw:0.35, sit:true, out:[{x:6.2,z:5.05},{x:6.4,z:5.05},{x:6.4,z:SOUTH}]},
+    {id:'beanR', kind:'game', x:8.15, z:7.25, yaw:-0.15, sit:true, out:[{x:8.15,z:5.15},{x:6.4,z:5.15},{x:6.4,z:SOUTH}]},
+    {id:'arcadeA', kind:'game', x:10.05, z:5.45, yaw:Math.PI / 2, sit:false, out:[{x:8.7,z:5.45},{x:6.4,z:5.45},{x:6.4,z:SOUTH}]},
+    {id:'arcadeB', kind:'game', x:10.05, z:6.95, yaw:Math.PI / 2, sit:false, out:[{x:8.7,z:6.95},{x:8.7,z:5.15},{x:6.4,z:5.15},{x:6.4,z:SOUTH}]},
+    {id:'pong', kind:'game', x:4.3, z:6.35, yaw:0, sit:false, out:[{x:5.6,z:6.35},{x:6.4,z:5.2},{x:6.4,z:SOUTH}]}
   ];
 
   var scene, camera, renderer, sun, hemi, ambient, fill;
@@ -402,6 +409,7 @@
   var colliders = [];
   var clickables = [];
   var screens = [];
+  var leds = [];
   var warmLights = [];
   var agents = [];
   var labels = {};
@@ -478,9 +486,9 @@
     var c = document.createElement('canvas');
     c.width = 512; c.height = 512;
     var g = c.getContext('2d');
-    g.fillStyle = '#e4e4e1';
+    g.fillStyle = '#ece2cc';
     g.fillRect(0, 0, 512, 512);
-    g.strokeStyle = '#d4d4d0';
+    g.strokeStyle = '#e0d3b8';
     g.lineWidth = 2;
     for (var i = 0; i <= 512; i += 32) {
       g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 512); g.stroke();
@@ -522,24 +530,27 @@
   }
 
   function buildOffice() {
-    var floorMat = new THREE.MeshStandardMaterial({map: floorTex(), roughness: 0.95, metalness: 0});
+    var floorMat = new THREE.MeshStandardMaterial({map: floorTex(), roughness: 0.96, metalness: 0});
     var floor = new THREE.Mesh(new THREE.PlaneGeometry(24, 18), floorMat);
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     scene.add(floor);
-    var rug = std('#d9d3c8', 0.95);
-    addBox(7.6, 0.02, 3.6, 8.0, 0.01, 7.05, rug, {cast:false, col:false});
-    addBox(7.2, 0.02, 5.2, -6.4, 0.01, 1.15, std('#ececea', 0.95), {cast:false});
+    addBox(8.6, 0.02, 4.6, 7.4, 0.01, 6.7, std('#c9b48a', 0.96), {cast:false, col:false});
+    addBox(8.2, 0.02, 3.6, -6.6, 0.01, 0.35, std('#d8c6a4', 0.96), {cast:false});
+    addBox(2.7, 0.025, 1.9, 10.55, 0.015, -7.95, std('#2c3138', 0.72), {cast:false});
 
-    var wall = std('#f7f7f5', 0.86);
+    var wall = std('#f3f2ee', 0.9);
+    var wallTop = std('#cdd0d4', 0.7);
     var wallH = 2.55;
     function wallX(z, x0, x1) {
       if (x1 - x0 < 0.05) return;
       addBox(x1 - x0, wallH, 0.16, (x0 + x1) / 2, wallH / 2, z, wall, {col:true});
+      addBox(x1 - x0, 0.08, 0.2, (x0 + x1) / 2, wallH + 0.02, z, wallTop, {cast:false});
     }
     function wallZ(x, z0, z1) {
       if (z1 - z0 < 0.05) return;
       addBox(0.16, wallH, z1 - z0, x, wallH / 2, (z0 + z1) / 2, wall, {col:true});
+      addBox(0.2, 0.08, z1 - z0, x, wallH + 0.02, (z0 + z1) / 2, wallTop, {cast:false});
     }
     wallX(-9, -12, 12);
     wallX(9, -12, -10.6);
@@ -548,79 +559,97 @@
     wallZ(12, -9, 9);
 
     var glass = new THREE.MeshStandardMaterial({
-      color: 0xffffff, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0.05,
+      color: 0xf4efe6, transparent: true, opacity: 0.2, roughness: 0.08, metalness: 0.04,
       depthWrite: false, side: THREE.DoubleSide
     });
-    var frame = std('#1a1c1f', 0.45);
+    var frame = std('#3a3e45', 0.45);
     function glassRunX(z, x0, x1) {
       if (x1 - x0 < 0.08) return;
-      var m = addBox(x1 - x0, 2.25, 0.06, (x0 + x1) / 2, 1.12, z, glass, {cast:false, col:true});
-      m.userData = {kind:'glass'};
+      addBox(x1 - x0, 2.25, 0.06, (x0 + x1) / 2, 1.12, z, glass, {cast:false, col:true});
       addBox(0.06, 2.3, 0.08, x0, 1.15, z, frame, {cast:false});
       addBox(0.06, 2.3, 0.08, x1, 1.15, z, frame, {cast:false});
       addBox(x1 - x0, 0.06, 0.08, (x0 + x1) / 2, 2.25, z, frame, {cast:false});
     }
-    [[-12, -8.4], [-6.5, 4.6], [6.6, 12]].forEach(function (s) { glassRunX(-3.05, s[0], s[1]); });
-    addBox(0.06, 2.25, 5.9, 0, 1.12, -6.02, glass, {cast:false, col:true});
-    addBox(0.08, 2.3, 0.08, 0, 1.15, -9, frame, {cast:false});
-    addBox(0.08, 2.3, 0.08, 0, 1.15, -3.05, frame, {cast:false});
-    for (var mz = -8.2; mz < -3.2; mz += 1.5) addBox(0.05, 2.2, 0.05, 0, 1.1, mz, frame, {cast:false});
+    function glassRunZ(x, z0, z1) {
+      if (z1 - z0 < 0.08) return;
+      addBox(0.06, 2.25, z1 - z0, x, 1.12, (z0 + z1) / 2, glass, {cast:false, col:true});
+      addBox(0.08, 2.3, 0.06, x, 1.15, z0, frame, {cast:false});
+      addBox(0.08, 2.3, 0.06, x, 1.15, z1, frame, {cast:false});
+      addBox(0.08, 0.06, z1 - z0, x, 2.25, (z0 + z1) / 2, frame, {cast:false});
+    }
+    [[-12, -8.0], [-6.2, 0], [0.15, 3.4], [5.2, 9.15]].forEach(function (s) { glassRunX(-3.4, s[0], s[1]); });
+    glassRunZ(0, -9, -3.4);
+    glassRunZ(9.15, -6.9, -3.4);
 
-    var wood = std('#c49a62', 0.55);
-    var woodDark = std('#a67c45', 0.6);
-    var black = std('#1c1e22', 0.5);
-    var white = std('#fbfbfb', 0.42);
+    wallZ(9.15, -9, -6.9);
+    wallX(-6.9, 9.15, 10.15);
+    wallX(-6.9, 11.35, 12);
+
+    wallZ(2.6, 4.25, 9);
+    wallX(4.25, 2.6, 5.6);
+    wallX(4.25, 7.2, 12);
+
+    var wood = std('#b07f55', 0.55);
+    var woodTop = std('#c4946a', 0.5);
+    var woodDark = std('#7e5638', 0.62);
+    var black = std('#3a3e45', 0.5);
+    var chairC = std('#59616c', 0.62);
+    var chairD = std('#3b4048', 0.55);
 
     function plant(x, z, s) {
       s = s || 1;
-      addCyl(0.16 * s, 0.13 * s, 0.22 * s, x, 0.11 * s, z, std('#f4f4f2', 0.6), {seg:10});
+      addCyl(0.16 * s, 0.13 * s, 0.22 * s, x, 0.11 * s, z, std('#f7f6f2', 0.6), {seg:10});
       addCyl(0.22 * s, 0.2 * s, 0.28 * s, x, 0.46 * s, z, std('#6eaf55', 0.7), {seg:8});
       var ball = new THREE.Mesh(new THREE.SphereGeometry(0.26 * s, 8, 6), std('#3f8f45', 0.75));
       ball.position.set(x, 0.72 * s, z);
       ball.castShadow = true;
       scene.add(ball);
     }
-    [[-11.15, -8.15], [11.15, -8.15], [-11.15, 7.7], [2.4, -1.6], [11.25, 2.6], [-1.2, 7.6], [6.4, -7.6]].forEach(function (p, i) {
-      plant(p[0], p[1], i % 2 ? 0.9 : 1.15);
+    [[-11.15, -8.15], [-11.15, 8.05], [3.2, -1.35], [10.6, -5.05], [1.15, 6.4], [8.3, -7.7]].forEach(function (p, i) {
+      plant(p[0], p[1], i % 2 ? 0.9 : 1.1);
     });
 
     function chair(x, z) {
-      addCyl(0.05, 0.05, 0.42, x, 0.21, z, black, {seg:8});
-      addBox(0.42, 0.08, 0.42, x, 0.46, z, black);
-      addBox(0.42, 0.42, 0.08, x, 0.74, z - 0.18, black);
+      addCyl(0.045, 0.05, 0.42, x, 0.21, z, chairD, {seg:8});
+      addBox(0.42, 0.08, 0.42, x, 0.46, z, chairC);
+      addBox(0.42, 0.42, 0.08, x, 0.74, z - 0.18, chairC);
+    }
+    function monitors(x, z, id) {
+      [-0.3, 0.3].forEach(function (dx, i) {
+        var g = new THREE.Group();
+        g.position.set(x + dx, 0.77, z + 0.78);
+        g.rotation.y = Math.PI;
+        var base = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.025, 0.14), black);
+        base.position.set(0, 0.012, 0);
+        g.add(base);
+        var neck = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.14, 0.04), black);
+        neck.position.set(0, 0.09, 0);
+        g.add(neck);
+        var bezel = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.32, 0.04), black);
+        bezel.position.set(0, 0.3, 0);
+        bezel.castShadow = true;
+        g.add(bezel);
+        var tex = screenTex(id === 'neo' && i === 0 ? '#7dffe1' : '#9be7ff');
+        var sm = new THREE.MeshStandardMaterial({map:tex, emissive:0xffffff, emissiveMap:tex, emissiveIntensity:0.45, roughness:0.35});
+        var screen = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.26), sm);
+        screen.position.set(0, 0.3, 0.025);
+        g.add(screen);
+        screens.push(sm);
+        g.traverse(function (o) {
+          if (o.isMesh) { o.userData = {kind:'monitor', agentId:id}; clickables.push(o); }
+        });
+        scene.add(g);
+      });
     }
     function desk(x, z, id) {
       chair(x, z);
-      addBox(1.28, 0.06, 0.68, x, 0.74, z + 0.58, white, {col:true});
-      addBox(0.08, 0.7, 0.08, x - 0.54, 0.36, z + 0.34, black, {cast:true});
-      addBox(0.08, 0.7, 0.08, x + 0.54, 0.36, z + 0.34, black);
-      addBox(0.08, 0.7, 0.08, x - 0.54, 0.36, z + 0.82, black);
-      addBox(0.08, 0.7, 0.08, x + 0.54, 0.36, z + 0.82, black);
-      var g = new THREE.Group();
-      g.position.set(x, 0.8, z + 0.82);
-      g.rotation.y = 0.62;
-      g.rotation.x = -0.22;
-      var bezel = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.4, 0.04), black);
-      bezel.castShadow = true;
-      g.add(bezel);
-      var tex = screenTex(id === 'neo' ? '#7dffe1' : '#9be7ff');
-      var sm = new THREE.MeshStandardMaterial({map:tex, emissive:0xffffff, emissiveMap:tex, emissiveIntensity:0.45, roughness:0.35});
-      var screen = new THREE.Mesh(new THREE.PlaneGeometry(0.54, 0.32), sm);
-      screen.position.z = 0.03;
-      g.add(screen);
-      screens.push(sm);
-      g.traverse(function (o) {
-        if (o.isMesh) { o.userData = {kind:'monitor', agentId:id}; clickables.push(o); }
-      });
-      scene.add(g);
-      var g2 = g.clone();
-      g2.position.set(x + 0.48, 0.8, z + 0.7);
-      g2.scale.set(0.72, 0.72, 0.72);
-      g2.traverse(function (o) {
-        if (o.isMesh) { o.userData = {kind:'monitor', agentId:id}; clickables.push(o); }
-      });
-      scene.add(g2);
-      addCyl(0.05, 0.06, 0.08, x + 0.42, 0.8, z + 0.42, std('#f3f3f1', 0.4), {seg:8});
+      addBox(1.28, 0.06, 0.7, x, 0.74, z + 0.56, woodTop, {col:true});
+      addBox(0.08, 0.7, 0.08, x - 0.54, 0.36, z + 0.3, woodDark);
+      addBox(0.08, 0.7, 0.08, x + 0.54, 0.36, z + 0.3, woodDark);
+      addBox(0.08, 0.7, 0.08, x - 0.54, 0.36, z + 0.82, woodDark);
+      addBox(0.08, 0.7, 0.08, x + 0.54, 0.36, z + 0.82, woodDark);
+      addBox(0.42, 0.02, 0.16, x, 0.785, z + 0.4, black, {cast:false});
+      monitors(x, z, id);
       var lamp = new THREE.PointLight(0xffb36b, 0, 3.2, 2);
       lamp.position.set(x, 1.55, z + 0.3);
       scene.add(lamp);
@@ -630,68 +659,116 @@
       var s = deskSpots[a.id];
       desk(s.x, s.z, a.id);
     });
-    addBox(1.28, 0.06, 0.68, -3.55, 0.74, 2.15 + 0.58, white, {col:true});
-    chair(-3.55, 2.15);
 
-    var tableHit = {kind:'meeting'};
-    addBox(3.4, 0.08, 1.25, -6.1, 0.74, -6.05, wood, {col:true, hit:tableHit});
-    [[-7.4, -6.55], [-4.8, -6.55], [-7.4, -5.55], [-4.8, -5.55], [-6.1, -6.85], [-6.1, -5.25]].forEach(function (c) {
-      addBox(0.42, 0.08, 0.42, c[0], 0.46, c[1], black);
-      addBox(0.42, 0.36, 0.07, c[0], 0.7, c[1] - 0.16, black);
-    });
-    var chart = chartTex();
-    var chartMat = new THREE.MeshStandardMaterial({map:chart, emissive:0xffffff, emissiveMap:chart, emissiveIntensity:0.35, roughness:0.4});
-    screens.push(chartMat);
-    addBox(1.5, 0.86, 0.06, -6.1, 1.55, -8.82, black, {hit:tableHit});
-    var chartMesh = addBox(1.36, 0.72, 0.02, -6.1, 1.55, -8.76, chartMat, {cast:false, hit:tableHit});
-    var meetLight = new THREE.PointLight(0xffb36b, 0, 7, 2);
-    meetLight.position.set(-6.1, 2.2, -6.05);
-    scene.add(meetLight); warmLights.push(meetLight);
+    function meetTable(x, z) {
+      var tableHit = {kind:'meeting'};
+      addBox(3.2, 0.08, 1.2, x, 0.74, z, woodTop, {col:true, hit:tableHit});
+      [[-1.2, -0.55], [1.2, -0.55], [-1.2, 0.55], [1.2, 0.55], [0, -0.72], [0, 0.72]].forEach(function (c) {
+        addBox(0.42, 0.08, 0.42, x + c[0], 0.46, z + c[1], chairC);
+        addBox(0.42, 0.32, 0.07, x + c[0], 0.66, z + c[1] - 0.16, chairC);
+      });
+      var chart = chartTex();
+      var chartMat = new THREE.MeshStandardMaterial({map:chart, emissive:0xffffff, emissiveMap:chart, emissiveIntensity:0.35, roughness:0.4});
+      screens.push(chartMat);
+      addBox(1.4, 0.8, 0.06, x, 1.5, -8.8, black, {hit:tableHit});
+      addBox(1.26, 0.66, 0.02, x, 1.5, -8.76, chartMat, {cast:false, hit:tableHit});
+      var meetLight = new THREE.PointLight(0xffb36b, 0, 6.5, 2);
+      meetLight.position.set(x, 2.15, z);
+      scene.add(meetLight);
+      warmLights.push(meetLight);
+    }
+    meetTable(-6.1, -6.15);
+    meetTable(4.55, -6.2);
 
-    addBox(1.7, 0.07, 0.7, 5.4, 0.74, -6.3, wood, {col:true});
-    addBox(0.7, 0.07, 1.15, 6.15, 0.74, -5.7, woodDark, {col:true});
-    chair(5.4, -5.55);
-    addBox(0.9, 1.7, 0.28, 10.7, 0.95, -8.55, woodDark, {col:true});
-    var spines = ['#c9473f', '#3f8fcf', '#e2b24c', '#6aa65b', '#8a6fd1', '#f4efe4', '#ee8a3a', '#2a9d8f'];
-    for (var row = 0; row < 4; row++) {
-      for (var b = 0; b < 6; b++) {
-        addBox(0.1, 0.22 + (b % 3) * 0.03, 0.16, 10.42 + b * 0.12, 0.38 + row * 0.38, -8.42, std(spines[(row + b) % spines.length], 0.6), {cast:false});
+    function rack(x, z) {
+      var shell = new THREE.MeshStandardMaterial({color:0x2e333a, roughness:0.42, metalness:0.55});
+      addBox(0.56, 1.78, 0.38, x, 0.92, z, shell, {col:true});
+      var vent = std('#1a1d22', 0.5);
+      for (var i = 0; i < 6; i++) addBox(0.4, 0.015, 0.012, x, 0.38 + i * 0.24, z + 0.195, vent, {cast:false});
+      var cols = [0x3dff7a, 0x4db4ff];
+      for (var r = 0; r < 7; r++) {
+        for (var c = 0; c < 2; c++) {
+          var col = cols[(r + c) % 2];
+          var mat = new THREE.MeshStandardMaterial({color:col, emissive:col, emissiveIntensity:0.8, roughness:0.3});
+          var led = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.028, 0.018), mat);
+          led.position.set(x - 0.16 + c * 0.32, 0.32 + r * 0.22, z + 0.205);
+          scene.add(led);
+          leds.push({mat:mat, phase:r * 0.85 + c * 1.6 + x});
+        }
       }
     }
-    var cornerLight = new THREE.PointLight(0xffb36b, 0, 5, 2);
-    cornerLight.position.set(6.2, 2.1, -6.2);
-    scene.add(cornerLight); warmLights.push(cornerLight);
+    rack(9.95, -8.48);
+    rack(10.7, -8.48);
+    rack(11.45, -8.48);
+    var rackLight = new THREE.PointLight(0x7ec8ff, 0.45, 3.4, 2);
+    rackLight.position.set(10.7, 1.55, -7.55);
+    scene.add(rackLight);
 
-    function sofa(x, z, color, w) {
-      var fab = std(color, 0.8);
-      addBox(w, 0.32, 0.62, x, 0.32, z, fab, {col:true});
-      addBox(w, 0.42, 0.14, x, 0.62, z - 0.24, fab);
-      addBox(0.14, 0.28, 0.62, x - w/2 + 0.07, 0.48, z, fab);
-      addBox(0.14, 0.28, 0.62, x + w/2 - 0.07, 0.48, z, fab);
+    function bean(x, z, color) {
+      var m = new THREE.Mesh(new THREE.SphereGeometry(0.38, 14, 10), std(color, 0.86));
+      m.scale.set(1.05, 0.55, 1.05);
+      m.position.set(x, 0.22, z);
+      m.castShadow = true;
+      m.receiveShadow = true;
+      scene.add(m);
+      colliders.push({minX:x - 0.32, maxX:x + 0.32, minZ:z - 0.32, maxZ:z + 0.32});
     }
-    sofa(6.3, 6.15, '#7ea36a', 1.9);
-    sofa(9.85, 6.15, '#d2b48c', 1.6);
-    addBox(0.9, 0.08, 0.5, 8.15, 0.38, 7.15, wood, {col:true});
-    addCyl(0.42, 0.42, 0.08, 5.45, 0.42, 7.85, wood, {seg:16});
-    addCyl(0.08, 0.1, 0.38, 5.45, 0.2, 7.85, woodDark, {seg:10});
-    colliders.push({minX:5.0, maxX:5.9, minZ:7.4, maxZ:8.3});
-    chair(5.15, 7.35);
-    var blue = std('#4c90c0', 0.45);
-    addBox(1.15, 0.08, 1.7, 10.45, 0.76, 8.0, blue, {col:true});
-    addBox(1.15, 0.04, 0.03, 10.45, 0.86, 8.0, std('#f7f7f7', 0.4));
-    addBox(0.08, 0.7, 0.08, 9.95, 0.38, 7.25, black);
-    addBox(0.08, 0.7, 0.08, 10.95, 0.38, 7.25, black);
-    addBox(0.08, 0.7, 0.08, 9.95, 0.38, 8.75, black);
-    addBox(0.08, 0.7, 0.08, 10.95, 0.38, 8.75, black);
-    var loungeLight = new THREE.PointLight(0xffc089, 0, 8, 2);
-    loungeLight.position.set(8.2, 2.3, 7.0);
-    scene.add(loungeLight); warmLights.push(loungeLight);
+    bean(6.2, 7.05, '#5b85c4');
+    bean(8.15, 7.25, '#c47a4a');
 
+    function arcade(x, z) {
+      var cab = new THREE.MeshStandardMaterial({color:0x2a2d33, roughness:0.48, metalness:0.28});
+      addBox(0.48, 1.62, 0.68, x, 0.81, z, cab, {col:true});
+      addBox(0.5, 0.14, 0.7, x, 1.68, z, std('#8a6fd1', 0.4));
+      var tex = screenTex('#7dffe1');
+      var sm = new THREE.MeshStandardMaterial({map:tex, emissive:0xffffff, emissiveMap:tex, emissiveIntensity:0.6, roughness:0.35});
+      screens.push(sm);
+      var scr = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.46), sm);
+      scr.position.set(x - 0.25, 1.15, z);
+      scr.rotation.y = -Math.PI / 2;
+      scene.add(scr);
+      addBox(0.22, 0.05, 0.4, x - 0.32, 0.7, z, black);
+    }
+    arcade(11.15, 5.45);
+    arcade(11.15, 6.95);
+
+    var blue = std('#3d7ea6', 0.45);
+    addBox(1.3, 0.06, 1.85, 4.3, 0.74, 7.6, blue, {col:true});
+    addBox(1.3, 0.012, 0.02, 4.3, 0.78, 7.6, std('#f7f6f2', 0.4));
+    addBox(1.28, 0.12, 0.02, 4.3, 0.86, 7.6, std('#f7f6f2', 0.5));
+    [[3.8, 6.85], [4.8, 6.85], [3.8, 8.35], [4.8, 8.35]].forEach(function (p) {
+      addBox(0.06, 0.7, 0.06, p[0], 0.36, p[1], black);
+    });
+
+    addBox(1.25, 0.08, 0.36, 9.05, 0.42, 8.55, wood, {col:true});
+    addBox(1.15, 0.66, 0.06, 9.05, 0.95, 8.48, black);
     var tv = screenTex('#ffd7a8');
-    var tvMat = new THREE.MeshStandardMaterial({map:tv, emissive:0xffffff, emissiveMap:tv, emissiveIntensity:0.25, roughness:0.4});
+    var tvMat = new THREE.MeshStandardMaterial({map:tv, emissive:0xffffff, emissiveMap:tv, emissiveIntensity:0.4, roughness:0.4});
     screens.push(tvMat);
-    addBox(1.1, 0.62, 0.05, 11.78, 1.45, 5.2, black);
-    addBox(1.0, 0.52, 0.02, 11.74, 1.45, 5.2, tvMat, {cast:false});
+    var tvScreen = new THREE.Mesh(new THREE.PlaneGeometry(1.02, 0.54), tvMat);
+    tvScreen.position.set(9.05, 0.95, 8.44);
+    tvScreen.rotation.y = Math.PI;
+    scene.add(tvScreen);
+    addBox(0.5, 0.1, 0.26, 9.05, 0.1, 8.05, black, {col:true});
+
+    var gameLight = new THREE.PointLight(0xffc089, 0, 8, 2);
+    gameLight.position.set(7.4, 2.2, 6.8);
+    scene.add(gameLight);
+    warmLights.push(gameLight);
+
+    var loader = new THREE.TextureLoader();
+    loader.load('the-office-banner.png', function (tex) {
+      if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 4;
+      var aspect = (tex.image && tex.image.height) ? tex.image.width / tex.image.height : 2.5;
+      var h = 0.95;
+      var w = Math.min(2.7, h * aspect);
+      h = w / aspect;
+      var mat = new THREE.MeshBasicMaterial({map:tex, transparent:true});
+      var mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
+      mesh.position.set(9.7, 1.7, 4.36);
+      scene.add(mesh);
+    });
   }
 
   function buildPerson(cfg) {
@@ -758,7 +835,7 @@
   function makeLabel(id) {
     var el = document.createElement('div');
     el.className = 'tagwrap';
-    el.innerHTML = '<div class="bubble" hidden></div><button type="button" class="pill"><span class="dot"></span><span class="nm"></span></button><div class="action"></div>';
+    el.innerHTML = '<div class="bubble" hidden></div><button type="button" class="pill"><span class="dot"></span><span class="nm"></span></button>';
     $('labels').appendChild(el);
     el.querySelector('.pill').addEventListener('click', function () { openAgent(id, 'chat'); });
     return el;
@@ -846,7 +923,7 @@
     while (agent.path.length && Math.hypot(agent.path[0].x - agent.pos.x, agent.path[0].z - agent.pos.z) < 0.08) agent.path.shift();
     agent.dest = spot;
     agent.mode = agent.path.length ? 'walk' : (spot.sit ? 'sit' : 'stand');
-    agent.walkLabel = spot.kind === 'lounge' ? 'Walking to the lounge' : 'Heading to desk';
+    agent.walkLabel = spot.kind === 'game' ? 'Walking to the gaming room' : 'Heading to desk';
     if (!agent.path.length) arrive(agent);
   }
   function arrive(agent) {
@@ -856,25 +933,25 @@
     agent.pos.x = spot.x; agent.pos.z = spot.z;
     agent.yaw = spot.yaw;
     agent.path = [];
-    if (spot.kind === 'lounge') agent.wanderAt = performance.now() + 9000 + Math.random() * 8000;
   }
-  function pickLounge(agent) {
+  function pickGame(agent) {
     var taken = {};
     agents.forEach(function (o) {
       if (o === agent) return;
-      var id = (o.dest && o.dest.kind === 'lounge' && o.dest.id) || (o.spot && o.spot.kind === 'lounge' && o.spot.id);
+      var id = (o.dest && o.dest.kind === 'game' && o.dest.id) || (o.spot && o.spot.kind === 'game' && o.spot.id);
       if (id) taken[id] = 1;
     });
-    var free = loungeSpots.filter(function (s) { return !taken[s.id]; });
-    var pool = free.length ? free : loungeSpots;
-    return pool[Math.floor(Math.random() * pool.length)];
+    var free = gameSpots.filter(function (s) { return !taken[s.id]; });
+    var pool = free.length ? free : gameSpots;
+    var ix = Math.max(0, agents.indexOf(agent));
+    return pool[ix % pool.length];
   }
   function retarget(agent) {
     if (agent.status === 'idle') {
       if (agent.departAt && performance.now() < agent.departAt) return;
-      if (agent.dest && agent.dest.kind === 'lounge' && (agent.mode === 'walk' || (agent.spot && agent.spot.kind === 'lounge'))) return;
-      if (agent.mode !== 'walk' && agent.spot && agent.spot.kind === 'lounge') return;
-      go(agent, pickLounge(agent));
+      if (agent.dest && agent.dest.kind === 'game' && (agent.mode === 'walk' || (agent.spot && agent.spot.kind === 'game'))) return;
+      if (agent.mode !== 'walk' && agent.spot && agent.spot.kind === 'game') return;
+      go(agent, pickGame(agent));
       return;
     }
     go(agent, deskSpots[agent.id]);
@@ -883,7 +960,7 @@
     if (a.mode === 'walk') return a.walkLabel || 'Walking';
     if (a.status === 'working') return (a.task && a.task !== 'Standing by') ? a.task : 'Typing';
     if (a.status === 'awaiting_approval') return a.task && a.task !== 'Standing by' ? a.task : 'Needs approval';
-    if (a.spot && a.spot.kind === 'lounge') return (a.task && a.task !== 'Standing by') ? a.task : 'In the lounge';
+    if (a.spot && a.spot.kind === 'game') return (a.task && a.task !== 'Standing by') ? a.task : 'In the gaming room';
     if (a.status === 'unknown') return 'Connecting…';
     return a.task || 'Standing by';
   }
@@ -907,10 +984,6 @@
         if (dist <= 0.08) { a.path.shift(); if (!a.path.length) arrive(a); }
       } else if (a.mode !== 'walk') {
         lerpYaw(a, a.spot ? a.spot.yaw : a.yaw, dt);
-        if (a.status === 'idle' && a.spot && a.spot.kind === 'lounge' && a.wanderAt && performance.now() > a.wanderAt) {
-          a.wanderAt = performance.now() + 14000 + Math.random() * 10000;
-          go(a, pickLounge(a));
-        }
       }
       var active = a.status === 'working' || a.status === 'awaiting_approval';
       a.ring.material.opacity = active ? (0.28 + Math.sin(a.phase * 3) * 0.12) : 0;
@@ -943,7 +1016,6 @@
       var el = labels[a.id];
       el.querySelector('.nm').textContent = a.cfg.name;
       el.querySelector('.dot').className = dotClass(a);
-      el.querySelector('.action').textContent = tagText(a);
       var bubble = el.querySelector('.bubble');
       var show = walkMode && nearAgent === a;
       bubble.hidden = !show;
@@ -954,7 +1026,6 @@
       var say = player.say && performance.now() < player.sayUntil;
       player.label.querySelector('.bubble').hidden = !say;
       if (say) player.label.querySelector('.bubble').textContent = player.say;
-      player.label.querySelector('.action').textContent = 'You';
       project(player.pos.x, 1.78, player.pos.z, player.label);
     } else if (player) {
       player.label.style.display = 'none';
@@ -1177,12 +1248,18 @@
     }).then(function () { LIVE.busy = false; });
   }
 
+  function paintChips() {
+    document.querySelectorAll('#agentChips .chip').forEach(function (c) {
+      c.classList.toggle('sel', !!(selected && c.getAttribute('data-id') === selected.id));
+    });
+  }
   function openAgent(id, tab) {
     selected = null;
     agents.forEach(function (a) { if (a.id === id) selected = a; });
     if (!selected) return;
     panelTab = tab || 'monitor';
     $('panel').hidden = false;
+    paintChips();
     paintPanel();
   }
   function paintPanel() {
@@ -1244,13 +1321,13 @@
     if (!scene) return;
     ambient.intensity = night ? 0.07 : 0.55;
     hemi.intensity = night ? 0.12 : 0.62;
-    sun.intensity = night ? 0.04 : 1.2;
+    sun.intensity = night ? 0.04 : 1.05;
     fill.intensity = night ? 0.05 : 0.38;
-    scene.background = new THREE.Color(night ? 0x14161c : 0xe7eaee);
-    scene.fog = new THREE.Fog(night ? 0x14161c : 0xe7eaee, 28, 78);
+    scene.background = new THREE.Color(night ? 0x1c1814 : 0xe6dcc8);
+    scene.fog = new THREE.Fog(night ? 0x1c1814 : 0xe4dccb, 28, 78);
     warmLights.forEach(function (l) { l.intensity = night ? 2.4 : 0; });
     screens.forEach(function (m) { m.emissiveIntensity = night ? 1.35 : 0.4; });
-    if (renderer) renderer.toneMappingExposure = night ? 0.92 : 1.05;
+    if (renderer) renderer.toneMappingExposure = night ? 0.9 : 1.0;
   }
   function setWalk(on) {
     walkMode = !!on;
@@ -1288,7 +1365,7 @@
     $('bRoutines').onclick = function () { openCard('routines'); };
     $('bNight').onclick = function () { setNight(!night); };
     $('bWalk').onclick = function () { setWalk(!walkMode); };
-    $('pClose').onclick = function () { $('panel').hidden = true; selected = null; };
+    $('pClose').onclick = function () { $('panel').hidden = true; selected = null; paintChips(); };
     $('tabMon').onclick = function () { panelTab = 'monitor'; paintPanel(); };
     $('tabChat').onclick = function () { panelTab = 'chat'; paintPanel(); };
     $('liveChip').onclick = function () {
@@ -1372,6 +1449,16 @@
     }
     joy.addEventListener('pointerup', endJoy);
     joy.addEventListener('pointercancel', endJoy);
+    var chipBox = $('agentChips');
+    AGENTS.forEach(function (a) {
+      var c = document.createElement('button');
+      c.type = 'button';
+      c.className = 'chip';
+      c.setAttribute('data-id', a.id);
+      c.innerHTML = '<img class="chip-av" alt="" src="' + a.avatar + '"><b style="background:' + a.color + '"></b><span>' + esc(a.name) + '</span>';
+      c.onclick = function () { openAgent(a.id, 'chat'); };
+      chipBox.appendChild(c);
+    });
     renderRoutines();
     renderFaces();
     paintApproval();
@@ -1382,8 +1469,8 @@
     if (!window.THREE) throw new Error('three.js failed to load');
     var view = $('view');
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xe7eaee);
-    scene.fog = new THREE.Fog(0xe7eaee, 30, 80);
+    scene.background = new THREE.Color(0xe6dcc8);
+    scene.fog = new THREE.Fog(0xe4dccb, 30, 80);
     camera = new THREE.PerspectiveCamera(34, 1, 0.1, 220);
     camTarget = new THREE.Vector3(-0.4, 0.6, 0.2);
     renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
@@ -1393,13 +1480,13 @@
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.0;
     view.appendChild(renderer.domElement);
-    hemi = new THREE.HemisphereLight(0xf4f7fb, 0xc8c4bc, 0.62);
+    hemi = new THREE.HemisphereLight(0xf6f1e6, 0xc4b49a, 0.62);
     scene.add(hemi);
     ambient = new THREE.AmbientLight(0xffffff, 0.55);
     scene.add(ambient);
-    sun = new THREE.DirectionalLight(0xfff4e5, 1.2);
+    sun = new THREE.DirectionalLight(0xfff1d6, 1.05);
     sun.position.set(-10, 18, 8);
     sun.castShadow = true;
     var sm = touch ? 1024 : 2048;
@@ -1496,6 +1583,12 @@
       updateAgents(dt);
       updatePlayer(dt);
       updateCamera(dt);
+      var tsec = now / 1000;
+      leds.forEach(function (led) {
+        var wave = 0.5 + 0.5 * Math.sin(tsec * 2.6 + led.phase);
+        var blink = Math.sin(tsec * 7.4 + led.phase * 3.1) > 0.84 ? 0.05 : 1;
+        led.mat.emissiveIntensity = (night ? 1.7 : 0.75) * (0.28 + 0.72 * wave) * blink;
+      });
       updateLabels();
       renderer.render(scene, camera);
       requestAnimationFrame(frame);
@@ -1512,7 +1605,16 @@
   }
   livePoll();
   LIVE.timer = setInterval(livePoll, LIVE_POLL);
-  window.__ov = {agents: agents, player: player, setNight: setNight, setWalk: setWalk, live: function () { return LIVE; }, build: BUILD};
+  window.__ov = {
+    agents: agents, player: player, setNight: setNight, setWalk: setWalk,
+    live: function () { return LIVE; }, build: BUILD, leds: leds, gameSpots: gameSpots, go: go, scene: scene,
+    setCam: function (x, y, z, yw, pi, d) {
+      camTarget.set(x, y, z);
+      if (yw != null) yaw = yw;
+      if (pi != null) pitch = pi;
+      if (d != null) dist = d;
+    }
+  };
 })();
 </script>
 </body>
