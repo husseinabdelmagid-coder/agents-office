@@ -21,7 +21,7 @@
     --shadow: 0 10px 30px rgba(40, 32, 20, .16);
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: #e6dcc8; color: var(--ink); }
+  html, body { margin: 0; height: 100%; background: #000; color: var(--ink); }
   body {
     overflow: hidden;
     font: 15px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -202,10 +202,15 @@
   #walkbar {
     left: 50%; bottom: calc(14px + env(safe-area-inset-bottom));
     transform: translateX(-50%);
-    width: min(520px, calc(100vw - 160px));
+    width: min(640px, calc(100vw - 160px));
     display: flex; gap: 8px; align-items: center;
     background: rgba(255,255,255,.96); border-radius: 16px; padding: 8px;
     box-shadow: var(--shadow); border: 1px solid var(--line);
+  }
+  .zoom { display: flex; gap: 4px; flex: 0 0 auto; }
+  .zoom button {
+    width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line);
+    background: #fff; font-size: 18px; line-height: 1;
   }
   #walkbar[hidden], #joy[hidden], #livePop[hidden] { display: none !important; }
   #walkbar input { flex: 1; min-height: 40px; border: 0; background: transparent; padding: 0 8px; }
@@ -347,6 +352,10 @@
     <strong id="walkWho">Walk in</strong>
     <div id="sayHint">WASD or arrows · Esc leaves</div>
   </div>
+  <div class="zoom">
+    <button type="button" id="bZoomOut" aria-label="Zoom out">−</button>
+    <button type="button" id="bZoomIn" aria-label="Zoom in">+</button>
+  </div>
   <input id="sayInput" maxlength="160" placeholder="Walk up to an agent" autocomplete="off" enterkeyhint="send" disabled>
   <button class="send" id="sayBtn" type="button" disabled>Say</button>
 </div>
@@ -358,7 +367,7 @@
 <script>
 (function () {
   'use strict';
-  var BUILD = '20261014-ov3';
+  var BUILD = '20261014-ov4';
   var AGENTS = [
     {id:'eve', name:'Eve', role:'Personal assistant', color:'#8a6fd1', shirt:'#8a6fd1', pants:'#3f4250', hair:'#3b2a22', skin:'#f1c8a5', style:'bun', avatar:'../avatars/eve.png', uuid:'e0d3f0e6-e6a5-4b4d-a002-87befa812360'},
     {id:'matt', name:'Matt', role:'Fitness coach', color:'#ee8a3a', shirt:'#ee8a3a', pants:'#2f3440', hair:'#2a1d16', skin:'#d8a27c', style:'short', avatar:'../avatars/matt.png', uuid:'3c92912d-8aa9-439d-b2fb-5282635b30d3'},
@@ -397,18 +406,23 @@
   };
   function meetOut(pts) {
     return pts.concat([
-      {x:-9.4, z:-5.45},
-      {x:-9.4, z:-4.7},
-      {x:-7.85, z:-4.7},
+      {x:-8.5, z:-4.55},
+      {x:-8.5, z:-3.65},
+      {x:-7.85, z:-3.65},
       {x:-7.85, z:SOUTH}
     ]);
   }
   var meetSpots = [
-    {id:'meetN1', kind:'meet', x:-10.0, z:-7.67, yaw:0, sit:true, out:meetOut([{x:-11.25,z:-7.67},{x:-11.25,z:-5.5}])},
-    {id:'meetN2', kind:'meet', x:-8.8, z:-7.67, yaw:0, sit:true, out:meetOut([{x:-7.55,z:-7.67},{x:-7.55,z:-5.5}])},
-    {id:'meetS1', kind:'meet', x:-10.0, z:-6.23, yaw:Math.PI, sit:true, out:meetOut([{x:-10.0,z:-5.5}])},
-    {id:'meetS2', kind:'meet', x:-8.8, z:-6.23, yaw:Math.PI, sit:true, out:meetOut([{x:-8.8,z:-5.5}])},
-    {id:'meetW', kind:'meet', x:-10.8, z:-6.95, yaw:Math.PI / 2, sit:true, out:meetOut([{x:-11.25,z:-6.95},{x:-11.25,z:-5.5}])}
+    {id:'meetN1', kind:'meet', x:-9.85, z:-7.55, yaw:0, sit:true, out:meetOut([{x:-11.4,z:-7.55},{x:-11.4,z:-4.55}])},
+    {id:'meetN2', kind:'meet', x:-8.95, z:-7.55, yaw:0, sit:true, out:meetOut([{x:-8.95,z:-8.15},{x:-11.4,z:-8.15},{x:-11.4,z:-4.55}])},
+    {id:'meetN3', kind:'meet', x:-8.05, z:-7.55, yaw:0, sit:true, out:meetOut([{x:-5.55,z:-7.55},{x:-5.55,z:-4.55}])},
+    {id:'meetN4', kind:'meet', x:-7.15, z:-7.55, yaw:0, sit:true, out:meetOut([{x:-7.15,z:-8.15},{x:-5.55,z:-8.15},{x:-5.55,z:-4.55}])},
+    {id:'meetS1', kind:'meet', x:-9.85, z:-5.45, yaw:Math.PI, sit:true, out:meetOut([{x:-9.85,z:-4.55}])},
+    {id:'meetS2', kind:'meet', x:-8.95, z:-5.45, yaw:Math.PI, sit:true, out:meetOut([{x:-8.95,z:-4.55}])},
+    {id:'meetS3', kind:'meet', x:-8.05, z:-5.45, yaw:Math.PI, sit:true, out:meetOut([{x:-8.05,z:-4.55}])},
+    {id:'meetS4', kind:'meet', x:-7.15, z:-5.45, yaw:Math.PI, sit:true, out:meetOut([{x:-7.15,z:-4.55}])},
+    {id:'meetW', kind:'meet', x:-10.85, z:-6.5, yaw:Math.PI / 2, sit:true, out:meetOut([{x:-11.4,z:-6.5},{x:-11.4,z:-4.55}])},
+    {id:'meetE', kind:'meet', x:-6.15, z:-6.5, yaw:-Math.PI / 2, sit:true, out:meetOut([{x:-5.55,z:-6.5},{x:-5.55,z:-4.55}])}
   ];
   var gameSpots = [
     {id:'beanL', kind:'game', x:5.6, z:8.2, yaw:0.5, sit:true, out:[{x:5.6,z:5.1},{x:6.4,z:5.1},{x:6.4,z:SOUTH}]},
@@ -421,6 +435,7 @@
   var scene, camera, renderer, sun, hemi, ambient, fill;
   var night = false, walkMode = false, togetherForced = false;
   var yaw = 0.62, pitch = 0.78, dist = 26;
+  var walkDist = 4.4;
   var camTarget = null;
   var colliders = [];
   var clickables = [];
@@ -553,7 +568,7 @@
     scene.add(floor);
     addBox(8.4, 0.02, 4.0, 7.25, 0.01, 6.55, std('#c9b48a', 0.96), {cast:false, col:false});
     addBox(8.2, 0.02, 3.6, -6.6, 0.01, 0.35, std('#d8c6a4', 0.96), {cast:false});
-    addBox(10.0, 0.025, 4.05, 6.4, 0.015, -6.5, std('#2c3138', 0.72), {cast:false});
+    addBox(5.05, 0.025, 4.0, 9.05, 0.015, -6.62, std('#2c3138', 0.72), {cast:false});
 
     var wall = std('#f3f2ee', 0.9);
     var wallTop = std('#cdd0d4', 0.7);
@@ -594,8 +609,8 @@
       addBox(0.08, 0.06, z1 - z0, x, 2.25, (z0 + z1) / 2, frame, {cast:false});
     }
     var meetRooms = [
-      {x0:-11.8, x1:-7.0, z0:-8.75, z1:-5.15, door0:-10.15, door1:-8.65},
-      {x0:-6.6, x1:-1.8, z0:-8.75, z1:-5.15, door0:-4.95, door1:-3.45}
+      {x0:-11.85, x1:-5.15, z0:-8.8, z1:-4.2, door0:-9.3, door1:-7.7},
+      {x0:-4.75, x1:1.95, z0:-8.8, z1:-4.2, door0:-2.2, door1:-0.6}
     ];
     meetRooms.forEach(function (r) {
       glassRunX(r.z0, r.x0, r.x1);
@@ -605,10 +620,10 @@
       glassRunZ(r.x1, r.z0, r.z1);
     });
 
-    var sx0 = 1.2, sx1 = 11.6, sz0 = -8.7, sz1 = -4.3;
+    var sx0 = 6.4, sx1 = 11.7, sz0 = -8.75, sz1 = -4.5;
     glassRunX(sz0, sx0, sx1);
-    glassRunX(sz1, sx0, 5.6);
-    glassRunX(sz1, 7.2, sx1);
+    glassRunX(sz1, sx0, 8.3);
+    glassRunX(sz1, 9.7, sx1);
     glassRunZ(sx0, sz0, sz1);
     glassRunZ(sx1, sz0, sz1);
 
@@ -635,9 +650,12 @@
       ball.castShadow = true;
       scene.add(ball);
     }
-    [[-11.45, -4.35], [-0.2, -6.6], [1.15, 2.4], [-11.2, 8.05], [0.9, 7.2]].forEach(function (p, i) {
-      plant(p[0], p[1], i % 2 ? 0.9 : 1.1);
-    });
+    [
+      [-11.5, -3.35, 1.05], [4.2, -6.7, 1.15], [4.3, -3.55, 0.85], [9.0, -3.45, 0.95],
+      [1.2, 2.55, 1.1], [-11.2, 3.55, 1.2], [-11.15, 6.9, 0.9], [-11.2, 8.15, 1.05],
+      [0.85, 7.55, 1.15], [1.45, 5.15, 0.85], [3.4, 2.15, 1.0], [-0.2, -3.45, 0.9],
+      [-4.45, -8.4, 0.75], [11.05, -4.85, 0.6], [5.15, -7.6, 1.05], [-4.9, 8.15, 1.1]
+    ].forEach(function (p) { plant(p[0], p[1], p[2]); });
 
     function chair(x, z) {
       addCyl(0.045, 0.05, 0.42, x, 0.21, z, chairD, {seg:8});
@@ -688,7 +706,32 @@
     AGENTS.forEach(function (a) {
       var s = deskSpots[a.id];
       desk(s.x, s.z, a.id);
+      addCyl(0.045, 0.038, 0.07, s.x + 0.42, 0.81, s.z + 0.42, std(a.color, 0.45), {seg:8});
     });
+    function panel(x, z, len, axis) {
+      var h = 1.22;
+      var fabric = std('#d4c4a8', 0.9);
+      var trim = std('#7e5638', 0.55);
+      if (axis === 'x') {
+        addBox(len, h, 0.07, x, h / 2, z, fabric, {col:true});
+        addBox(len, 0.05, 0.09, x, h + 0.02, z, trim, {cast:false});
+      } else {
+        addBox(0.07, h, len, x, h / 2, z, fabric, {col:true});
+        addBox(0.09, 0.05, len, x, h + 0.02, z, trim, {cast:false});
+      }
+    }
+    panel(-9.5, -1.48, 1.45, 'x');
+    panel(-6.35, -1.48, 1.45, 'x');
+    panel(-10.2, 0.3, 3.55, 'z');
+    panel(-5.5, 0.3, 3.55, 'z');
+    panel(-8.82, -0.95, 1.0, 'z');
+    panel(-6.88, -0.95, 1.0, 'z');
+    panel(-8.82, 1.5, 1.15, 'z');
+    panel(-6.88, 1.5, 1.15, 'z');
+    panel(-9.5, 0.82, 1.45, 'x');
+    panel(-6.35, 0.82, 1.45, 'x');
+    panel(-3.55, -0.42, 1.35, 'x');
+    panel(-4.3, 0.4, 1.55, 'z');
 
     function meetChair(x, z, face) {
       addBox(0.4, 0.07, 0.4, x, 0.46, z, chairC);
@@ -699,46 +742,57 @@
     }
     function meetTable(x, z, northZ) {
       var tableHit = {kind:'meeting'};
-      addBox(1.9, 0.08, 0.8, x, 0.74, z, woodTop, {col:true, hit:tableHit});
-      meetChair(x - 0.6, z - 0.72, 's');
-      meetChair(x + 0.6, z - 0.72, 's');
-      meetChair(x - 0.6, z + 0.72, 'n');
-      meetChair(x + 0.6, z + 0.72, 'n');
-      meetChair(x - 1.4, z, 'e');
-      meetChair(x + 1.4, z, 'w');
+      addBox(3.6, 0.08, 1.2, x, 0.74, z, woodTop, {col:true, hit:tableHit});
+      [-1.35, -0.45, 0.45, 1.35].forEach(function (dx) {
+        meetChair(x + dx, z - 1.05, 's');
+        meetChair(x + dx, z + 1.05, 'n');
+      });
+      meetChair(x - 2.35, z, 'e');
+      meetChair(x + 2.35, z, 'w');
       var chart = chartTex();
       var chartMat = new THREE.MeshStandardMaterial({map:chart, emissive:0xffffff, emissiveMap:chart, emissiveIntensity:0.35, roughness:0.4});
       screens.push(chartMat);
       addBox(1.15, 0.62, 0.05, x, 1.45, northZ + 0.16, black, {hit:tableHit});
       addBox(1.02, 0.5, 0.02, x, 1.45, northZ + 0.2, chartMat, {cast:false, hit:tableHit});
-      var meetLight = new THREE.PointLight(0xffb36b, 0, 5.5, 2);
+      var meetLight = new THREE.PointLight(0xffb36b, 0, 6.5, 2);
       meetLight.position.set(x, 2.1, z);
       scene.add(meetLight);
       warmLights.push(meetLight);
     }
-    meetTable(-9.4, -6.95, -8.75);
-    meetTable(-4.2, -6.95, -8.75);
+    meetTable(-8.5, -6.5, -8.8);
+    meetTable(-1.4, -6.5, -8.8);
 
-    function rack(x, z) {
+    function rack(x, z, face) {
       var shell = new THREE.MeshStandardMaterial({color:0x2e333a, roughness:0.42, metalness:0.55});
-      addBox(0.56, 1.78, 0.38, x, 0.92, z, shell, {col:true});
+      var alongX = face === 's' || face === 'n';
+      addBox(alongX ? 0.56 : 0.38, 1.78, alongX ? 0.38 : 0.56, x, 0.92, z, shell, {col:true});
+      var fx = face === 'e' ? 1 : face === 'w' ? -1 : 0;
+      var fz = face === 's' ? 1 : face === 'n' ? -1 : 0;
       var vent = std('#1a1d22', 0.5);
-      for (var i = 0; i < 6; i++) addBox(0.4, 0.015, 0.012, x, 0.38 + i * 0.24, z + 0.195, vent, {cast:false});
+      for (var i = 0; i < 6; i++) {
+        addBox(alongX ? 0.4 : 0.012, 0.015, alongX ? 0.012 : 0.4, x + fx * 0.195, 0.38 + i * 0.24, z + fz * 0.195, vent, {cast:false});
+      }
       var cols = [0x3dff7a, 0x4db4ff];
       for (var r = 0; r < 7; r++) {
         for (var c = 0; c < 2; c++) {
           var col = cols[(r + c) % 2];
           var mat = new THREE.MeshStandardMaterial({color:col, emissive:col, emissiveIntensity:0.9, roughness:0.3});
-          var led = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.028, 0.018), mat);
-          led.position.set(x - 0.16 + c * 0.32, 0.32 + r * 0.22, z + 0.205);
+          var led = new THREE.Mesh(new THREE.BoxGeometry(alongX ? 0.045 : 0.018, 0.028, alongX ? 0.018 : 0.045), mat);
+          var slide = -0.16 + c * 0.32;
+          led.position.set(x + fx * 0.205 + (alongX ? slide : 0), 0.32 + r * 0.22, z + fz * 0.205 + (alongX ? 0 : slide));
           scene.add(led);
-          leds.push({mat:mat, phase:r * 0.85 + c * 1.6 + x});
+          leds.push({mat:mat, phase:r * 0.85 + c * 1.6 + x + z});
         }
       }
     }
-    [2.4, 4.0, 5.6, 7.2, 8.8, 10.4].forEach(function (x) { rack(x, -6.55); });
-    var rackLight = new THREE.PointLight(0x7ec8ff, 0.7, 9, 2);
-    rackLight.position.set(6.4, 1.8, -6.2);
+    rack(7.55, -8.48, 's');
+    rack(10.5, -8.48, 's');
+    rack(6.68, -7.35, 'e');
+    rack(6.68, -5.75, 'e');
+    rack(11.42, -7.35, 'w');
+    rack(11.42, -5.75, 'w');
+    var rackLight = new THREE.PointLight(0x7ec8ff, 0.7, 7, 2);
+    rackLight.position.set(9.05, 1.8, -6.6);
     scene.add(rackLight);
 
     function bean(x, z, color) {
@@ -809,6 +863,42 @@
     gameLight.position.set(7.2, 2.2, 6.7);
     scene.add(gameLight);
     warmLights.push(gameLight);
+
+    function wallArt(x, z, face, w, h, color) {
+      var y = 1.6;
+      var frameM = std('#3a3e45', 0.45);
+      var paint = std(color, 0.62);
+      if (face === 'e') {
+        addBox(0.05, h + 0.1, w + 0.1, x, y, z, frameM, {cast:false});
+        addBox(0.02, h, w, x + 0.035, y, z, paint, {cast:false});
+      } else {
+        var s = face === 'n' ? -1 : 1;
+        addBox(w + 0.1, h + 0.1, 0.05, x, y, z, frameM, {cast:false});
+        addBox(w, h, 0.02, x, y, z + s * 0.035, paint, {cast:false});
+      }
+    }
+    wallArt(-11.82, -2.45, 'e', 0.72, 0.46, '#8a6fd1');
+    wallArt(-11.82, 4.7, 'e', 0.86, 0.5, '#c9473f');
+    wallArt(-6.4, 8.86, 'n', 0.92, 0.48, '#3f8fcf');
+    wallArt(-1.6, 8.86, 'n', 0.7, 0.42, '#ee8a3a');
+    addBox(0.36, 1.35, 1.15, -11.5, 0.68, 6.35, wood, {col:true});
+    [[-0.32, '#c9473f'], [-0.08, '#3f8fcf'], [0.16, '#8a6fd1'], [0.36, '#2a9d8f']].forEach(function (b) {
+      addBox(0.07, 0.26, 0.16, -11.32, 1.05, 6.35 + b[0], std(b[1], 0.55), {cast:false});
+      addBox(0.07, 0.2, 0.14, -11.32, 0.52, 6.3 + b[0], std(b[1], 0.6), {cast:false});
+    });
+    addBox(0.38, 1.05, 0.38, 4.55, 0.55, -3.55, std('#d7dbe2', 0.4), {col:true});
+    addBox(0.26, 0.2, 0.04, 4.55, 0.85, -3.34, std('#7fd0ff', 0.3), {cast:false});
+    addCyl(0.04, 0.04, 0.16, 4.68, 0.42, -3.32, black, {seg:8});
+    addCyl(0.05, 0.07, 1.5, 2.45, 0.75, 1.55, black, {seg:8});
+    var lampHead = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), new THREE.MeshStandardMaterial({color:0xffe1b0, emissive:0xffb36b, emissiveIntensity:0.85, roughness:0.4}));
+    lampHead.position.set(2.45, 1.58, 1.55);
+    scene.add(lampHead);
+    addBox(0.9, 0.08, 0.5, 1.7, 0.42, 0.7, woodTop, {col:true});
+    addBox(0.28, 0.34, 0.28, 1.35, 0.18, 0.95, chairC, {col:true});
+    addBox(0.28, 0.34, 0.28, 2.05, 0.18, 0.45, chairC, {col:true});
+    addCyl(0.12, 0.1, 0.28, -9.15, 0.14, 2.6, std('#59616c', 0.7), {seg:8});
+    addCyl(0.035, 0.045, 1.35, -0.85, 0.68, 5.35, woodDark, {seg:6});
+    addBox(0.22, 0.04, 0.22, -0.85, 1.36, 5.35, woodDark, {cast:false});
 
     var loader = new THREE.TextureLoader();
     loader.load('the-office-banner.png', function (tex) {
@@ -1155,7 +1245,7 @@
     if (len > 1) { ix /= len; iz /= len; }
     if (len > 0.08) {
       var fx = Math.sin(camYaw), fz = Math.cos(camYaw);
-      var rx = Math.cos(camYaw), rz = -Math.sin(camYaw);
+      var rx = -Math.cos(camYaw), rz = Math.sin(camYaw);
       var mx = fx * iz + rx * ix;
       var mz = fz * iz + rz * ix;
       var mlen = Math.hypot(mx, mz) || 1;
@@ -1180,7 +1270,7 @@
     $('sayInput').disabled = !sayOn;
     $('sayBtn').disabled = !sayOn;
     $('walkWho').textContent = best ? ('Near ' + best.cfg.name) : 'Walk in';
-    $('sayHint').textContent = best ? 'Example bubble — Enter says it locally' : 'WASD or arrows · Esc leaves';
+    $('sayHint').textContent = best ? 'Example bubble — Enter says it locally' : 'WASD or arrows · +/− zooms · Esc leaves';
     $('sayInput').placeholder = best ? ('Say something to ' + best.cfg.name) : 'Walk up to an agent';
   }
 
@@ -1191,7 +1281,7 @@
       while (d > Math.PI) d -= Math.PI * 2;
       while (d < -Math.PI) d += Math.PI * 2;
       camYaw += d * Math.min(1, dt * 4);
-      var back = 4.4;
+      var back = walkDist;
       for (var i = 0; i < 5; i++) {
         var cx = player.pos.x - Math.sin(camYaw) * back;
         var cz = player.pos.z - Math.cos(camYaw) * back;
@@ -1429,8 +1519,8 @@
     hemi.intensity = night ? 0.12 : 0.62;
     sun.intensity = night ? 0.04 : 1.05;
     fill.intensity = night ? 0.05 : 0.38;
-    scene.background = new THREE.Color(night ? 0x1c1814 : 0xe6dcc8);
-    scene.fog = new THREE.Fog(night ? 0x1c1814 : 0xe4dccb, 28, 78);
+    scene.background = new THREE.Color(0x000000);
+    scene.fog = null;
     warmLights.forEach(function (l) { l.intensity = night ? 2.4 : 0; });
     screens.forEach(function (m) { m.emissiveIntensity = night ? 1.35 : 0.4; });
     if (renderer) renderer.toneMappingExposure = night ? 0.9 : 1.0;
@@ -1472,6 +1562,9 @@
     $('bTogether').onclick = function () { setTogether(); };
     $('bNight').onclick = function () { setNight(!night); };
     $('bWalk').onclick = function () { setWalk(!walkMode); };
+    function zoomWalk(dir) { walkDist = clamp(walkDist * (dir > 0 ? 0.82 : 1.22), 1.6, 8.5); }
+    $('bZoomIn').onclick = function () { zoomWalk(1); };
+    $('bZoomOut').onclick = function () { zoomWalk(-1); };
     $('pClose').onclick = function () { $('panel').hidden = true; selected = null; paintChips(); };
     $('tabMon').onclick = function () { panelTab = 'monitor'; paintPanel(); };
     $('tabChat').onclick = function () { panelTab = 'chat'; paintPanel(); };
@@ -1576,8 +1669,8 @@
     if (!window.THREE) throw new Error('three.js failed to load');
     var view = $('view');
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xe6dcc8);
-    scene.fog = new THREE.Fog(0xe4dccb, 30, 80);
+    scene.background = new THREE.Color(0x000000);
+    scene.fog = null;
     camera = new THREE.PerspectiveCamera(34, 1, 0.1, 220);
     camTarget = new THREE.Vector3(-0.4, 0.6, 0.2);
     renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
@@ -1655,11 +1748,15 @@
     renderer.domElement.addEventListener('pointermove', function (e) {
       if (!ptrs.has(e.pointerId)) return;
       var p = ptrs.get(e.pointerId);
-      if (ptrs.size >= 2 && !walkMode) {
+      if (ptrs.size >= 2) {
         p.x = e.clientX; p.y = e.clientY;
         var a = Array.from(ptrs.values());
         var pd = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y);
-        if (pinch0 > 0) dist = clamp(dist * (pinch0 / pd), 12, 42);
+        if (pinch0 > 0) {
+          var scale = pinch0 / pd;
+          if (walkMode) walkDist = clamp(walkDist * scale, 1.6, 8.5);
+          else dist = clamp(dist * scale, 12, 42);
+        }
         pinch0 = pd;
         return;
       }
@@ -1679,7 +1776,8 @@
     });
     renderer.domElement.addEventListener('wheel', function (e) {
       e.preventDefault();
-      dist = clamp(dist * (e.deltaY > 0 ? 1.06 : 0.94), 12, 42);
+      if (walkMode) walkDist = clamp(walkDist * (e.deltaY > 0 ? 1.08 : 0.92), 1.6, 8.5);
+      else dist = clamp(dist * (e.deltaY > 0 ? 1.06 : 0.94), 12, 42);
     }, {passive:false});
     renderer.domElement.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 
@@ -1721,7 +1819,10 @@
       if (yw != null) yaw = yw;
       if (pi != null) pitch = pi;
       if (d != null) dist = d;
-    }
+    },
+    setCamYaw: function (y) { camYaw = y; },
+    walkDist: function () { return walkDist; },
+    setWalkDist: function (d) { walkDist = clamp(d, 1.6, 8.5); }
   };
 })();
 </script>
