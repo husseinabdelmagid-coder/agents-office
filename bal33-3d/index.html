@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Headquarters · 20261015-bal33.2-3d</title>
+<title>The Office.01 · 20261015-the-office.01</title>
 <style>
 :root{--chrome:#1b1c20;--chrome2:#25272c;--ink:#2d2a26;--muted:#857d71;--paper:#f8f5ef;--card:#fff;--line:#e8e1d4}
 *{box-sizing:border-box}
@@ -86,7 +86,7 @@ body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
 </head>
 <body class="gated">
 
-<div id="gate"><div class="box"><h1>Agents Office</h1><p>Enter the password to open the live office.</p>
+<div id="gate"><div class="box"><h1>The Office.01</h1><p>Enter the password to open the live office.</p>
 <input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" autofocus>
 <button id="gateGo" type="button">Unlock</button>
 <div class="err" id="gateErr"></div>
@@ -96,7 +96,7 @@ body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
 <div class="app">
 <header>
   <div class="dots"><i></i><i></i><i></i></div>
-  <div class="title">AGENTS HEADQUARTERS<small>virtual office</small></div>
+  <div class="title">The Office.01<small>virtual office</small></div>
   <div class="chips" id="chips"></div>
   <span class="clock" id="clock">09:00</span>
   <span class="sim" id="mode">● Simulated</span>
@@ -315,7 +315,7 @@ function updateAgent(a,dt){
     if(dist<=sp){a.x=tg[0];a.y=tg[1];sp-=dist;a.path.shift();}else{a.x+=a.dx*sp;a.y+=a.dy*sp;sp=0;}}
   if(!a.path.length)arrive(a);}
 
-/* ---------- three.js isometric view (bal33.2-3d) ---------- */
+/* ---------- three.js isometric view (The Office.01) ---------- */
 var canvas=null, renderer=null, scene=null, camera=null, camTarget=null;
 var view=document.getElementById('view');
 var labelLayer=document.getElementById('labels');
@@ -797,7 +797,7 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261015-bal33.2-3d';
+var OFFICE_BUILD='20261015-the-office.01';
 var OFFICE_COMMIT='pending';
 var LIVE_SLOT_SECS=12;var LIVE_PTR_FALLBACK=['https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json'];
 var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
