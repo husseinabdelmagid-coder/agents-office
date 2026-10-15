@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Headquarters · 20261007-bal33-real-avatars</title>
+<title>Agents Headquarters · 20261015-bal33.1-strange</title>
 <style>
 :root{--chrome:#1b1c20;--chrome2:#25272c;--ink:#2d2a26;--muted:#857d71;--paper:#f8f5ef;--card:#fff;--line:#e8e1d4}
 *{box-sizing:border-box}
@@ -197,7 +197,7 @@ function buildScene(){
   cyl(3.5,6.0,0.12,0.71,0.02,'#ffffff',{nb:1});cyl(4.2,6.6,0.12,0.71,0.02,'#ffffff',{nb:1});
   stools(3.8,6.3,1.65,'meet');
   // desk pods (centre)
-  pod(7.3,4.4,['eve','neo','d2','d3'],['mug','plant','',  'mug']);
+  pod(7.3,4.4,['eve','neo','strange','d3'],['mug','plant','',  'mug']);
   pod(12.3,4.4,['d4','prof','sam','d5'],['', 'books','mug','plant']);
   pod(9.8,9.6,['matt','d6','d7','d8'],['plant','mug','', '']);
   // right round table
@@ -279,7 +279,10 @@ var AG=[
         ['kitchen2','Coffee + quick sync with Eve',8,'idle'],['sam','Salary benchmark research',12,'work'],['reception2','Scheduling recruiter calls',9,'work'],['rt2','Career roadmap session',10,'meet']]},
  {id:'neo',name:'Neo',role:'Coding specialist',color:'#2a9d8f',shirt:'#2a9d8f',pants:'#2f3440',hair:'#1f1a17',skin:'#e7b896',style:'short',
   plan:[['neo','Patching Live status & Pages sync',14,'work'],['board','Mapping CDN / pointer bugs on the board',11,'work'],
-        ['meet1','Stand-up: shipping the office fix',9,'meet'],['neo','Deploying HTML to gh-pages',12,'work'],['cooler','Hydration break',6,'idle'],['rt0','Code review with Eve',10,'meet']]}
+        ['meet1','Stand-up: shipping the office fix',9,'meet'],['neo','Deploying HTML to gh-pages',12,'work'],['cooler','Hydration break',6,'idle'],['rt0','Code review with Eve',10,'meet']]},
+ {id:'strange',name:'Dr. Strange',role:'Medical advisor',color:'#6a4c93',shirt:'#6a4c93',pants:'#2c2438',hair:'#2a2420',skin:'#e7b896',style:'short',
+  plan:[['strange','Reviewing charts and clinic notes',14,'work'],['shelf','Pulling a medical reference',9,'work'],
+        ['meet0','Consult with Eve',10,'meet'],['strange','Writing the medical brief',12,'work'],['cooler','Hydration break',6,'idle'],['rt1','Standing by',8,'idle']]}
 ];
 var STATUS_TXT={work:'Working',meet:'In meeting',idle:'Break',walk:'Walking',wait:'Needs approval',live_idle:'Idle'};
 
@@ -492,7 +495,7 @@ function frame(ts){
 }
 
 /* ---------- UI ---------- */
-var AVATAR={eve:'avatars/eve.png',matt:'avatars/matt.png',prof:'avatars/el-profesor.png',sam:'avatars/sam.png',neo:'avatars/neo.png'};
+var AVATAR={eve:'../avatars/eve.png',matt:'../avatars/matt.png',prof:'../avatars/el-profesor.png',sam:'../avatars/sam.png',neo:'../avatars/neo.png',strange:'../avatars/dr-strange.png'};
 var uiInit=false,cardEls={},feedEl=document.getElementById('feed'),feed=[];
 function hhmm(m){m=Math.floor(m)%(24*60);var h=Math.floor(m/60),mm=m%60;return (h<10?'0':'')+h+':'+(mm<10?'0':'')+mm;}
 function buildUI(){var chips=document.getElementById('chips'),cards=document.getElementById('cards');
@@ -533,13 +536,13 @@ document.getElementById('bLabels').onclick=function(){showLabels=!showLabels;thi
    publish-agents-status.py. No tokens, no calls to the box gateway: if the file
    cannot be fetched (file://, missing, offline) the office falls back to the demo. */
 var LIVE={on:false,wanted:false,data:null,updated:0,timer:null,busy:false,fail:0,ctrl:null};
-var OFFICE_BUILD='20261007-bal33-real-avatars';
+var OFFICE_BUILD='20261015-bal33.1-strange';
 var OFFICE_COMMIT='9a79fdf742fda1e0baa9955a5726a4a9669f06b6';
 var LIVE_SLOT_SECS=12;var LIVE_PTR_FALLBACK=['https://raw.githack.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json','https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/live-pointer.json'];
 var LIVE_URLS=['https://raw.githubusercontent.com/husseinabdelmagid-coder/agents-office/main/agents-status.json'],LIVE_POLL=3000,LIVE_STALE=45000,LIVE_FETCH_MS=12000;
-var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam','e86192fb-f95f-40d2-ad1a-21023a9adac2':'neo'};
-var LIVE_NAMES={'eve':'eve','matt':'matt','el profesor':'prof','sam':'sam','neo':'neo','forge':'neo'};
-var IDLE_SPOT={eve:'sofa1',matt:'sofa2',prof:'sofa3',sam:'rt2',neo:'rt0'};
+var LIVE_IDS={'e0d3f0e6-e6a5-4b4d-a002-87befa812360':'eve','3c92912d-8aa9-439d-b2fb-5282635b30d3':'matt','3a48a61f-5e48-4510-80f4-83a668552dec':'prof','d5d825f5-d637-4a7e-b2e8-48e5d5048e5e':'sam','e86192fb-f95f-40d2-ad1a-21023a9adac2':'neo','a04bdbb3-b652-4846-ad72-f8f0149c0689':'strange'};
+var LIVE_NAMES={'eve':'eve','matt':'matt','el profesor':'prof','sam':'sam','neo':'neo','forge':'neo','dr. strange':'strange','dr strange':'strange','doctor strange':'strange','strange':'strange'};
+var IDLE_SPOT={eve:'sofa1',matt:'sofa2',prof:'sofa3',sam:'rt2',neo:'rt0',strange:'rt1'};
 var DEMO_NOTE='Simulated demo — scripted routine only (does not update agents-status.json / Live). Tap an agent or a card to follow them.';
 function nowHM(){var d=new Date();return hhmm(d.getHours()*60+d.getMinutes());}
 function agById(id){for(var i=0;i<AG.length;i++)if(AG[i].id===id)return AG[i];return null;}
