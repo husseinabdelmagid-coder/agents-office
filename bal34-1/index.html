@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Agents Headquarters · 20261015-bal34.1</title>
+<title>Agents Headquarters · 20261015-bal34.2</title>
 <style>
   :root {
     --accent: #8a6fd1;
@@ -294,8 +294,8 @@
 <input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" autofocus>
 <button id="gateGo" type="button">Unlock</button>
 <div class="err" id="gateErr"></div>
-<div class="gate-build" id="gateBuild">Build 20261015-bal34.1</div></div></div>
-<div class="corner-build" id="cornerBuild">Build 20261015-bal34.1</div>
+<div class="gate-build" id="gateBuild">Build 20261015-bal34.2</div></div></div>
+<div class="corner-build" id="cornerBuild">Build 20261015-bal34.2</div>
 <div id="view"></div>
 <div id="labels"></div>
 
@@ -407,10 +407,11 @@
 <script>
 (function () {
   'use strict';
-  var BUILD = '20261015-bal34.1';
+  var BUILD = '20261015-bal34.2';
   var AT_PROTO = /\/prototype-ov\//.test(location.pathname);
-  var NESTED = AT_PROTO || /\/bal34-1\//.test(location.pathname);
-  function asset(p) { return (NESTED ? '../' : '') + p; }
+  var IN_VERSIONS = /\/versions\//.test(location.pathname);
+  var NESTED = AT_PROTO || /\/bal34-1\//.test(location.pathname) || IN_VERSIONS;
+  function asset(p) { return (IN_VERSIONS ? '../../' : (NESTED ? '../' : '')) + p; }
   var AGENTS = [
     {id:'eve', name:'Eve', role:'Personal assistant', color:'#8a6fd1', shirt:'#8a6fd1', pants:'#3f4250', hair:'#3b2a22', skin:'#f1c8a5', style:'bun', avatar:asset('avatars/eve.png'), uuid:'e0d3f0e6-e6a5-4b4d-a002-87befa812360'},
     {id:'matt', name:'Matt', role:'Fitness coach', color:'#ee8a3a', shirt:'#ee8a3a', pants:'#2f3440', hair:'#2a1d16', skin:'#d8a27c', style:'short', avatar:asset('avatars/matt.png'), uuid:'3c92912d-8aa9-439d-b2fb-5282635b30d3'},
@@ -442,14 +443,33 @@
   var LIVE_POLL = 3000, LIVE_STALE = 45000, LIVE_FETCH_MS = 12000;
   var SOUTH = 3.45;
 
-  var deskSpots = {
-    eve:  {id:'eve-desk', kind:'desk', x:-9.35, z:-0.85, yaw:0, sit:true, out:[{x:-8.55,z:-0.85},{x:-7.85,z:-0.85},{x:-7.85,z:SOUTH}]},
-    matt: {id:'matt-desk', kind:'desk', x:-6.35, z:-0.85, yaw:0, sit:true, out:[{x:-7.15,z:-0.85},{x:-7.85,z:-0.85},{x:-7.85,z:SOUTH}]},
-    prof: {id:'prof-desk', kind:'desk', x:-9.35, z:1.45, yaw:0, sit:true, out:[{x:-8.55,z:1.45},{x:-7.85,z:1.45},{x:-7.85,z:SOUTH}]},
-    sam:  {id:'sam-desk', kind:'desk', x:-6.35, z:1.45, yaw:0, sit:true, out:[{x:-7.15,z:1.45},{x:-7.85,z:1.45},{x:-7.85,z:SOUTH}]},
-    neo:  {id:'neo-desk', kind:'desk', x:-3.55, z:0.25, yaw:0, sit:true, out:[{x:-2.75,z:0.25},{x:-2.4,z:0.25},{x:-2.4,z:SOUTH}]},
-    strange: {id:'strange-desk', kind:'desk', x:-3.55, z:1.55, yaw:0, sit:true, out:[{x:-2.75,z:1.55},{x:-2.4,z:1.55},{x:-2.4,z:SOUTH}]}
-  };
+  var DESK_X = [-10.15, -7.85, -5.55, -3.25];
+  var DESK_ZS = -1.2;
+  var DESK_ZN = 0.66;
+  function deskExitSouth(x) {
+    return [{x:x, z:-2.15}, {x:-1.95, z:-2.15}, {x:-1.95, z:SOUTH}];
+  }
+  function deskExitNorth(x) {
+    return [{x:x, z:1.55}, {x:x, z:SOUTH}];
+  }
+  var deskLayout = [
+    {id:'eve', x:DESK_X[0], z:DESK_ZS, yaw:0, face:1},
+    {id:'matt', x:DESK_X[1], z:DESK_ZS, yaw:0, face:1},
+    {id:'prof', x:DESK_X[2], z:DESK_ZS, yaw:0, face:1},
+    {id:'spare1', x:DESK_X[3], z:DESK_ZS, yaw:0, face:1},
+    {id:'sam', x:DESK_X[0], z:DESK_ZN, yaw:Math.PI, face:-1},
+    {id:'neo', x:DESK_X[1], z:DESK_ZN, yaw:Math.PI, face:-1},
+    {id:'strange', x:DESK_X[2], z:DESK_ZN, yaw:Math.PI, face:-1},
+    {id:'spare2', x:DESK_X[3], z:DESK_ZN, yaw:Math.PI, face:-1}
+  ];
+  var deskSpots = {};
+  deskLayout.forEach(function (d) {
+    if (d.id.indexOf('spare') === 0) return;
+    deskSpots[d.id] = {
+      id: d.id + '-desk', kind: 'desk', x: d.x, z: d.z, yaw: d.yaw, sit: true,
+      out: d.face > 0 ? deskExitSouth(d.x) : deskExitNorth(d.x)
+    };
+  });
   var gymSpot = {id:'gym', kind:'gym', x:1.2, z:5.25, yaw:0, sit:false, out:[{x:1.2,z:4.15},{x:1.2,z:SOUTH}]};
   function meetOut(pts) {
     return pts.concat([
@@ -586,15 +606,22 @@
     var g = c.getContext('2d');
     g.fillStyle = '#f0d2a4';
     g.fillRect(0, 0, 512, 512);
-    g.strokeStyle = '#e0bc88';
-    g.lineWidth = 2;
-    for (var i = 0; i <= 512; i += 32) {
-      g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 512); g.stroke();
-      g.beginPath(); g.moveTo(0, i); g.lineTo(512, i); g.stroke();
-    }
+    g.fillStyle = 'rgba(255,248,236,0.16)';
+    g.fillRect(10, 10, 236, 236);
+    g.fillRect(266, 266, 236, 236);
+    g.fillStyle = 'rgba(150,100,55,0.05)';
+    g.fillRect(266, 10, 236, 236);
+    g.fillRect(10, 266, 236, 236);
+    g.strokeStyle = '#e4c7a2';
+    g.lineWidth = 5;
+    g.beginPath();
+    g.moveTo(0, 256); g.lineTo(512, 256);
+    g.moveTo(256, 0); g.lineTo(256, 512);
+    g.stroke();
+    g.strokeRect(2.5, 2.5, 507, 507);
     var t = new THREE.CanvasTexture(c);
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.repeat.set(10, 8);
+    t.repeat.set(6, 4.5);
     if (THREE.SRGBColorSpace) t.colorSpace = THREE.SRGBColorSpace;
     return t;
   }
@@ -700,11 +727,12 @@
     glassRunZ(gx0, gz0, gz1);
     glassRunZ(gx1, gz0, gz1);
 
-    var gy0 = -0.15, gy1 = 2.8, gzGym0 = 4.55, gzGym1 = 7.35;
+    var gy0 = -0.15, gy1 = 2.8, gzGym0 = 4.55, gzGym1 = 8.84;
     glassRunX(gzGym0, gy0, 0.5);
     glassRunX(gzGym0, 1.9, gy1);
     glassRunX(gzGym1, gy0, gy1);
     glassRunZ(gy0, gzGym0, gzGym1);
+    glassRunZ(gy1, 8.7, gzGym1);
 
     var wood = std('#b07f55', 0.55);
     var woodTop = std('#c4946a', 0.5);
@@ -713,16 +741,18 @@
     var chairC = std('#59616c', 0.62);
     var chairD = std('#3b4048', 0.55);
 
-    function chair(x, z) {
+    function chair(x, z, face) {
+      face = face || 1;
       addCyl(0.045, 0.05, 0.42, x, 0.21, z, chairD, {seg:8});
       addBox(0.42, 0.08, 0.42, x, 0.46, z, chairC);
-      addBox(0.42, 0.42, 0.08, x, 0.74, z - 0.18, chairC);
+      addBox(0.42, 0.42, 0.08, x, 0.74, z - 0.18 * face, chairC);
     }
-    function monitors(x, z, id) {
+    function monitors(x, z, id, face) {
+      face = face || 1;
       [-0.3, 0.3].forEach(function (dx, i) {
         var g = new THREE.Group();
-        g.position.set(x + dx, 0.77, z + 0.78);
-        g.rotation.y = Math.PI;
+        g.position.set(x + dx, 0.77, z + 0.78 * face);
+        g.rotation.y = face > 0 ? Math.PI : 0;
         var base = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.025, 0.14), black);
         base.position.set(0, 0.012, 0);
         g.add(base);
@@ -745,24 +775,28 @@
         scene.add(g);
       });
     }
-    function desk(x, z, id) {
-      chair(x, z);
-      addBox(1.28, 0.06, 0.7, x, 0.74, z + 0.56, woodTop, {col:true});
-      addBox(0.08, 0.7, 0.08, x - 0.54, 0.36, z + 0.3, woodDark);
-      addBox(0.08, 0.7, 0.08, x + 0.54, 0.36, z + 0.3, woodDark);
-      addBox(0.08, 0.7, 0.08, x - 0.54, 0.36, z + 0.82, woodDark);
-      addBox(0.08, 0.7, 0.08, x + 0.54, 0.36, z + 0.82, woodDark);
-      addBox(0.42, 0.02, 0.16, x, 0.785, z + 0.4, black, {cast:false});
-      monitors(x, z, id);
+    function desk(x, z, id, face) {
+      face = face || 1;
+      chair(x, z, face);
+      addBox(1.28, 0.06, 0.7, x, 0.74, z + 0.56 * face, woodTop, {col:true});
+      addBox(0.08, 0.7, 0.08, x - 0.54, 0.36, z + 0.3 * face, woodDark);
+      addBox(0.08, 0.7, 0.08, x + 0.54, 0.36, z + 0.3 * face, woodDark);
+      addBox(0.08, 0.7, 0.08, x - 0.54, 0.36, z + 0.82 * face, woodDark);
+      addBox(0.08, 0.7, 0.08, x + 0.54, 0.36, z + 0.82 * face, woodDark);
+      addBox(0.42, 0.02, 0.16, x, 0.785, z + 0.4 * face, black, {cast:false});
+      monitors(x, z, id, face);
       var lamp = new THREE.PointLight(0xffb36b, 0, 3.2, 2);
-      lamp.position.set(x, 1.55, z + 0.3);
+      lamp.position.set(x, 1.55, z + 0.3 * face);
       scene.add(lamp);
       warmLights.push(lamp);
     }
+    deskLayout.forEach(function (d) {
+      desk(d.x, d.z, d.id.indexOf('spare') === 0 ? '' : d.id, d.face);
+    });
     AGENTS.forEach(function (a) {
       var s = deskSpots[a.id];
-      desk(s.x, s.z, a.id);
-      addCyl(0.045, 0.038, 0.07, s.x + 0.42, 0.81, s.z + 0.42, std(a.color, 0.45), {seg:8});
+      var face = Math.cos(s.yaw) >= 0 ? 1 : -1;
+      addCyl(0.045, 0.038, 0.07, s.x + 0.42, 0.81, s.z + 0.42 * face, std(a.color, 0.45), {seg:8});
     });
     function meetChair(x, z, face) {
       addBox(0.4, 0.07, 0.4, x, 0.46, z, chairC);
@@ -894,7 +928,7 @@
     scene.add(gameLight);
     warmLights.push(gameLight);
 
-    addBox(2.85, 0.02, 2.7, 1.32, 0.014, 5.95, std('#2a3038', 0.88), {cast:false});
+    addBox(2.7, 0.02, 4.05, 1.325, 0.014, 6.695, std('#2a3038', 0.88), {cast:false});
     var chrome = new THREE.MeshStandardMaterial({color:0xc5ccd4, roughness:0.28, metalness:0.72});
     var plateBlack = std('#2b2e33', 0.45);
     var plateRed = std('#c8504a', 0.48);
@@ -934,31 +968,57 @@
     dumbbell(2.15, 0.08, 5.4, '#c8504a');
 
 
-    addBox(0.36, 1.35, 1.15, 0.35, 0.68, 8.2, wood, {col:true});
-    [[-0.32, '#c9473f'], [-0.08, '#3f8fcf'], [0.16, '#8a6fd1'], [0.36, '#2a9d8f']].forEach(function (b) {
-      addBox(0.07, 0.26, 0.16, 0.52, 1.05, 8.2 + b[0], std(b[1], 0.55), {cast:false});
-      addBox(0.07, 0.2, 0.14, 0.52, 0.52, 8.15 + b[0], std(b[1], 0.6), {cast:false});
-    });
-    addBox(0.38, 1.05, 0.38, 4.55, 0.55, -3.55, std('#d7dbe2', 0.4), {col:true});
-    addBox(0.26, 0.2, 0.04, 4.55, 0.85, -3.34, std('#7fd0ff', 0.3), {cast:false});
-    addCyl(0.04, 0.04, 0.16, 4.68, 0.42, -3.32, black, {seg:8});
+    var counterTop = std('#d8c4a6', 0.48);
+    var fridgeBody = std('#e7eef2', 0.42);
+    var fridgeDark = std('#2c3138', 0.5);
+    addBox(0.64, 1.72, 0.62, 2.55, 0.86, -8.22, fridgeBody, {col:true});
+    addBox(0.5, 0.72, 0.03, 2.55, 1.18, -7.89, fridgeDark, {cast:false});
+    addBox(0.5, 0.52, 0.03, 2.55, 0.42, -7.89, fridgeDark, {cast:false});
+    addBox(0.03, 0.32, 0.04, 2.78, 1.18, -7.86, std('#c5ccd4', 0.32), {cast:false});
+    addBox(3.05, 0.84, 0.5, 4.55, 0.42, -8.28, std('#f4f1ea', 0.72), {col:true});
+    addBox(3.15, 0.08, 0.58, 4.55, 0.88, -8.28, counterTop, {col:true});
+    addBox(0.36, 0.38, 0.3, 3.55, 1.15, -8.25, std('#2a2d33', 0.45));
+    addBox(0.2, 0.08, 0.03, 3.55, 1.22, -8.08, std('#7fd0ff', 0.3), {cast:false});
+    addCyl(0.045, 0.04, 0.07, 3.78, 0.95, -7.95, std('#f7f6f2', 0.5), {seg:8});
+    function barStool(x, z) {
+      addCyl(0.04, 0.05, 0.62, x, 0.31, z, black, {seg:8});
+      addCyl(0.16, 0.16, 0.06, x, 0.64, z, woodTop, {seg:12});
+    }
+    barStool(3.85, -7.42);
+    barStool(5.15, -7.42);
+    addCyl(0.045, 0.05, 0.68, 4.55, 0.34, -6.25, woodDark, {seg:8});
+    addCyl(0.34, 0.34, 0.06, 4.55, 0.7, -6.25, woodTop, {seg:16});
+    addCyl(0.045, 0.04, 0.06, 4.4, 0.76, -6.25, std('#f7f6f2', 0.5), {seg:8});
+    function plant(x, z, s) {
+      s = s || 1;
+      addCyl(0.16 * s, 0.13 * s, 0.22 * s, x, 0.11 * s, z, std('#f7f6f2', 0.6), {seg:10});
+      addCyl(0.22 * s, 0.2 * s, 0.28 * s, x, 0.46 * s, z, std('#6eaf55', 0.7), {seg:8});
+      var ball = new THREE.Mesh(new THREE.SphereGeometry(0.26 * s, 8, 6), std('#3f8f45', 0.75));
+      ball.position.set(x, 0.72 * s, z);
+      ball.castShadow = true;
+      scene.add(ball);
+    }
     var sofaC = std('#5b85c4', 0.72);
     var sofaD = std('#4a6fa8', 0.68);
-    addBox(1.85, 0.28, 0.62, 2.2, 0.2, 0.95, sofaC, {col:true});
-    addBox(1.85, 0.46, 0.14, 2.2, 0.52, 0.62, sofaC);
-    addBox(0.14, 0.36, 0.62, 1.24, 0.4, 0.95, sofaD);
-    addBox(0.14, 0.36, 0.62, 3.16, 0.4, 0.95, sofaD);
-    addBox(0.72, 0.3, 0.46, 2.2, 0.18, 1.72, woodTop, {col:true});
-    addBox(0.42, 0.08, 0.42, 1.55, 0.28, 2.2, chairC, {col:true});
-    addBox(0.42, 0.38, 0.08, 1.55, 0.52, 2.38, chairC);
-    addBox(0.42, 0.08, 0.42, 2.85, 0.28, 2.2, chairC, {col:true});
-    addBox(0.42, 0.38, 0.08, 2.85, 0.52, 2.38, chairC);
+    addBox(1.85, 0.28, 0.62, 2.2, 0.2, -0.2, sofaC, {col:true});
+    addBox(1.85, 0.46, 0.14, 2.2, 0.52, -0.53, sofaC);
+    addBox(0.14, 0.36, 0.62, 1.24, 0.4, -0.2, sofaD);
+    addBox(0.14, 0.36, 0.62, 3.16, 0.4, -0.2, sofaD);
+    addBox(0.72, 0.3, 0.46, 2.2, 0.18, 0.57, woodTop, {col:true});
+    addBox(0.42, 0.08, 0.42, 1.55, 0.28, 1.05, chairC, {col:true});
+    addBox(0.42, 0.38, 0.08, 1.55, 0.52, 1.23, chairC);
+    addBox(0.42, 0.08, 0.42, 2.85, 0.28, 1.05, chairC, {col:true});
+    addBox(0.42, 0.38, 0.08, 2.85, 0.52, 1.23, chairC);
+    plant(0.95, -0.95, 0.95);
+    plant(3.5, -0.9, 1.05);
+    plant(0.9, 1.45, 0.85);
+    plant(3.55, 1.5, 0.9);
     addCyl(0.12, 0.1, 0.28, -9.15, 0.14, 2.6, std('#59616c', 0.7), {seg:8});
     addCyl(0.035, 0.045, 1.35, -0.85, 0.68, 5.35, woodDark, {seg:6});
     addBox(0.22, 0.04, 0.22, -0.85, 1.36, 5.35, woodDark, {cast:false});
 
     var loader = new THREE.TextureLoader();
-    loader.load(AT_PROTO ? 'the-office-banner.png' : (NESTED ? '../prototype-ov/the-office-banner.png' : 'prototype-ov/the-office-banner.png'), function (tex) {
+    loader.load(AT_PROTO ? 'the-office-banner.png' : (IN_VERSIONS ? '../../prototype-ov/the-office-banner.png' : (NESTED ? '../prototype-ov/the-office-banner.png' : 'prototype-ov/the-office-banner.png')), function (tex) {
       if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
       tex.anisotropy = 4;
       var aspect = (tex.image && tex.image.height) ? tex.image.width / tex.image.height : 2.5;
