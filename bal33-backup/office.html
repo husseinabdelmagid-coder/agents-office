@@ -652,6 +652,7 @@ AG.forEach(function(a){log(a,a.task);});showToast(AG[0],AG[0].task);
 layout();window.addEventListener('resize',layout);window.addEventListener('orientationchange',function(){setTimeout(layout,250);});
 requestAnimationFrame(frame);
 if(/[?&]live=1(&|$)/.test(location.search))setLive(true);
+window.setLive=setLive;
 })();
 </script>
 
