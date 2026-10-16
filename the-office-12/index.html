@@ -33,7 +33,7 @@ header{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px
 .gate-build{margin-top:14px;padding:8px 10px;border-radius:8px;border:1px solid #564a6e;background:#1a1625;color:#b8a9d6;font-size:12px;font-variant-numeric:tabular-nums;text-align:center;letter-spacing:.02em}
 .corner-build{position:fixed;left:10px;bottom:10px;z-index:50;padding:6px 10px;border-radius:8px;border:1px solid #3d9cff;background:#0d2a44cc;color:#7fd0ff;font:600 11px/1.2 system-ui,sans-serif;font-variant-numeric:tabular-nums;pointer-events:none;backdrop-filter:blur(4px)}
 main{flex:1;display:flex;min-height:0}
-.stage{flex:1;position:relative;min-width:0;background:radial-gradient(ellipse at 50% 45%,#24252a 0%,#141518 70%)}
+.stage{flex:1;position:relative;min-width:0;background:#000}
 .tools{position:absolute;left:8px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:2}
 .tools button{width:32px;height:32px;border-radius:6px;background:#22242a;border:1px solid #31333a;display:flex;align-items:center;justify-content:center;color:#a9a59d;font:600 16px/1 -apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer;padding:0}
 .tools button:active{background:#33353b;color:#fff}
@@ -827,7 +827,6 @@ function ensureDnColors(){
   if(dnCol) return;
   function C(h){return new THREE.Color(h);}
   dnCol={
-    skyDay:C(0xa9bdd0), skyDusk:C(0x6e4638), skyNight:C(0x10141c),
     floorDay:C(0xece2cc), floorNight:C(0xa89880),
     gridDay:C(0xe0d3b8), gridNight:C(0x6e6254),
     glassDay:C(0xd5e6f2), glassNight:C(0x243044),
@@ -835,18 +834,17 @@ function ensureDnColors(){
     hemiNight:C(0x4a3428), hemiNightG:C(0x1a2433),
     ambDay:C(0xffffff), ambNight:C(0xffe2c4),
     sunDay:C(0xfff3e2), sunNight:C(0xffb080),
-    fillDay:C(0xffffff), fillNight:C(0xffd2a8),
-    scratch:C(0x000000)
+    fillDay:C(0xffffff), fillNight:C(0xffd2a8)
   };
 }
+/* Day/night tints lights, floor, glass and screens inside the office.
+   The void around the floor stays pure black in both modes. */
 function applyDayNight(f){
   if(!scene||!hemi) return;
   if(f<0) f=0; else if(f>1) f=1;
   ensureDnColors();
-  var n=1-f, c=dnCol, s=c.scratch, gi;
-  if(f<0.5) s.copy(c.skyNight).lerp(c.skyDusk, f*2);
-  else s.copy(c.skyDusk).lerp(c.skyDay, (f-0.5)*2);
-  scene.background.copy(s);
+  var n=1-f, c=dnCol, gi;
+  if(scene.background) scene.background.setHex(0x000000);
   hemi.color.copy(c.hemiDay).lerp(c.hemiNight, n);
   hemi.groundColor.copy(c.hemiDayG).lerp(c.hemiNightG, n);
   hemi.intensity=0.72*f+0.34*n;
@@ -914,7 +912,7 @@ function cycleDayNight(){
 function boot3d(){
   if(!window.THREE) throw new Error('three.js failed to load');
   scene=new THREE.Scene();
-  scene.background=new THREE.Color(0x141518);
+  scene.background=new THREE.Color(0x000000);
   camera=new THREE.PerspectiveCamera(32, 1, 0.1, 240);
   camTarget=new THREE.Vector3(W/2, 0.55, D/2);
   var touch=matchMedia('(pointer: coarse)').matches;
