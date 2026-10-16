@@ -277,10 +277,10 @@ function buildScene(){
   confChair(14.05,1.02,0,'m1');
   confChair(14.05,3.20,Math.PI,'m2');
   confChair(12.05,3.20,Math.PI,'m3');
-  confChair(10.95,2.15,Math.PI/2,'m4');
-  // eight desks, same spacing, shifted together toward the left and the front
+  confChair(15.05,2.15,-Math.PI/2,'m4');
+  // eight desks, same spacing, a little further toward the left and the front
   (function(){
-    var pitch=2.5, count=4, x0=4.75, yRow=8.0;
+    var pitch=2.5, count=4, x0=3.90, yRow=8.55;
     var south=[['eve','mug'],['neo','plant'],['prof','books'],['sam','mug']];
     var north=[['strange',''],['matt','plant'],['d1',''],['d2','mug']];
     for(var i=0;i<count;i++){
@@ -300,10 +300,8 @@ function buildScene(){
   box(1.22,10.70,1.50,0.04,1.40,0.32,'#8e979f',{nb:1});
   box(1.18,10.66,0,0.08,0.045,1.82,'#8e979f',{nb:1});
   box(1.18,12.06,0,0.08,0.045,1.82,'#8e979f',{nb:1});
-  // lounge along the front wall, shortened on the north so the right-hand pair can face each other.
-  // The open floor west of that pair stays clear for a later seat.
-  box(8.45,10.55,0,7.35,3.15,0.02,COL.rug,{nb:1,rug:1});
-  box(15.2,9.7,0,6.55,4.0,0.02,COL.rug,{nb:1,rug:1});
+  // lounge starts at the Office.03 left edge and runs north to the meeting-room doors
+  box(15.4,4.55,0,6.35,9.15,0.02,COL.rug,{nb:1,rug:1});
   box(16,12.85,0,4,0.9,0.42,COL.sofa,{side:COL.sofaDark});
   box(16,13.42,0.42,4,0.33,0.5,COL.sofa,{side:COL.sofaDark});
   box(16,12.85,0.42,0.32,0.57,0.24,COL.sofaDark);box(19.68,12.85,0.42,0.32,0.57,0.24,COL.sofaDark);
@@ -311,21 +309,23 @@ function buildScene(){
   box(21.42,9.9,0.42,0.33,2.8,0.5,COL.sofa,{side:COL.sofaDark});
   box(17.95,9.9,0,0.9,2.8,0.42,COL.sofa,{side:COL.sofaDark});
   box(17.95,9.9,0.42,0.33,2.8,0.5,COL.sofa,{side:COL.sofaDark});
-  box(9.05,12.85,0,5.15,0.9,0.42,COL.sofa,{side:COL.sofaDark});
-  box(9.05,13.42,0.42,5.15,0.33,0.5,COL.sofa,{side:COL.sofaDark});
-  box(9.05,12.85,0.42,0.32,0.57,0.24,COL.sofaDark);box(13.88,12.85,0.42,0.32,0.57,0.24,COL.sofaDark);
+  box(16.20,6.30,0,5.15,0.9,0.42,COL.sofa,{side:COL.sofaDark});
+  box(16.20,6.30,0.42,5.15,0.33,0.5,COL.sofa,{side:COL.sofaDark});
+  box(16.20,6.63,0.42,0.32,0.57,0.24,COL.sofaDark);box(21.03,6.63,0.42,0.32,0.57,0.24,COL.sofaDark);
   box(19.48,10.50,0,0.74,1.35,0.34,COL.woodTop,{side:COL.wood});
   cyl(19.78,11.05,0.1,0.34,0.1,'#ffffff',{nb:1});box(19.58,11.35,0.34,0.52,0.35,0.04,'#4f7fb8',{nb:1});
   foosball(15.52,10.2);
   SPOTS.sofa1={x:17.2,y:13.05,sit:true,sofa:true,front:false};
   SPOTS.sofa2={x:18.9,y:13.05,sit:true,sofa:true,front:false};
   SPOTS.sofa3={x:21.15,y:12.20,sit:true,sofa:true,front:false,yaw:-Math.PI/2};
-  SPOTS.sofa4={x:9.75,y:13.05,sit:true,sofa:true,front:false};
-  SPOTS.sofa5={x:11.70,y:13.05,sit:true,sofa:true,front:false};
-  SPOTS.sofa6={x:13.55,y:13.05,sit:true,sofa:true,front:false};
+  SPOTS.sofa4={x:16.90,y:7.00,sit:true,sofa:true,front:true};
+  SPOTS.sofa5={x:18.85,y:7.00,sit:true,sofa:true,front:true};
+  SPOTS.sofa6={x:20.70,y:7.00,sit:true,sofa:true,front:true};
   SPOTS.sofa7={x:18.55,y:10.37,sit:true,sofa:true,front:false,yaw:Math.PI/2};
   SPOTS.sofa8={x:18.55,y:11.30,sit:true,sofa:true,front:false,yaw:Math.PI/2};
   SPOTS.sofa9={x:18.55,y:12.23,sit:true,sofa:true,front:false,yaw:Math.PI/2};
+  SPOTS.sofa10={x:21.15,y:10.37,sit:true,sofa:true,front:false,yaw:-Math.PI/2};
+  SPOTS.sofa11={x:21.15,y:11.30,sit:true,sofa:true,front:false,yaw:-Math.PI/2};
   // plants
   plant(0.6,0.6);plant(6.8,0.55);plant(21.4,8.6,1.1);plant(0.6,8.6);plant(14.6,13.3);plant(8.6,13.3,0.9);
   // small The Office sticker on the left wall, same plane and facing as the whiteboard
