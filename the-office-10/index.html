@@ -225,9 +225,6 @@ function buildScene(){
   box(3.3,0.15,0.92,0.9,0.5,0.06,'#c9ccd1',{nb:1});         // sink
   box(5.2,0,0,0.95,0.85,1.85,'#dcdfe3',{side:'#c5c9ce'});   // fridge
   SPOTS.kitchen={x:2.7,y:1.55,front:false};SPOTS.kitchen2={x:4.2,y:1.6,front:false};
-  // whiteboard on left wall
-  box(0,4.4,0.42,0.07,3.8,0.82,'#ffffff',{nb:1,wb:1,side:'#9aa0a8'});
-  SPOTS.board={x:0.85,y:4.6,front:true};
   // dining table, same place as The Office.03
   cyl(3.5,3.65,0.26,0,0.62,'#6b4a31');
   cyl(3.5,3.65,1.2,0.62,0.09,COL.woodTop,{side:COL.wood});
@@ -365,12 +362,12 @@ var AG=[
         ['matt','Reviewing the weekly training log',10,'work'],['sofa2','Reviewing the weekly nutrition plan',11,'idle'],['meet2','Stand-up: sharing training load',9,'meet'],['kitchen','Hydration break',6,'idle']]},
  {id:'prof',name:'El Profesor',role:'Deep research',color:'#c9473f',shirt:'#c9473f',pants:'#2b2d33',hair:'#1f1a17',skin:'#e7b896',style:'prof',
   plan:[['prof','Deep-dive literature review (14 sources)',15,'work'],['prof','Reviewing sources at the desk',9,'work'],
-        ['board','Mapping findings on the whiteboard',11,'work'],['prof','Writing the research brief',13,'work'],['meet1','Peer review with Eve',10,'meet'],['meet3','Stand-up: research update',8,'meet']]},
+        ['prof','Mapping findings at the desk',11,'work'],['prof','Writing the research brief',13,'work'],['meet1','Peer review with Eve',10,'meet'],['meet3','Stand-up: research update',8,'meet']]},
  {id:'sam',name:'Sam',role:'Career advisor',color:'#3f8fcf',shirt:'#3f8fcf',pants:'#4b4237',hair:'#6b4a2e',skin:'#f0c39c',style:'side',
   plan:[['sam','Polishing CV & LinkedIn summary',13,'work'],['meet0','Mock interview prep',11,'meet'],
         ['kitchen2','Coffee + quick sync with Eve',8,'idle'],['sam','Salary benchmark research',12,'work'],['sam','Scheduling recruiter calls',9,'work'],['meet2','Career roadmap session',10,'meet']]},
  {id:'neo',name:'Neo',role:'Coding specialist',color:'#2a9d8f',shirt:'#2a9d8f',pants:'#2f3440',hair:'#1f1a17',skin:'#e7b896',style:'short',
-  plan:[['neo','Patching Live status & Pages sync',14,'work'],['board','Mapping CDN / pointer bugs on the board',11,'work'],
+  plan:[['neo','Patching Live status & Pages sync',14,'work'],['neo','Mapping CDN and pointer bugs',11,'work'],
         ['meet1','Stand-up: shipping the office fix',9,'meet'],['neo','Deploying HTML to gh-pages',12,'work'],['kitchen2','Hydration break',6,'idle'],['meet0','Code review with Eve',10,'meet']]},
  {id:'strange',name:'Dr. Strange',role:'Medical advisor',color:'#6a4c93',shirt:'#6a4c93',pants:'#2c2438',hair:'#2a2420',skin:'#e7b896',style:'short',
   plan:[['strange','Reviewing charts and clinic notes',14,'work'],['strange','Reviewing a medical reference',9,'work'],
@@ -451,7 +448,6 @@ function addBox(it){
   scene.add(mesh);
   if(it.shelf) addBooks(it);
   if(it.rack) addRack(it);
-  if(it.wb) addBoardMarks(it);
 }
 function addBooks(it){
   var cols=['#c9473f','#4f7fb8','#e2b24c','#6aa65b','#8a6fd1','#e9e2d3','#3f8fcf','#d27d45'];
@@ -488,18 +484,6 @@ function addRack(it){
     addLed(it.x+it.w+0.03, zz+0.1, it.y+0.22, r2, it.y, 0);
     addLed(it.x+it.w+0.03, zz+0.1, it.y+0.38, r2, it.y, 1);
   }
-}
-function addBoardMarks(it){
-  var x=it.x+it.w+0.02;
-  function stroke(y,z,w,h,col){
-    var m=new THREE.Mesh(new THREE.BoxGeometry(0.012, h, w), mat(col));
-    m.position.set(x, it.z+z, it.y+y);
-    scene.add(m);
-  }
-  stroke(1.15, 0.55, 1.35, 0.028, '#466eaa');
-  stroke(2.15, 0.40, 0.85, 0.022, '#466eaa');
-  stroke(3.15, 0.58, 0.7, 0.022, '#c8463c');
-  stroke(3.05, 0.40, 0.48, 0.02, '#c8463c');
 }
 function addCyl(it){
   if(it.ball){
@@ -652,7 +636,6 @@ function syncAgent(a){
   p.armR.rotation.x=walking?sw*0.85:(sit?0.25:0);
   if(a.kind==='work'&&a.mode==='dwell'&&!sit&&spot.front) p.armR.rotation.x=-0.85+Math.sin(a.phase*2)*0.3;
   if(a.mode==='walk'&&(Math.abs(a.dx)+Math.abs(a.dy))>0.02) g.rotation.y=Math.atan2(a.dx, a.dy);
-  else if(spot===SPOTS.board) g.rotation.y=-Math.PI/2;
   else if(typeof spot.yaw==='number') g.rotation.y=spot.yaw;
   else g.rotation.y=spot.front?0:Math.PI;
   p.ring.visible=(selected===a);
