@@ -393,7 +393,7 @@ function planDest(a){
 }
 function advance(a){
   a.step=(a.step+1)%a.plan.length;var d=planDest(a),s=SPOTS[d.spot];
-  a._dest=d.spot;a.path=findPath(a.x,a.y,s.x,s.y);a.mode='walk';a.spot=s;a.nextTask=d.task;a.nextKind=d.kind;a.dur=d.dur;a.task='Heading to: '+d.task.toLowerCase();a.kind='walk';
+  a._dest=d.spot;a.path=findPath(a.x,a.y,s.x,s.y);a.mode='walk';a.spot=s;a.nextTask=d.task;a.nextKind=d.kind;a.dur=d.dur;a.task=headingLabel(d.task);a.kind='walk';
   log(a,'heading off → '+d.task);}
 function arrive(a){a.mode='dwell';a.t=0;a.task=a.nextTask;a.kind=a.nextKind;a.x=a.spot.x;a.y=a.spot.y;if(!LIVE.on){log(a,a.task);showToast(a,a.task);}}
 function updateAgent(a,dt){
@@ -1097,7 +1097,7 @@ function updateUI(){document.getElementById('clock').textContent=LIVE.on?nowHM()
     }
     c.st.textContent=STATUS_TXT[kind]||(LIVE.on?'Idle':'Working');c.st.className='st '+kind;c.task.textContent=task;
     c.bar.style.width=(a.mode==='walk'&&!LIVE.on?6:LIVE.on?(kind==='work'?(a.t%8)/8*100:kind==='wait'?100:kind==='meet'?100:0):Math.min(100,a.t/a.dur*100)).toFixed(0)+'%';
-    var meeting=(kind==='meet')||(a.mode==='walk'&&a.nextKind==='meet');
+    var meeting=isRoomSeat(a.liveSpot)||(isRoomSeat(a._dest)&&(a.kind==='meet'||a.nextKind==='meet'));
     c.el.className='card'+(selected===a?' sel':'')+(meeting?' meeting':'');a.chip.className='chip'+(selected===a?' sel':'');});}
 function log(a,txt){feed.unshift('<li><span>'+(LIVE.on?nowHM():hhmm(simMin))+'</span><b style="color:'+a.color+'">'+a.name+'</b> — '+txt.replace(/</g,'&lt;')+'</li>');feed=feed.slice(0,8);feedEl.innerHTML=feed.join('');}
 var toast=document.getElementById('toast');
@@ -1233,6 +1233,7 @@ function sendTo(a, spotId, kind, task){
   if(a._dest===spotId){
     a.nextKind=kind; a.nextTask=task;
     if(a.mode==='dwell'){a.kind=kind; a.task=task; a.spot=s;}
+    else if(a.mode==='walk') a.task=headingLabel(task);
     return;
   }
   a._dest=spotId;
@@ -1241,7 +1242,7 @@ function sendTo(a, spotId, kind, task){
     return;
   }
   a.path=findPath(a.x,a.y,s.x,s.y); a.mode='walk'; a.spot=s; a.nextTask=task; a.nextKind=kind;
-  a.task='Heading to: '+String(task||'').toLowerCase(); a.kind='walk';
+  a.task=headingLabel(task); a.kind='walk';
 }
 function applyCollabDemo(){
   if(LIVE.on) return;
@@ -1276,13 +1277,15 @@ function tickSimCollab(){
 var DEMO_NOTE='Simulated demo — scripted routine only (does not update agents-status.json / Live). Tap an agent or a card to follow them.';
 function nowHM(){var d=new Date();return hhmm(d.getHours()*60+d.getMinutes());}
 function agById(id){for(var i=0;i<AG.length;i++)if(AG[i].id===id)return AG[i];return null;}
+function headingLabel(task){return 'Heading to: '+String(task||'').replace(/^heading to:\s*/i,'').toLowerCase();}
 function goLive(a,spotId,task,kind){var s=SPOTS[spotId];if(!s)return;
+  a._dest=spotId;
   /* Idle snaps in place so we never show a stale "heading to exercise" while Live says standby */
   if(kind==='live_idle'||kind==='idle'){
     a.liveSpot=spotId;a.path=[];a.mode='dwell';a.spot=s;a.x=s.x;a.y=s.y;a.task=task;a.kind=kind;a.nextTask=task;a.nextKind=kind;a.dur=1e9;a.t=0;return;
   }
-  if(a.liveSpot!==spotId){a.liveSpot=spotId;a.path=findPath(a.x,a.y,s.x,s.y);a.mode='walk';a.spot=s;a.nextTask=task;a.nextKind=kind;a.dur=1e9;a.t=0;a.task='Heading to: '+String(task).toLowerCase();a.kind='walk';}
-  else if(a.mode==='walk'){a.nextTask=task;a.nextKind=kind;}
+  if(a.liveSpot!==spotId){a.liveSpot=spotId;a.path=findPath(a.x,a.y,s.x,s.y);a.mode='walk';a.spot=s;a.nextTask=task;a.nextKind=kind;a.dur=1e9;a.t=0;a.task=headingLabel(task);a.kind='walk';}
+  else if(a.mode==='walk'){a.nextTask=task;a.nextKind=kind;a.task=headingLabel(task);}
   else{a.task=task;a.kind=kind;}}
 
 function applyLocalSim(){/* removed: local overlay fought Live JSON */}
