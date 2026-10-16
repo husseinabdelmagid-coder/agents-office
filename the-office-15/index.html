@@ -1389,7 +1389,12 @@ function pcUrl(a){
 function isHttp(s){return /^https?:\/\//i.test(String(s||''));}
 function isScheme(s){return /^[a-z][a-z0-9+.-]*:/i.test(String(s||''));}
 function copyText(text, btn){
-  function done(){if(!btn) return; var old=btn.textContent; btn.textContent='Copied'; setTimeout(function(){btn.textContent=old;}, 1200);}
+  function done(){
+    if(!btn||btn.getAttribute('data-copied')==='1') return;
+    btn.setAttribute('data-copied','1');
+    var old=btn.textContent; btn.textContent='Copied';
+    setTimeout(function(){btn.textContent=old; btn.removeAttribute('data-copied');}, 1200);
+  }
   function fallback(){
     var ta=document.createElement('textarea');
     ta.value=text; ta.setAttribute('readonly','');
@@ -1398,10 +1403,16 @@ function copyText(text, btn){
     try{document.execCommand('copy');}catch(err){}
     document.body.removeChild(ta); done();
   }
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(done, fallback);
-    return;
-  }
+  /* Clipboard permission can hang without a user gesture. Fall back so Copy still confirms. */
+  var settled=false;
+  function ok(){if(settled) return; settled=true; done();}
+  function no(){if(settled) return; settled=true; fallback();}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      var p=navigator.clipboard.writeText(text);
+      if(p&&typeof p.then==='function'){p.then(ok, no); setTimeout(no, 400); return;}
+    }
+  }catch(err){}
   fallback();
 }
 function paintVoice(){
