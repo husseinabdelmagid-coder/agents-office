@@ -815,14 +815,17 @@ function syncAgent(a){
   p.armR.rotation.x=walking?sw*0.85:(sit?0.25:0);
   p.armL.rotation.y=0; p.armR.rotation.y=0;
   p.armL.rotation.z=0; p.armR.rotation.z=0;
+  p.armL.position.set(-0.26, 1.08, 0); p.armR.position.set(0.26, 1.08, 0);
   if(p.handL){
     p.handL.position.set(0,-0.4,0.03); p.handR.position.set(0,-0.4,0.03);
     p.handL.rotation.x=0; p.handR.rotation.x=0;
+    p.handL.scale.set(1,1,1); p.handR.scale.set(1,1,1);
   }
-  /* Arms reach forward so the hands sit above the desktop. Hands shift outward
-     so a front-row monitor does not hide them from the default camera.
+  /* Arms reach forward so the hands sit above the desktop, on the keyboard.
+     North-row monitors face the camera and cover the middle of the keyboard,
+     so the hands sit wide enough to show in the gaps beside each screen.
      A small alternating wobble only while working at a desk. Meeting seats
-     hold the same reach, steady. */
+     hold the same reach, steady, over the table edge. */
   var atDesk=sit&&!spot.stool&&!spot.sofa;
   var atMeet=sit&&typeof spot.yaw==='number';
   var typing=a.kind==='work'&&a.mode==='dwell'&&atDesk;
@@ -830,15 +833,21 @@ function syncAgent(a){
     var tw=now*6+a.phase;
     p.armL.rotation.x=-1.48+Math.sin(tw)*0.045;
     p.armR.rotation.x=-1.48+Math.sin(tw+2.4)*0.045;
-    p.armL.rotation.z=0.08; p.armR.rotation.z=-0.08;
+    /* North desks face the camera, so the monitor hides the keyboard.
+       Reach toward the camera until the hands rest on the near lip, in view.
+       South desks keep the hands wide, in the gaps beside the screen in front. */
+    p.armL.position.x=-0.98; p.armR.position.x=0.98;
+    p.armL.rotation.z=0.05; p.armR.rotation.z=-0.05;
+    if(spot.front){p.armL.position.z=0.58; p.armR.position.z=0.58;}
     if(p.handL){
-      p.handL.position.x=-0.18; p.handR.position.x=0.18;
+      p.handL.scale.set(1.35,1.2,1.45); p.handR.scale.set(1.35,1.2,1.45);
       p.handL.rotation.x=0.35+Math.sin(tw*1.7)*0.28;
       p.handR.rotation.x=0.35+Math.sin(tw*1.7+1.6)*0.28;
     }
   }else if(atMeet){
     p.armL.rotation.x=-1.48; p.armR.rotation.x=-1.48;
-    p.armL.rotation.z=0.08; p.armR.rotation.z=-0.08;
+    p.armL.rotation.z=0.22; p.armR.rotation.z=-0.22;
+    if(p.handL){p.handL.position.x=-0.16; p.handR.position.x=0.16;}
   }else if(a.kind==='work'&&a.mode==='dwell'&&!sit&&spot.front) p.armR.rotation.x=-0.85+Math.sin(a.phase*2)*0.3;
   if(a.mode==='walk'&&(Math.abs(a.dx)+Math.abs(a.dy))>0.02) g.rotation.y=Math.atan2(a.dx, a.dy);
   else if(typeof spot.yaw==='number') g.rotation.y=spot.yaw;
