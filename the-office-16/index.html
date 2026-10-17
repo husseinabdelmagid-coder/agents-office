@@ -66,7 +66,15 @@ main{flex:1;display:flex;min-height:0}
 .botwhen{margin-top:6px;font-size:11px;color:#9c978e;font-variant-numeric:tabular-nums}
 .botacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .botacts button,.botacts a{flex:1 1 30%;text-align:center;text-decoration:none;background:#2a2c32;color:#f4f1ea;border:1px solid #4a4c54;border-radius:9px;padding:10px 8px;min-height:44px;font:700 12px/1.2 -apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer}
+.botacts button.on{border-color:#e6b325;color:#fff}
 .botacts a.off{opacity:.4;pointer-events:none}
+.actlog{margin-top:8px;max-height:148px;overflow:auto;-webkit-overflow-scrolling:touch;background:#101114;border:1px solid #34363c;border-radius:10px;padding:2px 10px 6px}
+.actlog[hidden]{display:none!important}
+.actlog ul{list-style:none;margin:0;padding:0}
+.actlog li{padding:7px 0;border-top:1px solid #2a2c32;font-size:12px;line-height:1.35;color:#e4dfd6}
+.actlog li:first-child{border-top:0}
+.actlog li span{display:block;color:#9c978e;font-variant-numeric:tabular-nums;font-size:10px;margin-bottom:2px}
+.actlog li.empty{color:#9c978e}
 .voicebox{margin-top:10px;padding:10px;border-radius:10px;background:#101114;border:1px solid #34363c}
 .voicebox p{margin:0 0 8px;font-size:12px;line-height:1.4;color:#c9c3b8}
 .voicebox code{display:block;font:600 13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#ffe7a8;word-break:break-word;margin-bottom:8px}
@@ -182,6 +190,10 @@ body.gated > :not(#gate){visibility:hidden!important;pointer-events:none}
       <div class="botacts">
         <a id="botChat" href="#">Chat</a>
         <a id="botPc" href="#">View PC</a>
+        <button type="button" id="botLog" aria-expanded="false">Activity log</button>
+      </div>
+      <div class="actlog" id="botLogBox" hidden>
+        <ul id="botLogList"></ul>
       </div>
     </div>
     <div class="toast" id="toast"><b id="tDot">E</b><div><em id="tWho">Eve</em><span id="tTxt">Opening the office…</span></div></div>
@@ -513,7 +525,7 @@ var DN_KEY='agents-office-dn-v1';
 /* .13 typing is tickTyping. meetingSeats groups shared work.
    .14 player is the walkable visitor (Enter office). It is not in AG and never writes agents-status.json.
    .15 openPanel reads a working screen (userData.deskId) or the bot. near bots get an Open button.
-   .16 typing hands rest above the keyboard with no key flicker. The panel shortcuts are Chat and View PC. */
+   .16 typing hands rest above the keyboard with no key flicker. The panel shortcuts are Chat, View PC, and Activity log. */
 var OFFICE_NEXT={typing:null, player:null, near:[], screens:[]};
 /* Visitor. Spawn is open floor inside the south wall, west of the lounge and south of the desks. */
 var player={id:'you',name:'You',role:'Visitor',color:'#e6b325',shirt:'#e6b325',pants:'#243044',hair:'#1b3a2a',skin:'#f3d2b0',style:'you',
@@ -1387,6 +1399,130 @@ function pushLog(a, txt){
   a._log.unshift({t:LIVE.on?nowHM():hhmm(simMin), txt:String(txt||'')});
   if(a._log.length>16) a._log.length=16;
 }
+function parisClock(date){
+  var d=date||new Date();
+  if(!isFinite(d.getTime())) return '';
+  try{
+    var parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Paris',hourCycle:'h23',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(d);
+    var h='00',m='00',s='00',i,p;
+    for(i=0;i<parts.length;i++){
+      p=parts[i];
+      if(p.type==='hour') h=p.value;
+      else if(p.type==='minute') m=p.value;
+      else if(p.type==='second') s=p.value;
+    }
+    if(h==='24') h='00';
+    return h+':'+m+':'+s;
+  }catch(e){}
+  return hhmm(d.getHours()*60+d.getMinutes())+':'+('0'+d.getSeconds()).slice(-2);
+}
+function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+var FEED_KEYS=['activity','activities','feed','recent','recentTasks','tasks','history','log','events'];
+var DOC_FEED_KEYS=['activity','activities','feed','recent','recentTasks','history','log','events'];
+function feedProvided(obj, keys){
+  var i;
+  if(!obj||typeof obj!=='object') return false;
+  for(i=0;i<keys.length;i++) if(Array.isArray(obj[keys[i]])) return true;
+  return false;
+}
+function feedItems(obj, keys){
+  var out=[], i, list, j;
+  if(!obj||typeof obj!=='object') return out;
+  for(i=0;i<keys.length;i++){
+    list=obj[keys[i]];
+    if(!Array.isArray(list)) continue;
+    for(j=0;j<list.length;j++) out.push(list[j]);
+  }
+  return out;
+}
+function entryText(e){
+  if(e==null) return '';
+  if(typeof e==='string'||typeof e==='number') return String(e);
+  if(typeof e!=='object') return '';
+  return String(e.text||e.task||e.message||e.title||e.summary||e.activity||'');
+}
+function entryTime(e){
+  if(!e||typeof e!=='object') return '';
+  return e.at||e.time||e.timestamp||e.updatedAt||e.ts||e.when||'';
+}
+function entryForAgent(e, agent, row){
+  if(!e||typeof e!=='object') return false;
+  var id=e.agentId||e.agent||e.bot||'';
+  var name=String(e.name||e.agentName||'').toLowerCase();
+  if(!id && e.id && (e.id===row.id || LIVE_IDS[e.id])) id=e.id;
+  if(!id && !name) return false;
+  if(id && (id===row.id || LIVE_IDS[id]===agent.id)) return true;
+  if(name && (LIVE_NAMES[name]===agent.id || name===String(agent.name||'').toLowerCase())) return true;
+  return false;
+}
+/* Activity arrays on the agent, or a document feed filtered to that bot.
+   Returns null when the file has no feed, so the caller keeps the recent-task log. */
+function readLiveFeed(agent, row, doc){
+  var own=feedProvided(row, FEED_KEYS);
+  var items=own?feedItems(row, FEED_KEYS):[];
+  var top, i, e, txt, when, ms, stamped, any;
+  if(!own && feedProvided(doc, DOC_FEED_KEYS)){
+    top=feedItems(doc, DOC_FEED_KEYS);
+    for(i=0;i<top.length;i++){
+      e=top[i];
+      if(entryForAgent(e, agent, row)) items.push(e);
+    }
+    own=true;
+  }
+  if(!own) return null;
+  stamped=[]; any=false;
+  for(i=0;i<items.length;i++){
+    e=items[i];
+    txt=entryText(e).trim();
+    if(!txt) continue;
+    when=entryTime(e)||(doc&&doc.updatedAt)||'';
+    ms=Date.parse(when);
+    if(!isFinite(ms)) ms=null; else any=true;
+    stamped.push({t:ms!=null?parisClock(new Date(ms)):String(when||''), txt:txt, ms:ms, i:i});
+  }
+  if(any) stamped.sort(function(a,b){
+    if(a.ms==null&&b.ms==null) return a.i-b.i;
+    if(a.ms==null) return 1;
+    if(b.ms==null) return -1;
+    return b.ms-a.ms||a.i-b.i;
+  });
+  if(stamped.length>24) stamped.length=24;
+  return stamped;
+}
+function pushLiveLog(a, txt, when){
+  if(!a) return;
+  if(!a._liveLog) a._liveLog=[];
+  var line=String(txt||'');
+  var ms=Date.parse(when);
+  var t=isFinite(ms)?parisClock(new Date(ms)):parisClock(new Date());
+  if(a._liveLog.length && a._liveLog[0].txt===line) return;
+  a._liveLog.unshift({t:t, txt:line});
+  if(a._liveLog.length>24) a._liveLog.length=24;
+}
+var logOpen=false;
+function paintActivity(){
+  var box=document.getElementById('botLogBox');
+  var btn=document.getElementById('botLog');
+  var list=document.getElementById('botLogList');
+  var rows, i, html;
+  if(!box||!list) return;
+  if(!logOpen||!panelAgent){
+    box.hidden=true;
+    if(btn){btn.classList.remove('on'); btn.setAttribute('aria-expanded','false');}
+    return;
+  }
+  box.hidden=false;
+  if(btn){btn.classList.add('on'); btn.setAttribute('aria-expanded','true');}
+  rows=panelAgent._liveLog||[];
+  html=rows.length?'':'\0empty';
+  for(i=0;i<rows.length;i++) html+=(rows[i].t||'')+'\n'+(rows[i].txt||'')+'\n';
+  if(list.getAttribute('data-sig')===html) return;
+  list.setAttribute('data-sig', html);
+  if(!rows.length){list.innerHTML='<li class="empty">No recent activity</li>'; return;}
+  html='';
+  for(i=0;i<rows.length;i++) html+='<li><span>'+escHtml(rows[i].t||'')+'</span>'+escHtml(rows[i].txt||'')+'</li>';
+  list.innerHTML=html;
+}
 function isHttp(s){return /^https?:\/\//i.test(String(s||''));}
 function paintPanel(){
   var a=panelAgent; if(!a) return;
@@ -1417,6 +1553,7 @@ function paintPanel(){
   }
   var pc=document.getElementById('botPc');
   if(pc){pc.href=PC_VIEW_URL; pc.target='_self'; pc.rel='';}
+  paintActivity();
 }
 function openPanel(a){
   if(!a||a.id==='you') return;
@@ -1430,7 +1567,9 @@ function openPanel(a){
 }
 function closePanel(){
   panelAgent=null;
+  logOpen=false;
   var el=document.getElementById('botPanel'); if(el) el.hidden=true;
+  paintActivity();
 }
 window.__bal33={
   cam:function(){return {yaw:yaw, polar:polar, dist:dist, fov:camera?camera.fov:0, target:camTarget?[camTarget.x,camTarget.y,camTarget.z]:null};},
@@ -1451,10 +1590,12 @@ window.__bal33={
   blocked:function(x,y){return playerHits(x,y);},
   desk:function(){
     if(!panelAgent) return {open:false};
-    return {open:true, id:panelAgent.id, name:panelAgent.name, role:panelAgent.role, task:activityText(panelAgent), progress:+taskProgress(panelAgent).toFixed(0), when:panelAgent._when||'', working:screenOpens(panelAgent), chat:GROK_CHAT[panelAgent.id]||'', view:PC_VIEW_URL, log:(panelAgent._log||[]).map(function(x){return (x.t||'')+' '+(x.txt||'');})};
+    return {open:true, id:panelAgent.id, name:panelAgent.name, role:panelAgent.role, task:activityText(panelAgent), progress:+taskProgress(panelAgent).toFixed(0), when:panelAgent._when||'', working:screenOpens(panelAgent), chat:GROK_CHAT[panelAgent.id]||'', view:PC_VIEW_URL, logOpen:logOpen, log:(panelAgent._liveLog||[]).map(function(x){return (x.t||'')+' '+(x.txt||'');})};
   },
   openBot:function(id){var a=agById(id); if(a) openPanel(a);},
   closeBot:function(){closePanel();},
+  toggleLog:function(){logOpen=!logOpen; paintActivity();},
+  ingest:function(d){LIVE.wanted=true; if(!LIVE.on) enterLive(); onLive(d||{});},
   hands:function(){
     var out=[], i, a, p, v, h;
     v=new THREE.Vector3();
@@ -1685,7 +1826,7 @@ function tickSimCollab(){
   if(LIVE.on&&LIVE.data) applyLive(LIVE.data);
   else applyCollabDemo();
 }
-var DEMO_NOTE='Simulated demo — scripted routine only (does not update agents-status.json / Live). Tap a bot or a working screen for Chat and View PC.';
+var DEMO_NOTE='Simulated demo — scripted routine only (does not update agents-status.json / Live). Tap a bot or a working screen for Chat, View PC, and Activity log.';
 function nowHM(){var d=new Date();return hhmm(d.getHours()*60+d.getMinutes());}
 function agById(id){for(var i=0;i<AG.length;i++)if(AG[i].id===id)return AG[i];return null;}
 function headingLabel(task){return 'Heading to: '+String(task||'').replace(/^heading to:\s*/i,'').toLowerCase();}
@@ -1705,25 +1846,30 @@ function applyLive(d){var seen={},pending=[];
   d.agents.forEach(function(r){if(!r||typeof r!=='object')return;var id=LIVE_IDS[r.id]||LIVE_NAMES[String(r.name||'').toLowerCase()],a=id&&agById(id);if(!a||seen[id])return;seen[id]=1;
     var raw=(r.status==='working'||r.status==='awaiting_approval')?r.status:'idle';
     var task=String(r.task||(raw==='working'?'Handling a live request':raw==='awaiting_approval'?'Waiting on your approval':'Standing by')).slice(0,140);
-    var group=r.groupId||r.group||r.taskId||r.task_id||r.activityId||r.activity||'';
+    var group=r.groupId||r.group||r.taskId||r.task_id||r.activityId||(typeof r.activity==='string'?r.activity:'')||'';
     if(SIM_COLLAB.on&&SIM_COLLAB.ids[id]){raw='working';task=SIM_COLLAB.task;group='sim-collab';}
     /* Trust status file idle immediately — publisher already covers tool-gap flicker */
     if(raw!=='idle'){a._idleHits=0;}
     if(typeof r.progress==='number'&&isFinite(r.progress)) a._progress=r.progress;
     else if(r.progress!=null&&r.progress!==''&&isFinite(parseFloat(r.progress))) a._progress=parseFloat(r.progress);
     else a._progress=null;
-    pending.push({a:a,id:id,st:raw,task:task,group:String(group||''),prev:a.liveStatus});});
+    pending.push({a:a,id:id,st:raw,task:task,group:String(group||''),prev:a.liveStatus,row:r});});
   var meet=meetingSeats(pending.filter(function(p){return p.st!=='idle';}));
   pending.forEach(function(p){
     var a=p.a,id=p.id,st=p.st,task=p.task,prev=p.prev,seat=meet[id],kind=seat?'meet':(st==='working'?'work':'wait');
     a.liveStatus=st;a.liveTask=task;markUpdate(a);
     if(st==='idle'){goLive(a,IDLE_SPOT[id],task,'live_idle');a.task=task;a.kind='live_idle';a.mode='dwell';}
     else{goLive(a,seat||id,task,kind);a.liveTask=task;if(a.mode!=='walk'){a.task=task;a.kind=kind;}}
-    var prevTask=a._feedTask||'';a._feedTask=task;if(prev!==st||prevTask!==task){log(a,(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task);showToast(a,task);}});
+    var line=(st==='working'?'live: ':st==='awaiting_approval'?'needs approval: ':'idle: ')+task;
+    var fromFile=readLiveFeed(a, p.row||{}, d);
+    var prevTask=a._feedTask||'';a._feedTask=task;
+    if(fromFile){a._liveLog=fromFile;}
+    else if(prev!==st||prevTask!==task){pushLiveLog(a, task, d.updatedAt);}
+    if(prev!==st||prevTask!==task){log(a,line);showToast(a,task);}});
   AG.forEach(function(a){if(!seen[a.id]){
       if(a.liveStatus!=='idle')log(a,'idle: Standing by');a.liveStatus='idle';a.liveTask='Standing by';a._progress=null;a._idleHits=0;goLive(a,IDLE_SPOT[a.id],'Standing by','live_idle');a.task='Standing by';a.kind='live_idle';markUpdate(a);}});applyLocalSim();updateUI();}
-function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus='idle';a.liveTask='Standing by';a.task='Standing by';a.kind='live_idle';a.mode='dwell';a.path=[];});log({name:'Office',color:'#7fd0ff'},'Live status connected · build '+OFFICE_BUILD);updateUI();}
-function leaveLive(why){if(!LIVE.on)return;LIVE.on=false;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;a.step=(a.step+a.plan.length-1)%a.plan.length;advance(a);});
+function enterLive(){LIVE.on=true;AG.forEach(function(a){a.liveSpot=null;a.liveStatus='idle';a.liveTask='Standing by';a.task='Standing by';a.kind='live_idle';a.mode='dwell';a.path=[];a._liveLog=[];a._feedTask='';});log({name:'Office',color:'#7fd0ff'},'Live status connected · build '+OFFICE_BUILD);updateUI();}
+function leaveLive(why){if(!LIVE.on)return;LIVE.on=false;AG.forEach(function(a){a.liveSpot=null;a.liveStatus=null;a._liveLog=[];a._feedTask='';a.step=(a.step+a.plan.length-1)%a.plan.length;advance(a);});
   log({name:'Office',color:'#a09a90'},why||'Back to simulated demo');}
 function onLive(d){if(!LIVE.wanted)return;var ts=Date.parse(d.updatedAt)||Date.now();
   /* Drop out-of-order/stale CDN responses so an older Working Eve doesn't overwrite a fresher Idle/Sam update */
@@ -1797,6 +1943,7 @@ document.getElementById('bSim').onclick=function(){startCollabDemo();};
 document.getElementById('bYou').onclick=function(){if(player.on)exitPlayer();else enterPlayer();};
 bindWalkInput();
 document.getElementById('botClose').onclick=function(){closePanel();};
+document.getElementById('botLog').onclick=function(){logOpen=!logOpen; paintActivity();};
 window.addEventListener('keydown', function(e){
   if(e.key!=='Escape') return;
   if(panelAgent){closePanel(); e.preventDefault();}
