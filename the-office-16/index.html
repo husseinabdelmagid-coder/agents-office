@@ -1580,6 +1580,11 @@ window.__bal33={
   dayNight:function(){return {mode:dnMode, factor:dnFactor, goal:dnGoal(), paris:parisMinutes()};},
   setDayNight:function(m){setDayNight(m);},
   collab:function(rows){return meetingSeats(rows||[]);},
+  demoPair:function(phase){
+    if(phase==='off'||phase==='stop'){PAIR_DEMO.on=false;PAIR_DEMO.phase='off';if(LIVE.on&&LIVE.data)applyLive(LIVE.data);else applyCollabDemo();return {on:false};}
+    startPairDemo(phase||'meet');
+    return {on:true, phase:PAIR_DEMO.phase, eve:pairTask('eve'), sam:pairTask('sam')};
+  },
   simMeet:function(seconds){startCollabDemo(seconds);return {on:SIM_COLLAB.on};},
   typing:function(){var out=[],i,d;for(i=0;i<deskFxList.length;i++){d=deskFxList[i];out.push({id:d.id,key:d.keys?+d.keys.emissiveIntensity.toFixed(3):null,screen:d.screens.length?+d.screens[0].emissiveIntensity.toFixed(3):null});}return out;},
   player:function(){return {on:player.on, name:player.name, x:+player.x.toFixed(2), y:+player.y.toFixed(2), near:OFFICE_NEXT.near.slice(), cam:camTarget?[+camTarget.x.toFixed(2),+camTarget.y.toFixed(2),+camTarget.z.toFixed(2)]:null};},
@@ -1678,24 +1683,31 @@ var CONF_ORDER=['eve','matt','prof','sam','neo','strange'];
 function normTask(t){return String(t||'').trim().toLowerCase().replace(/\s+/g,' ');}
 var ROOM_SMALL=['m0','m1','m2','m3','m4','m5'];
 var ROOM_LARGE=['conf0','conf1','conf2','conf3','conf4','conf5','conf6','conf7'];
-/* Collaboration heuristic (Office.13), applied to Live rows and to the demo routine.
-   Pass only non-idle agents. A room needs two or more of them.
-   1. Explicit shared id. group, groupId, taskId, task_id, activity or activityId, after the same
-      normalization as task text. Matching ids are one group even when the wording differs.
-   2. Same activity text. Trim, lowercase, collapse spaces, and drop a leading "heading to:".
-      Generic lines do not count: standing by, idle, working, break, handling a live request.
-   3. Partner phrases. "with X", including "peer review with X", "code review with X",
-      "sync with X", "with X and Y", and "heading to: … with X". X is matched to Eve, Matt,
-      Sam, Neo/Forge, El Profesor/Professor, Dr Strange/Strange. The speaker is united with
-      each named partner who is also in this non-idle set. An idle partner is not pulled off
-      the lounge. Overlapping mentions union into one group (A-with-B and B-with-C).
-   4. Rooms. 2–6 people use the small glass room (6 seats) when it is free, otherwise the
-      large room. 7–8 use the large room (8 seats). More than 8 still use the large room:
-      the first 8 in desk order sit, and the rest stay at their desks. Only one group per
-      room; a second group that cannot fit stays at desks. Bigger groups are seated first.
-   5. When the shared task ends the assignment disappears. Live sends solos back to their
-      own desks (idle agents still use the lounge seats). The demo walker does the same. */
+/* Collaboration heuristic. Callers pass working agents only. A room needs two or more.
+   Office.13 compared the whole task string for exact equality after trim/lowercase, and
+   treated a free-text activity as if it were a shared id. Live rows break that: the
+   wording differs ("Shared deploy review" vs "Reviewing the shared deploy"), the shared
+   id sits on taskId or inside voice / live-cache, or the link is "with <name>",
+   SendToAgent, or "collab" in the activity. Agent title is the role and is never a task id.
+   1. Shared id or task title. group, groupId, taskId, task_id, activityId, and the same
+      keys inside task, voice, liveCache, live_cache, and live-cache. A matching id or
+      title is one group even when the sentences differ.
+   2. Task text. Exact normalized text still groups. Otherwise tokenize, drop stopwords,
+      stem, and unite when at least two tokens overlap and the overlap covers most of
+      both descriptions. Generic lines do not count: standing by, idle, working, break,
+      handling a live request.
+   3. Cross-references in the task or activity. "with X", SendToAgent X, and a collab /
+      collaboration note. Named partners unite with that working agent. A collab note
+      with no name shares a bucket with every other unnamed collab note. Idle partners
+      stay on the lounge.
+   4. Rooms. 2–5 use the small glass room when it is free. 6 or more use the large room.
+      A second small group may use the large room. More than 8 still use the large room:
+      the first 8 in desk order sit, and the rest stay at their desks. One group per room.
+      Bigger groups are seated first.
+   5. When the shared task ends or the texts diverge, the assignment disappears and each
+      working agent returns to their own desk. Idle agents still use the lounge seats. */
 var GENERIC_TASK={'standing by':1,'idle':1,'working':1,'break':1,'handling a live request':1};
+var TASK_STOP={a:1,an:1,the:1,of:1,to:1,for:1,and:1,with:1,on:1,in:1,at:1,by:1,from:1,into:1,via:1,using:1,eve:1,matt:1,sam:1,neo:1,forge:1,prof:1,profesor:1,professor:1,strange:1,doctor:1};
 var PARTNER_NAMES=[
   ['el profesor','prof'],['doctor strange','strange'],['dr. strange','strange'],['dr strange','strange'],
   ['professor','prof'],['profesor','prof'],['strange','strange'],['forge','neo'],
@@ -1727,6 +1739,117 @@ function partnersIn(text){
   }
   return out;
 }
+function stemTok(w){
+  if(w.length>5&&w.slice(-3)==='ing') w=w.slice(0,-3);
+  else if(w.length>4&&w.slice(-2)==='ed') w=w.slice(0,-2);
+  else if(w.length>4&&w.slice(-1)==='s') w=w.slice(0,-1);
+  return w;
+}
+function taskTokens(text){
+  var s=coreTask(text).replace(/[^a-z0-9\s]/g,' '), parts=s.split(/\s+/), out=[], seen={}, i, w;
+  for(i=0;i<parts.length;i++){
+    w=stemTok(parts[i]);
+    if(w.length<3||TASK_STOP[w]||seen[w]) continue;
+    seen[w]=1; out.push(w);
+  }
+  return out;
+}
+function tokensOverlap(a,b){
+  var i, n=0, sb={};
+  if(a.length<2||b.length<2) return false;
+  for(i=0;i<b.length;i++) sb[b[i]]=1;
+  for(i=0;i<a.length;i++) if(sb[a[i]]) n++;
+  if(n<2) return false;
+  var mn=a.length<b.length?a.length:b.length, mx=a.length>b.length?a.length:b.length;
+  return n/mn>=0.67 && n/mx>=0.5;
+}
+function pushSigText(bucket,v){
+  var keys, k;
+  if(v==null) return;
+  if(typeof v==='string'||typeof v==='number'){ if(String(v).trim()) bucket.push(String(v)); return; }
+  if(typeof v!=='object') return;
+  keys=['title','name','text','task','summary','label','description','message','body'];
+  for(k=0;k<keys.length;k++){
+    if(v[keys[k]]!=null&&typeof v[keys[k]]!=='object') bucket.push(String(v[keys[k]]));
+  }
+}
+function pushSigId(ids,v){
+  var s=normTask(v);
+  if(s&&s.length>=4) ids.push(s);
+}
+function idsFromObj(ids,o){
+  var keys=['taskId','task_id','groupId','group','activityId','activity_id'], j;
+  if(!o||typeof o!=='object'||Object.prototype.toString.call(o)==='[object Array]') return;
+  for(j=0;j<keys.length;j++) if(o[keys[j]]!=null&&typeof o[keys[j]]!=='object') pushSigId(ids,o[keys[j]]);
+}
+function cacheSig(texts,ids,titles,o){
+  var s;
+  if(o==null) return;
+  if(typeof o==='string'||typeof o==='number'){
+    s=String(o).trim();
+    if(!s) return;
+    if(s.indexOf(' ')<0) pushSigId(ids,s);
+    else texts.push(s);
+    return;
+  }
+  if(typeof o!=='object') return;
+  idsFromObj(ids,o);
+  if(o.id!=null&&typeof o.id!=='object') pushSigId(ids,o.id);
+  if(o.title) titles.push(String(o.title));
+  pushSigText(texts,o);
+}
+function collabSignals(r){
+  var texts=[], extras=[], ids=[], titles=[], send, nm;
+  r=r||{};
+  if(typeof r.task==='string'||typeof r.task==='number'){ if(String(r.task).trim()) texts.push(String(r.task)); }
+  else if(r.task&&typeof r.task==='object'){
+    pushSigText(texts,r.task); idsFromObj(ids,r.task);
+    if(r.task.id!=null&&typeof r.task.id!=='object') pushSigId(ids,r.task.id);
+    if(r.task.title) titles.push(String(r.task.title));
+  }
+  pushSigId(ids,r.taskId); pushSigId(ids,r.task_id); pushSigId(ids,r.groupId); pushSigId(ids,r.group);
+  pushSigId(ids,r.activityId); pushSigId(ids,r.activity_id);
+  if(r.taskTitle) titles.push(String(r.taskTitle));
+  if(r.task_title) titles.push(String(r.task_title));
+  if(typeof r.activity==='string'||typeof r.activity==='number'){ if(String(r.activity).trim()) extras.push(String(r.activity)); }
+  else if(r.activity&&typeof r.activity==='object'&&Object.prototype.toString.call(r.activity)!=='[object Array]'){
+    idsFromObj(ids,r.activity); pushSigText(extras,r.activity);
+    if(r.activity.type||r.activity.to||r.activity.target||r.activity.agent) extras.push(String(r.activity.type||'')+' '+(r.activity.to||r.activity.target||r.activity.agent||''));
+  }
+  cacheSig(extras,ids,titles,r.voice);
+  cacheSig(extras,ids,titles,r.liveCache);
+  cacheSig(extras,ids,titles,r.live_cache);
+  cacheSig(extras,ids,titles,r['live-cache']);
+  send=r.sendToAgent||r.sendTo||r.toAgent||r.targetAgent;
+  if(send==null) send=r.target;
+  if(typeof send==='string'||typeof send==='number') extras.push('sendtoagent '+send);
+  else if(send&&typeof send==='object'){
+    nm=send.name||send.agent||send.to||send.id||'';
+    if(nm) extras.push('sendtoagent '+nm);
+  }
+  return {task:texts.join(' '), extra:extras.join(' '), ids:ids, title:titles.join(' ')};
+}
+function compareBlob(sig){
+  var parts=[], bits=[sig.task,sig.title,sig.extra], i, c;
+  for(i=0;i<bits.length;i++){
+    c=coreTask(bits[i]);
+    if(c&&!GENERIC_TASK[c]) parts.push(c);
+  }
+  return parts.join(' ');
+}
+function refHits(text){
+  var s=coreTask(text), partners=partnersIn(s), seen={}, out=[], i, id, at, tail;
+  for(i=0;i<partners.length;i++) seen[partners[i]]=1;
+  at=s.indexOf('sendtoagent');
+  if(at<0) at=s.indexOf('send to agent');
+  if(at>=0){
+    tail=s.slice(at).replace(/^sendtoagent/,'').replace(/^send to agent/,'').replace(/^[\s:()]+/,'');
+    id=matchPartnerName(tail);
+    if(id&&!seen[id]){seen[id]=1;partners.push(id);}
+  }
+  for(i=0;i<partners.length;i++) out.push(partners[i]);
+  return {partners:out, collab:out.length===0&&/\bcollab/.test(s)};
+}
 function meetingSeats(rows){
   var parent={}, i, ids=[], buckets={}, list=[], used={small:false,large:false}, assign={}, order={};
   function find(a){return parent[a]===a?a:(parent[a]=find(parent[a]));}
@@ -1738,14 +1861,26 @@ function meetingSeats(rows){
     parent[rows[i].id]=rows[i].id;
     ids.push(rows[i].id);
   }
+  var sigs={}, blobs={}, toks={};
   for(i=0;i<rows.length;i++){
     var r=rows[i]; if(!r||!parent.hasOwnProperty(r.id)) continue;
-    var gid=normTask(r.group||'');
-    if(gid) addBucket('id:'+gid, r.id);
-    var core=coreTask(r.task);
+    var sig=collabSignals(r), gids=sig.ids, gi, core, title, refs, p;
+    sigs[r.id]=sig;
+    for(gi=0;gi<gids.length;gi++) addBucket('id:'+gids[gi], r.id);
+    core=coreTask(sig.task);
     if(core&&!GENERIC_TASK[core]) addBucket('task:'+core, r.id);
-    var partners=partnersIn(core), p;
-    for(p=0;p<partners.length;p++) if(parent.hasOwnProperty(partners[p])&&partners[p]!==r.id) unite(r.id, partners[p]);
+    title=coreTask(sig.title);
+    if(title&&!GENERIC_TASK[title]) addBucket('title:'+title, r.id);
+    blobs[r.id]=compareBlob(sig);
+    toks[r.id]=taskTokens(blobs[r.id]);
+    refs=refHits(core+' '+title+' '+sig.extra);
+    for(p=0;p<refs.partners.length;p++) if(parent.hasOwnProperty(refs.partners[p])&&refs.partners[p]!==r.id) unite(r.id, refs.partners[p]);
+    if(refs.collab) addBucket('ref:collab', r.id);
+  }
+  for(i=0;i<ids.length;i++){
+    for(var j=i+1;j<ids.length;j++){
+      if(tokensOverlap(toks[ids[i]]||[], toks[ids[j]]||[])) unite(ids[i], ids[j]);
+    }
   }
   Object.keys(buckets).forEach(function(k){
     var arr=buckets[k]; if(arr.length<2) return;
@@ -1759,7 +1894,7 @@ function meetingSeats(rows){
   list.sort(function(a,b){return b.ids.length-a.ids.length||(a.k<b.k?-1:a.k>b.k?1:0);});
   list.forEach(function(g){
     var n=g.ids.length, room=null;
-    if(n<=6&&!used.small) room='small';
+    if(n<=5){ if(!used.small) room='small'; else if(!used.large) room='large'; }
     else if(!used.large) room='large';
     if(!room) return;
     used[room]=true;
@@ -1772,11 +1907,47 @@ function meetingSeats(rows){
 }
 function isRoomSeat(id){return !!(id&&(ROOM_SMALL.indexOf(id)>=0||ROOM_LARGE.indexOf(id)>=0));}
 var SIM_COLLAB={on:false, until:0, task:'Design review together', ids:{eve:1,matt:1,neo:1}, restoreLive:false};
+/* ?demo=pair and __bal33.demoPair(). Wording differs on purpose so seating proves the matcher. */
+var PAIR_DEMO={on:false, phase:'off', ids:{eve:1,sam:1}, eve:'Shared deploy review', sam:'Reviewing the shared deploy'};
+function pairTask(id){
+  if(PAIR_DEMO.phase==='meet') return id==='sam'?PAIR_DEMO.sam:PAIR_DEMO.eve;
+  return id==='eve'?'Triaging inbox & calendar':'Polishing CV & LinkedIn summary';
+}
+function taskTextOf(taskRaw, fallback){
+  var s='';
+  if(typeof taskRaw==='string'||typeof taskRaw==='number') s=String(taskRaw);
+  else if(taskRaw&&typeof taskRaw==='object') s=String(taskRaw.text||taskRaw.title||taskRaw.name||taskRaw.summary||taskRaw.label||'');
+  s=s.replace(/\s+/g,' ').trim();
+  return s||fallback;
+}
+function meetInput(p){
+  var row, out, t;
+  if(p.override) return {id:p.id, task:p.taskFull||p.task, group:p.group||''};
+  row=p.row||{};
+  out={
+    id:p.id, task:p.taskFull||p.task, group:p.group||'',
+    activity:row.activity, taskId:row.taskId, task_id:row.task_id, groupId:row.groupId,
+    activityId:row.activityId, activity_id:row.activity_id, taskTitle:row.taskTitle, task_title:row.task_title,
+    voice:row.voice, liveCache:row.liveCache, live_cache:row.live_cache,
+    sendToAgent:row.sendToAgent, sendTo:row.sendTo, toAgent:row.toAgent, targetAgent:row.targetAgent, target:row.target
+  };
+  out['live-cache']=row['live-cache'];
+  t=row.task;
+  if(t&&typeof t==='object'){
+    if(!out.taskId&&t.taskId) out.taskId=t.taskId;
+    if(!out.taskId&&t.id) out.taskId=t.id;
+    if(!out.task_id&&t.task_id) out.task_id=t.task_id;
+    if(!out.taskTitle&&t.title) out.taskTitle=t.title;
+  }
+  return out;
+}
 function taskNow(a){
+  if(PAIR_DEMO.on&&PAIR_DEMO.ids[a.id]) return pairTask(a.id);
   if(SIM_COLLAB.on&&SIM_COLLAB.ids[a.id]) return SIM_COLLAB.task;
   return a.mode==='walk'?(a.nextTask||a.task):a.task;
 }
 function kindNow(a){
+  if(PAIR_DEMO.on&&PAIR_DEMO.ids[a.id]) return 'work';
   if(SIM_COLLAB.on&&SIM_COLLAB.ids[a.id]) return 'work';
   return a.mode==='walk'?(a.nextKind||a.kind):a.kind;
 }
@@ -1801,15 +1972,28 @@ function applyCollabDemo(){
   var rows=[];
   AG.forEach(function(a){
     var kind=kindNow(a);
-    if(kind==='idle'||kind==='live_idle') return;
-    rows.push({id:a.id, task:taskNow(a), group:(SIM_COLLAB.on&&SIM_COLLAB.ids[a.id])?'sim-collab':''});
+    if(PAIR_DEMO.on){ if(!PAIR_DEMO.ids[a.id]) return; }
+    else if(kind==='idle'||kind==='live_idle') return;
+    rows.push({id:a.id, task:taskNow(a), group:(!PAIR_DEMO.on&&SIM_COLLAB.on&&SIM_COLLAB.ids[a.id])?'sim-collab':''});
   });
   var meet=meetingSeats(rows);
   AG.forEach(function(a){
     var seat=meet[a.id];
     if(seat) sendTo(a, seat, 'meet', taskNow(a));
-    else if(isRoomSeat(a._dest)){var home=planDest(a); sendTo(a, home.spot, home.kind, home.task);}
+    else if(isRoomSeat(a._dest)){
+      if(PAIR_DEMO.on&&PAIR_DEMO.ids[a.id]) {sendTo(a, a.id, 'work', pairTask(a.id)); return;}
+      if(PAIR_DEMO.on) return;
+      var home=planDest(a); sendTo(a, home.spot, home.kind, home.task);
+    }
   });
+}
+function startPairDemo(phase){
+  PAIR_DEMO.on=true;
+  PAIR_DEMO.phase=(phase==='split'||phase==='end'||phase==='desk')?'split':'meet';
+  if(PAIR_DEMO.phase==='meet') log({name:'Office',color:'#ee8a3a'},'Pair demo: Eve and Sam are on the same deploy review and take the small meeting room. Local only — agents-status.json is not written.');
+  else log({name:'Office',color:'#ee8a3a'},'Pair demo: shared task ended — Eve and Sam return to their desks.');
+  if(LIVE.on&&LIVE.data) applyLive(LIVE.data);
+  else applyCollabDemo();
 }
 function startCollabDemo(seconds){
   var dur=(typeof seconds==='number'&&seconds>0)?seconds:22;
@@ -1845,16 +2029,21 @@ function applyLocalSim(){/* removed: local overlay fought Live JSON */}
 function applyLive(d){var seen={},pending=[];
   d.agents.forEach(function(r){if(!r||typeof r!=='object')return;var id=LIVE_IDS[r.id]||LIVE_NAMES[String(r.name||'').toLowerCase()],a=id&&agById(id);if(!a||seen[id])return;seen[id]=1;
     var raw=(r.status==='working'||r.status==='awaiting_approval')?r.status:'idle';
-    var task=String(r.task||(raw==='working'?'Handling a live request':raw==='awaiting_approval'?'Waiting on your approval':'Standing by')).slice(0,140);
-    var group=r.groupId||r.group||r.taskId||r.task_id||r.activityId||(typeof r.activity==='string'?r.activity:'')||'';
-    if(SIM_COLLAB.on&&SIM_COLLAB.ids[id]){raw='working';task=SIM_COLLAB.task;group='sim-collab';}
+    var fallback=raw==='working'?'Handling a live request':raw==='awaiting_approval'?'Waiting on your approval':'Standing by';
+    var taskFull=taskTextOf(r.task, fallback);
+    var task=taskFull.slice(0,140);
+    var group=r.groupId||r.group||r.taskId||r.task_id||r.activityId||'';
+    if(group&&typeof group==='object') group='';
+    var override=false;
+    if(SIM_COLLAB.on&&SIM_COLLAB.ids[id]){raw='working';task=SIM_COLLAB.task;taskFull=task;group='sim-collab';override=true;}
+    if(PAIR_DEMO.on&&PAIR_DEMO.ids[id]){raw='working';task=pairTask(id);taskFull=task;group='';override=true;}
     /* Trust status file idle immediately — publisher already covers tool-gap flicker */
     if(raw!=='idle'){a._idleHits=0;}
     if(typeof r.progress==='number'&&isFinite(r.progress)) a._progress=r.progress;
     else if(r.progress!=null&&r.progress!==''&&isFinite(parseFloat(r.progress))) a._progress=parseFloat(r.progress);
     else a._progress=null;
-    pending.push({a:a,id:id,st:raw,task:task,group:String(group||''),prev:a.liveStatus,row:r});});
-  var meet=meetingSeats(pending.filter(function(p){return p.st!=='idle';}));
+    pending.push({a:a,id:id,st:raw,task:task,taskFull:taskFull,group:String(group||''),override:override,prev:a.liveStatus,row:r});});
+  var meet=meetingSeats(pending.filter(function(p){return p.st==='working';}).map(meetInput));
   pending.forEach(function(p){
     var a=p.a,id=p.id,st=p.st,task=p.task,prev=p.prev,seat=meet[id],kind=seat?'meet':(st==='working'?'work':'wait');
     a.liveStatus=st;a.liveTask=task;markUpdate(a);
@@ -1956,6 +2145,7 @@ AG.forEach(function(a){log(a,a.task);});showToast(AG[0],AG[0].task);
 layout();window.addEventListener('resize',layout);window.addEventListener('orientationchange',function(){setTimeout(layout,250);});
 requestAnimationFrame(frame);
 if(/[?&]live=1(&|$)/.test(location.search))setLive(true);
+if(/[?&]demo=pair(?:&|$)/.test(location.search))startPairDemo('meet');
 window.setLive=setLive;
 })();
 </script>
