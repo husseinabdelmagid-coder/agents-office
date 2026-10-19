@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T17:06:08Z",
+  "updatedAt": "2026-10-19T17:06:33Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -24,7 +24,7 @@
       "name": "Matt",
       "title": "Fitness Coach",
       "status": "working",
-      "task": "Using Shell",
+      "task": "Handling a live request",
       "color": "#ee8a3a"
     },
     {
