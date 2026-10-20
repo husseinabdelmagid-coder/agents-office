@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T15:23:15Z",
+  "updatedAt": "2026-10-20T15:23:36Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -52,8 +52,8 @@
       "name": "Neo",
       "title": "Coding Wizard",
       "status": "working",
-      "task": "Second Brain web app",
-      "task_title": "Second Brain web app",
+      "task": "Gmail vault sync",
+      "task_title": "Gmail vault sync",
       "color": "#2a9d8f"
     },
     {
