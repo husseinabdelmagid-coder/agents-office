@@ -1391,8 +1391,8 @@ function bindWalkInput(){
   el.addEventListener('pointerup', endJoy);
   el.addEventListener('pointercancel', endJoy);
 }
-/* East glass, the face toward the camera, on the open end of that pane so the larger mark stays off the racks. */
-var BRAIN_AT={x:1.32,y:1.05,z:13.18};
+/* East glass, the face toward the camera, toward the near end of that pane. */
+var BRAIN_AT={x:1.32,y:1.02,z:13.10};
 function projectPt(x,y,z){
   if(!camera||!labelVec||!view) return null;
   labelVec.set(x,y,z).project(camera);
@@ -1410,10 +1410,10 @@ function placeBrain(){
   if(!c||!hx||!c.ok||!hx.ok){el.style.display='none'; return;}
   per=Math.hypot(hx.x-c.x, hx.y-c.y)/0.5;
   if(per<1){el.style.display='none'; return;}
-  /* About two and a half times the .22 mark, still inside the front pane. */
-  world=48/per;
-  if(world>0.82) world=0.82;
-  if(world<0.40) world=0.40;
+  /* About two and three quarter times the .22 mark, still inside the front pane. */
+  world=54/per;
+  if(world>1.00) world=1.00;
+  if(world<0.48) world=0.48;
   tl=projectPt(BRAIN_AT.x, BRAIN_AT.y+world*0.5, BRAIN_AT.z-world*0.5);
   tr=projectPt(BRAIN_AT.x, BRAIN_AT.y+world*0.5, BRAIN_AT.z+world*0.5);
   bl=projectPt(BRAIN_AT.x, BRAIN_AT.y-world*0.5, BRAIN_AT.z-world*0.5);
