@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-20T15:23:36Z",
+  "updatedAt": "2026-10-20T15:25:16Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
-    "busyOnlyAwaitingApproval": false,
+    "busyOnlyAwaitingApproval": true,
     "activeAgentId": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
     "activeAgentName": "Neo",
     "lastBusyAt": "2026-10-20T15:21:43.918000Z",
@@ -51,8 +51,8 @@
       "id": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
       "name": "Neo",
       "title": "Coding Wizard",
-      "status": "working",
-      "task": "Gmail vault sync",
+      "status": "awaiting_approval",
+      "task": "Waiting on your approval",
       "task_title": "Gmail vault sync",
       "color": "#2a9d8f"
     },
