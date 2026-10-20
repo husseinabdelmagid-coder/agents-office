@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T15:08:02Z",
+  "updatedAt": "2026-10-20T15:08:20Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -17,6 +17,7 @@
       "title": "Personal assistant",
       "status": "idle",
       "task": "Standing by",
+      "task_title": null,
       "color": "#8a6fd1"
     },
     {
@@ -25,6 +26,7 @@
       "title": "Fitness Coach",
       "status": "idle",
       "task": "Standing by",
+      "task_title": null,
       "color": "#ee8a3a"
     },
     {
@@ -33,6 +35,7 @@
       "title": "Deep researcher",
       "status": "working",
       "task": "Handling a live request",
+      "task_title": "Handling a live request",
       "color": "#c9473f"
     },
     {
@@ -41,6 +44,7 @@
       "title": "Career advisor",
       "status": "idle",
       "task": "Standing by",
+      "task_title": null,
       "color": "#3f8fcf"
     },
     {
@@ -49,6 +53,7 @@
       "title": "Coding Wizard",
       "status": "working",
       "task": "Handling a live request",
+      "task_title": "Handling a live request",
       "color": "#2a9d8f"
     },
     {
@@ -57,6 +62,7 @@
       "title": "Medical advisor",
       "status": "idle",
       "task": "Standing by",
+      "task_title": null,
       "color": "#6a4c93"
     }
   ]
