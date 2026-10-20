@@ -1852,7 +1852,9 @@ function collabSignals(r){
     nm=send.name||send.agent||send.to||send.id||'';
     if(nm) extras.push('sendtoagent '+nm);
   }
-  return {task:texts.join(' '), extra:extras.join(' '), ids:ids, title:titles.join(' ')};
+  var seenId={}, uniq=[], ui;
+  for(ui=0;ui<ids.length;ui++) if(!seenId[ids[ui]]){seenId[ids[ui]]=1; uniq.push(ids[ui]);}
+  return {task:texts.join(' '), extra:extras.join(' '), ids:uniq, title:titles.join(' ')};
 }
 function compareBlob(sig){
   var parts=[], bits=[sig.task,sig.title,sig.extra], i, c;
