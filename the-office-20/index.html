@@ -539,7 +539,8 @@ var DN_KEY='agents-office-dn-v1';
    .17 hands stay on the wrists, just in front of the torso, above the keyboard.
    .18 merges Chat and View PC into one chat/PC view button: chat URL, then the computer tab.
    .19 live rows with the same task, session, handoff, or placeholder line share a meeting room. ?debug=groups explains it.
-   .20 activity log lists the last 24h of tasks (Europe/Brussels), from agents-activity-24h.json when that file exists. */
+   .20 activity log lists the last 24h of tasks (Europe/Brussels), from agents-activity-24h.json when that file exists.
+   Shown task text prefers task_title, then the existing task or summary. */
 var OFFICE_NEXT={typing:null, player:null, near:[], screens:[]};
 /* Visitor. Spawn is open floor inside the south wall, west of the lounge and south of the desks. */
 var player={id:'you',name:'You',role:'Visitor',color:'#e6b325',shirt:'#e6b325',pants:'#243044',hair:'#1b3a2a',skin:'#f3d2b0',style:'you',
@@ -1443,11 +1444,21 @@ function feedItems(obj, keys){
   }
   return out;
 }
+function textOf(){
+  var i, v;
+  for(i=0;i<arguments.length;i++){
+    v=arguments[i];
+    if(v==null||typeof v==='object') continue;
+    v=String(v).replace(/\s+/g,' ').trim();
+    if(v) return v;
+  }
+  return '';
+}
 function entryText(e){
   if(e==null) return '';
   if(typeof e==='string'||typeof e==='number') return String(e);
   if(typeof e!=='object') return '';
-  return String(e.text||e.task||e.message||e.title||e.summary||e.activity||'');
+  return textOf(e.task_title, e.taskTitle, e.text, e.task, e.message, e.title, e.summary, e.activity);
 }
 function entryTime(e){
   if(!e||typeof e!=='object') return '';
@@ -1529,7 +1540,7 @@ function spanKind(raw, task){
 function spanFromEntry(e){
   var task, start, endRaw, end, status;
   if(!e||typeof e!=='object') return null;
-  task=String(e.task||e.title||e.summary||e.text||e.txt||'').replace(/\s+/g,' ').trim();
+  task=textOf(e.task_title, e.taskTitle, e.task, e.title, e.summary, e.text, e.txt);
   start=Date.parse(e.start||e.from||e.at||e.timestamp||e.updatedAt||e.when||'');
   if(!isFinite(start)&&e.ms!=null) start=+e.ms;
   endRaw=e.end||e.to||e.until||'';
@@ -2209,9 +2220,19 @@ function pairTask(id){
 function taskTextOf(taskRaw, fallback){
   var s='';
   if(typeof taskRaw==='string'||typeof taskRaw==='number') s=String(taskRaw);
-  else if(taskRaw&&typeof taskRaw==='object') s=String(taskRaw.text||taskRaw.title||taskRaw.name||taskRaw.summary||taskRaw.label||'');
-  s=s.replace(/\s+/g,' ').trim();
+  else if(taskRaw&&typeof taskRaw==='object') s=textOf(taskRaw.task_title, taskRaw.taskTitle, taskRaw.text, taskRaw.task, taskRaw.title, taskRaw.name, taskRaw.summary, taskRaw.label);
+  s=String(s||'').replace(/\s+/g,' ').trim();
   return s||fallback;
+}
+/* Publisher task_title is the short label. Shown on the panel, the rail, and the log. */
+function shownTask(row, fallback){
+  var title='';
+  if(row){
+    title=textOf(row.task_title, row.taskTitle);
+    if(!title && row.task && typeof row.task==='object') title=textOf(row.task.task_title, row.task.taskTitle);
+  }
+  if(title) return title;
+  return taskTextOf(row&&row.task, fallback);
 }
 function meetInput(p){
   var row, out, t;
@@ -2325,8 +2346,9 @@ function applyLive(d){var seen={},pending=[];
   d.agents.forEach(function(r){if(!r||typeof r!=='object')return;var id=LIVE_IDS[r.id]||LIVE_NAMES[String(r.name||'').toLowerCase()],a=id&&agById(id);if(!a||seen[id])return;seen[id]=1;
     var raw=(r.status==='working'||r.status==='awaiting_approval')?r.status:'idle';
     var fallback=raw==='working'?'Handling a live request':raw==='awaiting_approval'?'Waiting on your approval':'Standing by';
-    var taskFull=taskTextOf(r.task, fallback);
-    var task=taskFull.slice(0,140);
+    var taskBody=taskTextOf(r.task, '');
+    var task=shownTask(r, fallback).slice(0,140);
+    var taskFull=taskBody||task;
     var group=r.groupId||r.group||r.taskId||r.task_id||r.activityId||'';
     if(group&&typeof group==='object') group='';
     var override=false;
@@ -2351,7 +2373,7 @@ function applyLive(d){var seen={},pending=[];
     var prevTask=a._feedTask||'';a._feedTask=task;
     if(fromFile){a._feedSpans=feedAsSpans(fromFile); a._liveLog=fromFile;}
     else a._feedSpans=null;
-    noteSpan(a, p.taskFull||task, st, d.updatedAt);
+    noteSpan(a, task, st, d.updatedAt);
     if(!fromFile && (prev!==st||prevTask!==task)) pushLiveLog(a, task, d.updatedAt);
     if(prev!==st||prevTask!==task){log(a,line);showToast(a,task);}});
   AG.forEach(function(a){if(!seen[a.id]){
