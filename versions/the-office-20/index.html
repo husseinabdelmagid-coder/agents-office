@@ -1553,7 +1553,7 @@ function noteSpan(a, task, status, when){
     if(st!=='working') last.end=ms;
     return;
   }
-  if(last && last.end==null) last.end=ms;
+  if(last && last.end==null){last.end=ms; if(last.status==='working') last.status='done';}
   spans.push({start:ms, end:st==='working'?null:ms, seen:ms, task:String(task||''), status:st});
   cut=Date.now()-TASK_WINDOW;
   while(spans.length && (spans[0].end||spans[0].seen||spans[0].start)<cut) spans.shift();
@@ -1572,7 +1572,10 @@ function mergeSpans(list){
     if(same && gap<=TASK_MERGE_MS){
       cur.start=Math.min(cur.start, nxt.start);
       if(nxt.status==='working' && nxt.end==null){cur.end=null; cur.status='working';}
-      else{
+      else if(nxt.status==='working'){
+        cur.end=Math.max(cur.end==null?cur.start:cur.end, nxt.end);
+        cur.status='working';
+      }else{
         cur.end=Math.max(cur.end==null?cur.start:cur.end, nxt.end==null?nxt.start:nxt.end);
         cur.status=nxt.status==='idle'?'idle':'done';
       }
