@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T15:08:40Z",
+  "updatedAt": "2026-10-20T15:08:57Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -34,8 +34,8 @@
       "name": "El Profesor",
       "title": "Deep researcher",
       "status": "working",
-      "task": "Handling a live request",
-      "task_title": "Handling a live request",
+      "task": "Research: lawn and garden",
+      "task_title": "Research: lawn and garden",
       "color": "#c9473f"
     },
     {
@@ -52,8 +52,8 @@
       "name": "Neo",
       "title": "Coding Wizard",
       "status": "working",
-      "task": "Handling a live request",
-      "task_title": "Handling a live request",
+      "task": "Coding task",
+      "task_title": "Coding task",
       "color": "#2a9d8f"
     },
     {
