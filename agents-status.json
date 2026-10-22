@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-22T05:19:30Z",
+  "updatedAt": "2026-10-22T05:55:40Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -7,7 +7,7 @@
     "busyOnlyAwaitingApproval": false,
     "activeAgentId": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
     "activeAgentName": "Sam",
-    "lastBusyAt": "2026-10-21T15:11:00.510000Z",
+    "lastBusyAt": "2026-10-22T05:55:34.164000Z",
     "liveFeed": "ok"
   },
   "agents": [
@@ -43,8 +43,8 @@
       "name": "Sam",
       "title": "Career advisor",
       "status": "working",
-      "task": "CV review",
-      "task_title": "CV review",
+      "task": "Career advice",
+      "task_title": "Career advice",
       "color": "#3f8fcf"
     },
     {
