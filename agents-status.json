@@ -1,19 +1,19 @@
 {
-  "updatedAt": "2026-10-26T20:21:26Z",
+  "updatedAt": "2026-10-26T20:21:41Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": false,
     "busyOnlyAwaitingApproval": false,
     "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
-    "activeAgentName": "Eve",
-    "lastBusyAt": "2026-10-23T18:24:19.329000Z",
+    "activeAgentName": "Eve \u00b7 Personal assistant",
+    "lastBusyAt": "2026-10-26T20:21:35.240000Z",
     "liveFeed": "ok"
   },
   "agents": [
     {
       "id": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
-      "name": "Eve",
+      "name": "Eve \u00b7 Personal assistant",
       "title": "Personal assistant",
       "status": "idle",
       "task": "Standing by",
@@ -22,8 +22,8 @@
     },
     {
       "id": "3c92912d-8aa9-439d-b2fb-5282635b30d3",
-      "name": "Matt",
-      "title": "Fitness Coach",
+      "name": "Matt \u00b7 Fitness Coach",
+      "title": "Coach",
       "status": "idle",
       "task": "Standing by",
       "task_title": null,
@@ -31,7 +31,7 @@
     },
     {
       "id": "3a48a61f-5e48-4510-80f4-83a668552dec",
-      "name": "El Profesor",
+      "name": "El Profesor \u00b7 Deep researcher",
       "title": "Deep researcher",
       "status": "idle",
       "task": "Standing by",
@@ -40,7 +40,7 @@
     },
     {
       "id": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
-      "name": "Sam",
+      "name": "Sam \u00b7 Career advisor",
       "title": "Career advisor",
       "status": "idle",
       "task": "Standing by",
@@ -49,8 +49,8 @@
     },
     {
       "id": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
-      "name": "Neo",
-      "title": "Coding Wizard",
+      "name": "Neo \u00b7 Coding Wizard",
+      "title": "Coding specialist",
       "status": "idle",
       "task": "Standing by",
       "task_title": null,
