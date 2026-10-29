@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-29T19:28:57Z",
+  "updatedAt": "2026-10-29T19:37:23Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -52,8 +52,8 @@
       "name": "Neo \u00b7 Coding Wizard",
       "title": "Coding specialist",
       "status": "working",
-      "task": "Bug fix",
-      "task_title": "Bug fix",
+      "task": "Agents Office update",
+      "task_title": "Agents Office update",
       "color": "#2a9d8f"
     },
     {
