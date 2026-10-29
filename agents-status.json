@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-29T19:27:57Z",
+  "updatedAt": "2026-10-29T19:28:57Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -43,8 +43,8 @@
       "name": "Sam \u00b7 Career advisor",
       "title": "Career advisor",
       "status": "working",
-      "task": "Job search scan",
-      "task_title": "Job search scan",
+      "task": "Career advice",
+      "task_title": "Career advice",
       "color": "#3f8fcf"
     },
     {
@@ -52,8 +52,8 @@
       "name": "Neo \u00b7 Coding Wizard",
       "title": "Coding specialist",
       "status": "working",
-      "task": "Agents Office update",
-      "task_title": "Agents Office update",
+      "task": "Bug fix",
+      "task_title": "Bug fix",
       "color": "#2a9d8f"
     },
     {
