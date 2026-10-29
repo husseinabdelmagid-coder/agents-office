@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-29T19:23:52Z",
+  "updatedAt": "2026-10-29T19:27:42Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -24,18 +24,18 @@
       "id": "3c92912d-8aa9-439d-b2fb-5282635b30d3",
       "name": "Matt \u00b7 Fitness Coach",
       "title": "Coach",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
+      "status": "working",
+      "task": "Training plan",
+      "task_title": "Training plan",
       "color": "#ee8a3a"
     },
     {
       "id": "3a48a61f-5e48-4510-80f4-83a668552dec",
       "name": "El Profesor \u00b7 Deep researcher",
       "title": "Deep researcher",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
+      "status": "working",
+      "task": "Deep research",
+      "task_title": "Deep research",
       "color": "#c9473f"
     },
     {
