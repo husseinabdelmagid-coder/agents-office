@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-29T19:05:44Z",
+  "updatedAt": "2026-10-29T19:05:59Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
-    "isBusy": false,
+    "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
-    "activeAgentName": "Eve \u00b7 Personal assistant",
+    "activeAgentId": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
+    "activeAgentName": "Sam \u00b7 Career advisor",
     "lastBusyAt": "2026-10-28T16:08:55.937000Z",
     "liveFeed": "ok"
   },
@@ -15,9 +15,9 @@
       "id": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
       "name": "Eve \u00b7 Personal assistant",
       "title": "Personal assistant",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
+      "status": "working",
+      "task": "System test",
+      "task_title": "System test",
       "color": "#8a6fd1"
     },
     {
@@ -42,9 +42,9 @@
       "id": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
       "name": "Sam \u00b7 Career advisor",
       "title": "Career advisor",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
+      "status": "working",
+      "task": "Job search scan",
+      "task_title": "Job search scan",
       "color": "#3f8fcf"
     },
     {
