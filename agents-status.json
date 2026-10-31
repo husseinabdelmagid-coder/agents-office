@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-31T15:27:32Z",
+  "updatedAt": "2026-10-31T15:27:47Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -7,7 +7,7 @@
     "busyOnlyAwaitingApproval": false,
     "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
     "activeAgentName": "Eve \u00b7 Personal assistant",
-    "lastBusyAt": "2026-10-30T16:02:15.467000Z",
+    "lastBusyAt": "2026-10-31T15:27:40.861000Z",
     "liveFeed": "ok"
   },
   "agents": [
