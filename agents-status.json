@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-31T18:46:51Z",
+  "updatedAt": "2026-10-31T18:49:41Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
-    "isBusy": false,
+    "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
-    "activeAgentName": "Eve \u00b7 Personal assistant",
+    "activeAgentId": "2335cf8d-309f-4f2d-b512-3715a9bbff07",
+    "activeAgentName": "Pixel \u00b7 Photo & Video Studio",
     "lastBusyAt": "2026-10-31T15:27:40.861000Z",
     "liveFeed": "ok"
   },
@@ -69,9 +69,9 @@
       "id": "2335cf8d-309f-4f2d-b512-3715a9bbff07",
       "name": "Pixel \u00b7 Photo & Video Studio",
       "title": "Photo & Video Studio",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
+      "status": "working",
+      "task": "Video render",
+      "task_title": "Video render",
       "color": "#e0559b"
     }
   ]
