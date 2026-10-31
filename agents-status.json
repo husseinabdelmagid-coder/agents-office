@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-31T18:26:41Z",
+  "updatedAt": "2026-10-31T18:26:56Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
-    "activeAgentName": "Neo \u00b7 Coding Wizard",
+    "activeAgentId": "2335cf8d-309f-4f2d-b512-3715a9bbff07",
+    "activeAgentName": "Pixel \u00b7 Photo & Video Studio",
     "lastBusyAt": "2026-10-31T15:27:40.861000Z",
     "liveFeed": "ok"
   },
@@ -69,9 +69,9 @@
       "id": "2335cf8d-309f-4f2d-b512-3715a9bbff07",
       "name": "Pixel \u00b7 Photo & Video Studio",
       "title": "Photo & Video Studio",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
+      "status": "working",
+      "task": "Creative task",
+      "task_title": "Creative task",
       "color": "#e0559b"
     }
   ]
