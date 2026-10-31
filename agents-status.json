@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-31T18:25:05Z",
+  "updatedAt": "2026-10-31T18:25:50Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -52,8 +52,8 @@
       "name": "Neo \u00b7 Coding Wizard",
       "title": "Coding specialist",
       "status": "working",
-      "task": "Agents Office update",
-      "task_title": "Agents Office update",
+      "task": "Office.26 build",
+      "task_title": "Office.26 build",
       "color": "#2a9d8f"
     },
     {
