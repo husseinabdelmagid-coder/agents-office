@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-02T05:03:23Z",
+  "updatedAt": "2026-11-02T05:03:43Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -7,7 +7,7 @@
     "busyOnlyAwaitingApproval": false,
     "activeAgentId": "3a48a61f-5e48-4510-80f4-83a668552dec",
     "activeAgentName": "El Profesor \u00b7 Deep researcher",
-    "lastBusyAt": "2026-10-31T15:27:40.861000Z",
+    "lastBusyAt": "2026-11-02T05:03:32.681000Z",
     "liveFeed": "ok"
   },
   "agents": [
@@ -34,8 +34,8 @@
       "name": "El Profesor \u00b7 Deep researcher",
       "title": "Deep researcher",
       "status": "working",
-      "task": "Research: education",
-      "task_title": "Research: education",
+      "task": "Deep research",
+      "task_title": "Deep research",
       "color": "#c9473f"
     },
     {
