@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-02T13:26:46Z",
+  "updatedAt": "2026-11-02T13:31:56Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -25,8 +25,8 @@
       "name": "Matt \u00b7 Fitness Coach",
       "title": "Coach",
       "status": "working",
-      "task": "Nutrition guidance",
-      "task_title": "Nutrition guidance",
+      "task": "Training plan",
+      "task_title": "Training plan",
       "color": "#ee8a3a"
     },
     {
