@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-11-02T13:37:25Z",
+  "updatedAt": "2026-11-02T16:11:28Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "3c92912d-8aa9-439d-b2fb-5282635b30d3",
-    "activeAgentName": "Matt \u00b7 Fitness Coach",
-    "lastBusyAt": "2026-11-02T05:03:32.681000Z",
+    "activeAgentId": "3a48a61f-5e48-4510-80f4-83a668552dec",
+    "activeAgentName": "El Profesor \u00b7 Deep researcher",
+    "lastBusyAt": "2026-11-02T16:11:07.147000Z",
     "liveFeed": "ok"
   },
   "agents": [
@@ -33,9 +33,9 @@
       "id": "3a48a61f-5e48-4510-80f4-83a668552dec",
       "name": "El Profesor \u00b7 Deep researcher",
       "title": "Deep researcher",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
+      "status": "working",
+      "task": "Research: lawn and garden",
+      "task_title": "Research: lawn and garden",
       "color": "#c9473f"
     },
     {
