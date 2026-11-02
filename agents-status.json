@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-11-02T05:03:43Z",
+  "updatedAt": "2026-11-02T05:05:48Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
-    "isBusy": true,
+    "isBusy": false,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "3a48a61f-5e48-4510-80f4-83a668552dec",
-    "activeAgentName": "El Profesor \u00b7 Deep researcher",
+    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
+    "activeAgentName": "Eve \u00b7 Personal assistant",
     "lastBusyAt": "2026-11-02T05:03:32.681000Z",
     "liveFeed": "ok"
   },
@@ -33,9 +33,9 @@
       "id": "3a48a61f-5e48-4510-80f4-83a668552dec",
       "name": "El Profesor \u00b7 Deep researcher",
       "title": "Deep researcher",
-      "status": "working",
-      "task": "Deep research",
-      "task_title": "Deep research",
+      "status": "idle",
+      "task": "Standing by",
+      "task_title": null,
       "color": "#c9473f"
     },
     {
