@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-11-03T06:17:59Z",
+  "updatedAt": "2026-11-03T08:19:42Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
-    "isBusy": true,
+    "isBusy": false,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
-    "activeAgentName": "Sam \u00b7 Career advisor",
+    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
+    "activeAgentName": "Eve \u00b7 Personal assistant",
     "lastBusyAt": "2026-11-02T16:11:07.147000Z",
     "liveFeed": "ok"
   },
@@ -42,9 +42,9 @@
       "id": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
       "name": "Sam \u00b7 Career advisor",
       "title": "Career advisor",
-      "status": "working",
-      "task": "Application drafting",
-      "task_title": "Application drafting",
+      "status": "idle",
+      "task": "Standing by",
+      "task_title": null,
       "color": "#3f8fcf"
     },
     {
