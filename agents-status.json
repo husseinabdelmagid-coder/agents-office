@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-03T06:14:21Z",
+  "updatedAt": "2026-11-03T06:16:31Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -43,8 +43,8 @@
       "name": "Sam \u00b7 Career advisor",
       "title": "Career advisor",
       "status": "working",
-      "task": "Career advice",
-      "task_title": "Career advice",
+      "task": "Application drafting",
+      "task_title": "Application drafting",
       "color": "#3f8fcf"
     },
     {
