@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-06T07:23:12Z",
+  "updatedAt": "2026-11-06T07:23:30Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -8,7 +8,7 @@
     "activeAgentId": "3a48a61f-5e48-4510-80f4-83a668552dec",
     "activeAgentName": "El Profesor \u00b7 Deep researcher",
     "lastBusyAt": "2026-11-05T17:11:21.938000Z",
-    "liveFeed": "starting"
+    "liveFeed": "ok"
   },
   "agents": [
     {
