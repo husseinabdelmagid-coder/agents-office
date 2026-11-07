@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-07T10:50:27Z",
+  "updatedAt": "2026-11-07T10:50:43Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -16,8 +16,8 @@
       "name": "Eve \u00b7 Personal assistant",
       "title": "Personal assistant",
       "status": "working",
-      "task": "Travel planning",
-      "task_title": "Travel planning",
+      "task": "Assistant task",
+      "task_title": "Assistant task",
       "color": "#8a6fd1"
     },
     {
