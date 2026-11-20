@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20T15:40:42Z",
+  "updatedAt": "2026-11-20T17:24:04Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
