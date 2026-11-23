@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-23T13:06:58Z",
+  "updatedAt": "2026-11-23T13:07:23Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -34,8 +34,8 @@
       "name": "El Profesor \u00b7 Deep researcher",
       "title": "Deep researcher",
       "status": "working",
-      "task": "Research report",
-      "task_title": "Research report",
+      "task": "Research: Agents Office",
+      "task_title": "Research: Agents Office",
       "color": "#c9473f"
     },
     {
