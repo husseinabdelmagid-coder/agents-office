@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>RenoPath — maquette</title>
+  <style>
+    :root {
+      --teal-950: #0E2F31;
+      --teal-900: #164E50;
+      --teal-800: #1A5C5A;
+      --teal-700: #21776A;
+      --teal-600: #25887A;
+      --lime: #88DE7B;
+      --lime-soft: #CEF1C9;
+      --lime-wash: #E8F8E4;
+      --ink: #181818;
+      --muted: #595959;
+      --faint: #7F7F7F;
+      --line: #E2E8E5;
+      --line-strong: #C9D4D0;
+      --bg: #F3F5F4;
+      --card: #FFFFFF;
+      --warn: #B45309;
+      --warn-bg: #FEF3C7;
+      --danger: #B42318;
+      --danger-bg: #FEE4E2;
+      --ok: #16794A;
+      --ok-bg: #E4F6EC;
+      --info-bg: #E6F3F1;
+      --banner-bg: #F6E7B8;
+      --banner-ink: #5C4A12;
+      --banner-line: #E2C56A;
+      --shadow: 0 1px 2px rgba(16, 40, 36, .06), 0 8px 24px rgba(16, 40, 36, .05);
+      --radius: 14px;
+      --sidebar: 232px;
+      --banner-h: 36px;
+      --topbar-h: 56px;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    button, input, select { font-family: inherit; font-size: inherit; }
+    button { cursor: pointer; }
+    a { color: var(--teal-700); }
+    .app { min-height: 100%; display: flex; }
+    .sidebar {
+      width: var(--sidebar);
+      flex: 0 0 var(--sidebar);
+      background: var(--teal-900);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px 18px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .brand-mark {
+      width: 32px; height: 32px; border-radius: 9px;
+      background: var(--lime);
+      display: grid; place-items: center;
+      flex: 0 0 32px;
+    }
+    .brand-mark svg { width: 18px; height: 18px; }
+    .brand-name { font-weight: 700; font-size: 16px; letter-spacing: -.02em; line-height: 1.1; }
+    .brand-name span { color: var(--lime); }
+    .brand-sub { font-size: 11px; color: rgba(255,255,255,.62); margin-top: 1px; }
+    .nav { padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+    .nav-label {
+      font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); padding: 10px 10px 6px; font-weight: 600;
+    }
+    .nav-btn {
+      display: flex; align-items: center; gap: 10px;
+      border: 0; background: transparent; color: rgba(255,255,255,.86);
+      text-align: left; padding: 9px 10px; border-radius: 9px; width: 100%;
+      font-weight: 550;
+    }
+    .nav-btn svg { width: 18px; height: 18px; flex: 0 0 18px; opacity: .9; }
+    .nav-btn:hover { background: rgba(255,255,255,.08); }
+    .nav-btn.active { background: rgba(136,222,123,.18); color: #fff; }
+    .nav-btn.active svg { opacity: 1; color: var(--lime); }
+    .nav-mod {
+      margin-left: auto; font-size: 10px; font-weight: 700;
+      letter-spacing: .04em; color: rgba(255,255,255,.45);
+      font-variant-numeric: tabular-nums;
+    }
+    .nav-btn.active .nav-mod { color: var(--lime); }
+    .nav-building {
+      margin: 0 10px 12px; padding: 10px 10px;
+      background: rgba(0,0,0,.18); border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .nav-building .nb-k { font-size: 10px; color: rgba(255,255,255,.5); }
+    .nav-building .nb-v { font-size: 12px; font-weight: 600; margin-top: 2px; color: #fff; }
+    .sidebar-foot { padding: 12px 16px 16px; border-top: 1px solid rgba(255,255,255,.08); }
+    .lang-toggle {
+      display: flex; background: rgba(0,0,0,.22); border-radius: 999px; padding: 3px;
+    }
+    .lang-toggle button {
+      flex: 1; border: 0; background: transparent; color: rgba(255,255,255,.7);
+      border-radius: 999px; padding: 6px 0; font-weight: 700; font-size: 12px;
+    }
+    .lang-toggle button.on { background: var(--lime); color: var(--teal-950); }
+    .workspace { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 100vh; }
+    .banner {
+      position: sticky; top: 0; z-index: 40;
+      height: var(--banner-h);
+      background: var(--banner-bg); color: var(--banner-ink);
+      border-bottom: 1px solid var(--banner-line);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 12px; font-weight: 650; letter-spacing: .01em;
+    }
+    .banner .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--warn); }
+    .topbar {
+      height: var(--topbar-h);
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 22px;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: var(--banner-h); z-index: 30;
+    }
+    .menu-btn {
+      display: none; width: 36px; height: 36px; border: 1px solid var(--line);
+      background: #fff; border-radius: 8px; align-items: center; justify-content: center;
+    }
+    .crumbs { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .crumbs b { color: var(--ink); font-weight: 650; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .search {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg); border: 1px solid var(--line); border-radius: 9px;
+      padding: 0 10px; height: 34px; width: 260px;
+    }
+    .search input {
+      border: 0; background: transparent; outline: none; width: 100%; color: var(--ink);
+    }
+    .search svg, .ico { width: 18px; height: 18px; }
+    .search svg { width: 15px; height: 15px; color: var(--faint); flex: 0 0 15px; }
+    .upload .ico, .upload svg { width: 36px !important; height: 36px !important; display: block; margin: 0 auto 6px; color: var(--teal-700); }
+    .notice svg { width: 22px !important; height: 22px !important; flex: 0 0 22px; margin-top: 1px; }
+    .doc .di svg { width: 18px !important; height: 18px !important; }
+    .peb-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; align-items: start; }
+    .toolbar .btn.primary { margin-left: auto; }
+    .userpill { display: flex; align-items: center; gap: 8px; }
+    .avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--teal-700); color: #fff; display: grid; place-items: center;
+      font-weight: 700; font-size: 11px;
+    }
+    .userpill .un { font-weight: 650; font-size: 12px; line-height: 1.2; }
+    .userpill .ur { font-size: 11px; color: var(--faint); }
+    main { padding: 22px 24px 48px; flex: 1; }
+    h1 { font-size: 22px; letter-spacing: -.03em; margin: 0 0 4px; font-weight: 750; }
+    .lede { color: var(--muted); margin: 0 0 18px; max-width: 720px; }
+    .ex-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700; letter-spacing: .02em;
+      text-transform: uppercase; color: var(--banner-ink);
+      background: var(--banner-bg); border: 1px solid var(--banner-line);
+      border-radius: 999px; padding: 1px 7px; vertical-align: middle;
+      white-space: nowrap;
+    }
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+    .kpi {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 14px 16px; box-shadow: var(--shadow);
+    }
+    .kpi .k { font-size: 11px; color: var(--muted); font-weight: 600; }
+    .kpi .v { font-size: 26px; font-weight: 750; letter-spacing: -.03em; margin: 4px 0 2px;
+      font-variant-numeric: tabular-nums; }
+    .kpi .s { font-size: 11px; color: var(--faint); }
+    .kpi.warn .v { color: var(--warn); }
+    .kpi.danger .v { color: var(--danger); }
+    .kpi.ok .v { color: var(--ok); }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 12px; }
+    .seg {
+      display: flex; flex-wrap: wrap; gap: 0; background: var(--card);
+      border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+    }
+    .seg button {
+      border: 0; background: transparent; padding: 7px 11px; color: var(--muted);
+      font-weight: 600; font-size: 12px; border-right: 1px solid var(--line);
+    }
+    .seg button:last-child { border-right: 0; }
+    .seg button.on { background: var(--teal-900); color: #fff; }
+    .btn {
+      border: 1px solid var(--line); background: #fff; color: var(--ink);
+      border-radius: 10px; padding: 8px 13px; font-weight: 650; font-size: 13px;
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .btn:hover { border-color: var(--line-strong); background: #fafcfb; }
+    .btn svg { width: 15px; height: 15px; }
+    .btn.primary { background: var(--teal-700); border-color: var(--teal-700); color: #fff; }
+    .btn.primary:hover { background: var(--teal-800); }
+    .btn.ghost { background: transparent; }
+    .btn.lime { background: var(--lime); border-color: #6dcc61; color: var(--teal-950); }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .card-h { padding: 14px 16px 0; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .card-h h2 { font-size: 15px; margin: 0; letter-spacing: -.01em; }
+    .card-b { padding: 14px 16px 16px; }
+    table.list { width: 100%; border-collapse: collapse; }
+    table.list th {
+      text-align: left; font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--faint); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--line);
+      background: #f9faf9; white-space: nowrap;
+    }
+    table.list td {
+      padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: middle;
+      font-variant-numeric: tabular-nums;
+    }
+    table.list tr:last-child td { border-bottom: 0; }
+    table.list tbody tr { cursor: pointer; }
+    table.list tbody tr:hover { background: #f6faf8; }
+    .bname { font-weight: 700; color: var(--ink); }
+    .baddr { font-size: 12px; color: var(--faint); }
+    .chip {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 26px; height: 26px; padding: 0 7px; border-radius: 7px;
+      font-weight: 800; font-size: 12px; letter-spacing: .02em; color: #fff;
+    }
+    .chip.A { background: #007A3D; }
+    .chip.B { background: #50A30A; }
+    .chip.C { background: #C0C000; color: #1a1a00; }
+    .chip.D { background: #F7E300; color: #3a3200; }
+    .chip.E { background: #F5A000; }
+    .chip.F { background: #E85D04; }
+    .chip.G { background: #D0001F; }
+    .reg {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 650; color: var(--teal-800);
+    }
+    .reg i { width: 7px; height: 7px; border-radius: 50%; background: var(--teal-700); display: inline-block; }
+    .reg.wal { color: #6B4F1D; }
+    .reg.wal i { background: #C9842A; }
+    .st {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+      white-space: nowrap;
+    }
+    .st.at_risk { background: var(--danger-bg); color: var(--danger); }
+    .st.in_progress { background: #E8EEFE; color: #3730A3; }
+    .st.planned { background: var(--warn-bg); color: var(--warn); }
+    .st.compliant { background: var(--ok-bg); color: var(--ok); }
+    .st.indicative { background: var(--info-bg); color: var(--teal-700); }
+    .st.review { background: #F3F4F6; color: #3F3F46; }
+    .cdown { font-weight: 650; }
+    .cdown.ok { color: var(--ok); }
+    .cdown.warn { color: var(--warn); }
+    .cdown.mute { color: var(--faint); font-weight: 550; }
+    .empty { padding: 28px; text-align: center; color: var(--muted); }
+    .grid-2 { display: grid; grid-template-columns: 1.3fr .7fr; gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .upload {
+      border: 1.5px dashed var(--line-strong); border-radius: 12px;
+      background: #f8fbf9; padding: 18px 16px; text-align: center; color: var(--muted);
+      transition: border-color .15s, background .15s;
+    }
+    .upload.drag { border-color: var(--teal-700); background: var(--lime-wash); }
+    .upload.compact { display: flex; align-items: center; gap: 14px; text-align: left; padding: 12px 14px; }
+    .upload.compact .ico, .upload.compact svg { width: 22px !important; height: 22px !important; margin: 0; flex: 0 0 22px; }
+    .upload.compact .up-copy { flex: 1; min-width: 0; }
+    .upload.compact h3 { margin: 0 0 2px; font-size: 14px; }
+    .upload.compact p { margin: 0; font-size: 12.5px; }
+
+    .upload h3 { margin: 8px 0 4px; color: var(--ink); font-size: 15px; }
+    .rule {
+      background: var(--info-bg); border: 1px solid #cfe3df; border-radius: 12px; padding: 14px 16px;
+    }
+    .rule h3 { margin: 0 0 8px; font-size: 14px; }
+    .rule .why { margin: 0; color: var(--muted); }
+    .rule dl { display: grid; grid-template-columns: 140px 1fr; gap: 6px 12px; margin: 10px 0 0; }
+    .rule dt { color: var(--faint); font-size: 12px; }
+    .rule dd { margin: 0; font-weight: 650; }
+    .notice {
+      border-radius: 12px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px;
+    }
+    .notice.alert { background: var(--danger-bg); color: #7A1A14; border: 1px solid #f5c2be; }
+    .notice.warn { background: var(--warn-bg); color: #7A3E08; border: 1px solid #f3d48a; }
+    .notice.info { background: var(--info-bg); color: #134E4A; border: 1px solid #cfe3df; }
+    .notice strong { display: block; margin-bottom: 2px; }
+    .stage { border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; overflow: hidden; background: #fff; }
+    .stage.done { border-color: #c9e8d4; }
+    .stage-h {
+      display: grid; grid-template-columns: 36px 1fr auto auto auto;
+      gap: 10px; align-items: center; padding: 12px 14px; cursor: pointer;
+    }
+    .stage-n {
+      width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center;
+      background: var(--teal-900); color: #fff; font-weight: 800; font-size: 12px;
+    }
+    .stage.done .stage-n { background: var(--ok); }
+    .stage.suspended-grant .grant { color: var(--danger); text-decoration: line-through; }
+    .stage .ttl { font-weight: 700; }
+    .stage .meta { font-size: 12px; color: var(--faint); }
+    .money { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    .grant { font-size: 12px; text-align: right; font-weight: 650; color: var(--ok); }
+    .stage-b { display: none; padding: 0 14px 14px 60px; color: var(--muted); font-size: 13px; }
+    .stage.open .stage-b { display: block; }
+    .totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
+    .tot { background: var(--bg); border-radius: 12px; padding: 12px 14px; }
+    .tot .k { font-size: 11px; color: var(--muted); font-weight: 600; }
+    .tot .v { font-size: 20px; font-weight: 750; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+    .docs { display: flex; flex-direction: column; gap: 8px; }
+    .doc {
+      display: grid; grid-template-columns: 36px 1fr auto; gap: 10px; align-items: center;
+      border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fff;
+    }
+    .doc .di {
+      width: 36px; height: 36px; border-radius: 8px; background: var(--lime-wash);
+      display: grid; place-items: center; color: var(--teal-800);
+    }
+    .doc .dt { font-weight: 700; }
+    .doc .ds { font-size: 12px; color: var(--faint); }
+    .badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+      padding: 2px 7px; border-radius: 999px; background: var(--lime-wash); color: var(--teal-800);
+    }
+    .badge.queue { background: var(--warn-bg); color: var(--warn); }
+    .badge.missing { background: var(--danger-bg); color: var(--danger); }
+    .check { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .check:last-child { border-bottom: 0; }
+    .check input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--teal-700); }
+    .check.done .ct { text-decoration: line-through; color: var(--faint); }
+    .progress { height: 8px; background: #e6ecea; border-radius: 99px; overflow: hidden; }
+    .progress > span { display: block; height: 100%; background: linear-gradient(90deg, var(--teal-700), var(--lime)); }
+    .log { font-family: var(--mono); font-size: 11.5px; line-height: 1.55; }
+    .log-row { display: grid; grid-template-columns: 52px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+    .log-row:last-child { border-bottom: 0; }
+    .log .idx { color: var(--teal-700); font-weight: 700; }
+    .log .hash { color: #0F3D3A; word-break: break-all; }
+    .log .prev { color: var(--faint); }
+    .log .act { font-family: var(--sans); font-size: 12.5px; font-weight: 650; margin-bottom: 2px; color: var(--ink); }
+    .log .when { font-family: var(--sans); color: var(--faint); font-size: 12px; }
+    .remind { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .remind:last-child { border-bottom: 0; }
+    .remind.done { opacity: .55; }
+    .remind.done .rt { text-decoration: line-through; }
+    .rt { font-weight: 700; }
+    .rm { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .racts { display: flex; gap: 6px; align-items: flex-start; }
+    .toast-wrap {
+      position: fixed; right: 18px; bottom: 18px; z-index: 80;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .toast {
+      background: var(--teal-950); color: #fff; padding: 10px 14px; border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2); max-width: 360px; font-size: 13px;
+    }
+    .modal-back {
+      position: fixed; inset: 0; background: rgba(14,47,49,.45); z-index: 70;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal {
+      background: #fff; border-radius: 16px; width: min(520px, 100%);
+      padding: 20px 22px; box-shadow: 0 20px 50px rgba(0,0,0,.2);
+    }
+    .modal h3 { margin: 0 0 8px; font-size: 17px; }
+    .share-box {
+      background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+      padding: 10px 12px; font-family: var(--mono); font-size: 12px; word-break: break-all; margin: 10px 0;
+    }
+    .scrim {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 45;
+    }
+    .metric-row { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; font-size: 13px; }
+    .metric-row + .metric-row { border-top: 1px solid var(--line); }
+    .muted { color: var(--muted); }
+    .faint { color: var(--faint); }
+    .right { text-align: right; }
+    .nowrap { white-space: nowrap; }
+    .hidden { display: none !important; }
+    .icon-btn { border: 0; background: transparent; padding: 4px; color: var(--muted); }
+    h2.sec { font-size: 15px; margin: 18px 0 8px; }
+    .peb-big { display: flex; align-items: center; gap: 14px; }
+    .peb-big .chip { width: 56px; height: 56px; font-size: 26px; border-radius: 12px; min-width: 56px; }
+    .peb-big .kwh { font-size: 28px; font-weight: 750; letter-spacing: -.03em; line-height: 1; }
+    .peb-big .unit { font-size: 12px; color: var(--faint); }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .fine-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+    @media (max-width: 1100px) {
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .grid-2, .grid-3, .totals, .stage-h { grid-template-columns: 1fr; }
+      .stage-h { display: flex; flex-wrap: wrap; }
+      .search { display: none; }
+      .sidebar {
+        position: fixed; left: 0; top: 0; z-index: 50;
+        transform: translateX(-105%); transition: transform .2s ease;
+      }
+      .sidebar.open { transform: none; }
+      .menu-btn { display: inline-flex; }
+      .scrim.on { display: block; }
+    }
+    @media (max-width: 720px) {
+      main { padding: 16px 14px 40px; }
+      .kpis { grid-template-columns: 1fr; }
+      .userpill .umeta { display: none; }
+    }
+    @media print {
+      .sidebar, .banner, .topbar, .toast-wrap, .modal-back, .scrim, .no-print, .menu-btn { display: none !important; }
+      .workspace { display: block; }
+      main { padding: 0; }
+      body { background: #fff; }
+      .card { box-shadow: none; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="workspace">
+      <div class="banner" id="banner"></div>
+      <header class="topbar" id="topbar"></header>
+      <main id="main"></main>
+    </div>
+  </div>
+  <div class="scrim" id="scrim"></div>
+  <div class="toast-wrap" id="toasts"></div>
+  <div id="modal-root"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  const I18N = {
+    fr: {
+      title: "RenoPath — maquette",
+      wordmark: "RenoPath",
+      workingName: "Nom de travail",
+      org: "Cabinet Horizon Syndic",
+      role: "Compte syndic",
+      user: "Sophie Lemaire",
+      banner: "Données d’exemple / Example data — maquette statique, aucun chiffre n’est une donnée réelle.",
+      example: "Exemple",
+      navModules: "Modules",
+      navPortfolio: "Portefeuille",
+      navCert: "Lecteur de certificat",
+      navPlan: "Feuille de route",
+      navDossier: "Dossier de conformité",
+      navReminders: "Rappels et alertes",
+      navActive: "Immeuble actif",
+      searchPh: "Rechercher…",
+      headline: "L’échéance, le plan et la preuve de chaque immeuble, dans un seul outil pensé en français.",
+      portfolioLede: "Suivi d’un portefeuille à Bruxelles et en Wallonie : étiquette PEB, règle régionale, échéance et état d’avancement. Chiffres fictifs.",
+      kpiBuildings: "Immeubles suivis",
+      kpiAtRisk: "À risque (Bruxelles F/G)",
+      kpiCompliant: "Conformes à l’objectif 2033",
+      kpiWallonia: "Wallonie, sans mandat",
+      kpiBuildingsSub: "Bruxelles et Wallonie",
+      kpiAtRiskSub: "Doivent atteindre 275 kWh/m²/an",
+      kpiCompliantSub: "Seuil de 275 kWh/m²/an atteint",
+      kpiWalloniaSub: "Parcours indicatif vers le label A",
+      filterRegion: "Région",
+      filterStatus: "Statut",
+      all: "Tous",
+      brussels: "Bruxelles",
+      wallonia: "Wallonie",
+      st_at_risk: "À risque",
+      st_in_progress: "Travaux en cours",
+      st_planned: "Planifié",
+      st_compliant: "Conforme 2033",
+      st_indicative: "Parcours indicatif",
+      st_review: "À traiter",
+      colBuilding: "Immeuble",
+      colRegion: "Région",
+      colPeb: "PEB",
+      colValue: "kWh/m²/an",
+      colDeadline: "Échéance",
+      colCountdown: "Compte à rebours",
+      colStatus: "Statut",
+      colProof: "Preuves",
+      addBuilding: "Ajouter un immeuble",
+      emptyFilter: "Aucun immeuble ne correspond à ces filtres.",
+      units: "{n} unités",
+      house: "Maison unifamiliale",
+      copro: "Copropriété",
+      deadlineNone: "Aucune obligation légale",
+      pathwayOnly: "Parcours indicatif",
+      countdownIn: "dans {t}",
+      years: "{n} ans",
+      year1: "1 an",
+      months: "{n} mois",
+      month1: "1 mois",
+      days: "{n} j",
+      alreadyMet: "Objectif 2033 déjà atteint",
+      nextHorizon: "Horizon 150 kWh dès 2045 au plus tôt",
+      crumbsHome: "Portefeuille",
+      certTitle: "Lecteur de certificat",
+      certLede: "Téléversez un certificat PEB. RenoPath lit l’étiquette et la valeur, détecte la région et affiche l’échéance légale — ou l’absence de mandat.",
+      uploadTitle: "Téléverser un certificat PEB",
+      uploadHint: "Glissez un PDF ici ou choisissez un fichier. La lecture est simulée : aucun fichier n’est envoyé.",
+      chooseFile: "Choisir un fichier",
+      parsing: "Lecture du certificat…",
+      parsedOk: "Certificat lu (simulation).",
+      currentCert: "Certificat en fichier",
+      issued: "Émis le",
+      certifier: "Certificateur",
+      certNo: "N° de certificat",
+      floorArea: "Surface de plancher",
+      ruleTitle: "Règle détectée et échéance",
+      whyTitle: "Pourquoi cette échéance ?",
+      fieldRegion: "Région",
+      fieldRule: "Règle",
+      fieldTrigger: "Déclencheur",
+      fieldDeadline: "Échéance",
+      fieldTarget: "Objectif",
+      fieldGap: "Écart",
+      fieldSanction: "Sanction",
+      openPlan: "Voir la feuille de route",
+      openDossier: "Ouvrir le dossier",
+      ruleBrussels: "Tout logement privé doit atteindre au plus 275 kWh/m²/an au 1er janvier 2033 (Bruxelles Environnement). Cela correspond aujourd’hui à la classe E au maximum : les classes F et G ne seront plus autorisées.",
+      ruleBrusselsMet: "Ce logement est déjà sous le seuil de 275 kWh/m²/an (classe E ou mieux). L’objectif 2033 est atteint. À partir de 2045 au plus tôt, l’objectif passera à 150 kWh/m²/an (classe C au maximum). Un certificat PEB valide sera obligatoire pour tout bâtiment à partir de fin 2030 au plus tôt.",
+      ruleWallonia: "La Wallonie n’a pas encore d’obligation de rénover. Depuis le 1er septembre 2026, les nouveaux certificats PEB wallons incluent un parcours indicatif vers le label A : travaux recommandés, ordre, label après chaque étape et, pour les maisons, une fourchette de coût indicative.",
+      triggerAll: "Tous les logements privés",
+      triggerCert: "Certificat émis depuis le 1er septembre 2026",
+      sanctionBrussels: "Amende administrative de 2,50 € par kWh/m²/an d’écart, écart plafonné à 125 kWh/m²/an.",
+      sanctionNone: "—",
+      fineIllust: "Calcul illustratif (données d’exemple) : 2,50 € × {gap} = {amount}. La charte ne précise pas si ce montant est multiplié par la surface ; aucun total immeuble n’est donc affiché.",
+      fineCapped: "L’écart réel ({raw} kWh/m²/an) est plafonné à 125 pour le calcul de l’amende.",
+      gapUnit: "{n} kWh/m²/an",
+      target275: "275 kWh/m²/an (≈ classe E max.) d’ici le 1er janv. 2033",
+      target150: "150 kWh/m²/an (≈ classe C max.) à partir de 2045 au plus tôt",
+      targetA: "Parcours indicatif vers le label A (pas de mandat)",
+      walloniaAptNote: "Pour les appartements et les logements sur installation collective, le certificat ne donne pas d’estimation de coût et renvoie à une approche immeuble entier, car les travaux nécessitent une décision de copropriété.",
+      walloniaHouseNote: "Pour cette maison, le certificat peut indiquer une fourchette de coût indicative. Ce parcours est généré automatiquement : ce n’est ni un devis ni un projet de rénovation personnalisé.",
+      walloniaPathwayAuto: "Le parcours est généré automatiquement ; ce n’est pas un devis.",
+      newBuildingTitle: "Nouvel immeuble",
+      newBuildingLede: "Ajoutez un immeuble en téléversant son certificat PEB (Bruxelles ou Wallonie).",
+      demoParsedName: "PEB_simulation_exemple.pdf",
+      planTitle: "Feuille de route de rénovation",
+      planLede: "Travaux classés par priorité, avec coûts indicatifs et aides. Les montants sont fictifs. Ce n’est pas un devis.",
+      renolutionNotice: "Les primes RENOLUTION (Bruxelles) sont suspendues depuis le 14 septembre 2026 (Bruxelles Environnement / Renolution). Aucune aide bruxelloise n’est donc comptée dans les totaux.",
+      walloniaGrantNote: "Les montants d’aides wallonnes affichés sont des données d’exemple. Les primes officielles dépendent du type de travaux et des plafonds SPW ; ils ne sont pas reproduits ici.",
+      stageCost: "Coût indicatif",
+      stageGrant: "Aide",
+      stageGrantSusp: "Aide suspendue",
+      afterLabel: "Label après étape",
+      afterValue: "Conso. après étape",
+      totalCost: "Coût total indicatif",
+      totalGrant: "Aides",
+      totalNet: "Reste à charge (indic.)",
+      suspended: "Suspendu",
+      grantZero: "0 € — primes suspendues",
+      openStage: "Détail",
+      sharePlan: "Partager aux copropriétaires",
+      planShared: "Maquette : le lien de partage vers la feuille de route a été copié (simulation).",
+      dossierTitle: "Dossier de conformité",
+      dossierLede: "Fichier vivant par immeuble : preuves de chaque étape, exportables en un PDF daté pour un acheteur, une banque, une assemblée générale ou une autorité.",
+      autoFiled: "Documents classés automatiquement",
+      reviewQueue: "File de revue humaine",
+      reviewHint: "Les pièces incertaines ne sont pas devinées : elles attendent une validation.",
+      missingTitle: "Contrôle des preuves manquantes",
+      missingHint: "Cochez les pièces une fois en fichier. Les manquants restent signalés.",
+      historyTitle: "Historique inviolable",
+      historyHint: "Horodatage d’upload, empreinte du fichier et journal en ajout seulement : rien n’est modifié en silence.",
+      exportPdf: "Exporter PDF",
+      shareLink: "Lien de partage",
+      agVersion: "Version assemblée générale",
+      progressToDeadline: "Avancement vers l’échéance",
+      proofsHeld: "{held} / {need} preuves en fichier",
+      suggestedMatch: "Correspondance suggérée",
+      autoFromCert: "Issu du certificat (module 01)",
+      autoFromPlan: "Relié à une étape du plan (module 02)",
+      hashOf: "empreinte",
+      prevHash: "préc.",
+      exportToast: "Maquette : la boîte d’impression s’ouvre. Choisissez « Enregistrer au format PDF ».",
+      shareTitle: "Lien de partage temporaire",
+      shareBody: "Lien à durée limitée, destiné à un notaire, un acheteur ou une équipe de prêt vert. Simulation uniquement.",
+      shareExpires: "Expire le {d} (14 jours).",
+      copyLink: "Copier le lien",
+      close: "Fermer",
+      copied: "Lien copié (simulation).",
+      agToast: "Maquette : une version assemblée générale serait générée ici (couverture, calendrier des travaux, preuves par étape).",
+      remindersTitle: "Rappels et alertes",
+      remindersLede: "Échéances, pièces manquantes et messages pour les propriétaires, les acheteurs et les autorités. Actions simulées.",
+      recOwners: "Propriétaires / copropriétaires",
+      recBuyers: "Acheteurs",
+      recAuthorities: "Autorités",
+      recSyndic: "Syndic (interne)",
+      recAgent: "Agence immobilière",
+      chEmail: "E-mail",
+      chApp: "Notification",
+      chLetter: "Courrier",
+      dueOn: "Échéance le {d}",
+      snooze: "Reporter 7 j",
+      markDone: "Marquer fait",
+      unsnooze: "Annuler le report",
+      snoozedUntil: "Reporté au {d}",
+      markedDone: "Rappel marqué comme fait.",
+      reminderSnoozed: "Rappel reporté de 7 jours.",
+      noReminders: "Aucun rappel à afficher.",
+      upcoming: "À venir",
+      doneSection: "Faits",
+      footer: "Maquette statique · RenoPath v0.4 (brouillon) · 23 novembre 2026 · Ne pas publier. Aucun backend.",
+      printCover: "Dossier de conformité",
+      printSub: "Export de maquette — données d’exemple uniquement",
+      evBefore: "PEB avant travaux",
+      evAfter: "PEB après travaux",
+      evAfterMissing: "Nouveau certificat non encore déposé",
+      m2: "m²",
+      missingBadge: "Manquant",
+    },
+    en: {
+      title: "RenoPath — mock-up",
+      wordmark: "RenoPath",
+      workingName: "Working name",
+      org: "Cabinet Horizon Syndic",
+      role: "Syndic account",
+      user: "Sophie Lemaire",
+      banner: "Données d’exemple / Example data — static mock-up, no figure is real data.",
+      example: "Example",
+      navModules: "Modules",
+      navPortfolio: "Portfolio",
+      navCert: "Certificate reader",
+      navPlan: "Renovation roadmap",
+      navDossier: "Compliance dossier",
+      navReminders: "Reminders and alerts",
+      navActive: "Active building",
+      searchPh: "Search…",
+      headline: "Every building’s deadline, plan and proof, in one French-first tool.",
+      portfolioLede: "A Brussels and Wallonia portfolio: PEB label, regional rule, deadline and progress. All figures are fictional.",
+      kpiBuildings: "Buildings tracked",
+      kpiAtRisk: "At risk (Brussels F/G)",
+      kpiCompliant: "Meeting the 2033 objective",
+      kpiWallonia: "Wallonia, no mandate",
+      kpiBuildingsSub: "Brussels and Wallonia",
+      kpiAtRiskSub: "Must reach 275 kWh/m²/yr",
+      kpiCompliantSub: "275 kWh/m²/yr threshold met",
+      kpiWalloniaSub: "Indicative pathway to label A",
+      filterRegion: "Region",
+      filterStatus: "Status",
+      all: "All",
+      brussels: "Brussels",
+      wallonia: "Wallonia",
+      st_at_risk: "At risk",
+      st_in_progress: "Works in progress",
+      st_planned: "Planned",
+      st_compliant: "2033 compliant",
+      st_indicative: "Indicative pathway",
+      st_review: "To review",
+      colBuilding: "Building",
+      colRegion: "Region",
+      colPeb: "PEB",
+      colValue: "kWh/m²/yr",
+      colDeadline: "Deadline",
+      colCountdown: "Countdown",
+      colStatus: "Status",
+      colProof: "Evidence",
+      addBuilding: "Add a building",
+      emptyFilter: "No building matches these filters.",
+      units: "{n} units",
+      house: "Single-family house",
+      copro: "Co-ownership",
+      deadlineNone: "No legal obligation",
+      pathwayOnly: "Indicative pathway",
+      countdownIn: "in {t}",
+      years: "{n} years",
+      year1: "1 year",
+      months: "{n} months",
+      month1: "1 month",
+      days: "{n} d",
+      alreadyMet: "2033 objective already met",
+      nextHorizon: "150 kWh horizon from 2045 at the earliest",
+      crumbsHome: "Portfolio",
+      certTitle: "Certificate reader",
+      certLede: "Upload a PEB certificate. RenoPath reads the label and value, detects the region and shows the legal deadline — or the absence of a mandate.",
+      uploadTitle: "Upload a PEB certificate",
+      uploadHint: "Drop a PDF here or choose a file. Parsing is simulated: nothing is uploaded.",
+      chooseFile: "Choose a file",
+      parsing: "Reading the certificate…",
+      parsedOk: "Certificate read (simulation).",
+      currentCert: "Certificate on file",
+      issued: "Issued on",
+      certifier: "Certifier",
+      certNo: "Certificate no.",
+      floorArea: "Floor area",
+      ruleTitle: "Detected rule and deadline",
+      whyTitle: "Why this deadline?",
+      fieldRegion: "Region",
+      fieldRule: "Rule",
+      fieldTrigger: "Trigger",
+      fieldDeadline: "Deadline",
+      fieldTarget: "Target",
+      fieldGap: "Gap",
+      fieldSanction: "Sanction",
+      openPlan: "View roadmap",
+      openDossier: "Open dossier",
+      ruleBrussels: "Every private home must reach at most 275 kWh/m²/yr by 1 January 2033 (Bruxelles Environnement). This currently corresponds to class E at most, so F and G homes will no longer be allowed.",
+      ruleBrusselsMet: "This home is already under the 275 kWh/m²/yr threshold (class E or better). The 2033 objective is met. From 2045 at the earliest, the objective will be raised to 150 kWh/m²/yr (class C at most). A valid PEB certificate will be mandatory for every building from end-2030 at the earliest.",
+      ruleWallonia: "Wallonia has no renovation mandate yet. Since 1 September 2026, new Walloon PEB certificates include an indicative pathway to label A: recommended works, their order, the label after each step and, for houses, an indicative cost range.",
+      triggerAll: "All private homes",
+      triggerCert: "Certificate issued since 1 September 2026",
+      sanctionBrussels: "Administrative fine of €2.50 per kWh/m²/yr of gap, with the gap capped at 125 kWh/m²/yr.",
+      sanctionNone: "—",
+      fineIllust: "Illustrative calculation (example data): €2.50 × {gap} = {amount}. The charter does not say whether this amount is multiplied by floor area, so no building-level total is shown.",
+      fineCapped: "The raw gap ({raw} kWh/m²/yr) is capped at 125 for the fine calculation.",
+      gapUnit: "{n} kWh/m²/yr",
+      target275: "275 kWh/m²/yr (≈ class E max) by 1 Jan 2033",
+      target150: "150 kWh/m²/yr (≈ class C max) from 2045 at the earliest",
+      targetA: "Indicative pathway to label A (no mandate)",
+      walloniaAptNote: "For apartments and homes on collective installations, the certificate gives no cost estimate and points to a whole-building approach, because works need a co-ownership decision.",
+      walloniaHouseNote: "For this house, the certificate may include an indicative cost range. The pathway is generated automatically: it is not a quote or a personal renovation project.",
+      walloniaPathwayAuto: "The pathway is generated automatically; it is not a quote.",
+      newBuildingTitle: "New building",
+      newBuildingLede: "Add a building by uploading its PEB certificate (Brussels or Wallonia).",
+      demoParsedName: "PEB_simulation_example.pdf",
+      planTitle: "Renovation roadmap",
+      planLede: "Prioritised works with indicative costs and grants. All amounts are fictional. This is not a quote.",
+      renolutionNotice: "Brussels RENOLUTION grants have been suspended since 14 September 2026 (Bruxelles Environnement / Renolution). No Brussels grant is therefore counted in the totals.",
+      walloniaGrantNote: "Walloon grant amounts shown here are example data. Official primes depend on the type of works and SPW caps; official rates are not reproduced.",
+      stageCost: "Indicative cost",
+      stageGrant: "Grant",
+      stageGrantSusp: "Grant suspended",
+      afterLabel: "Label after step",
+      afterValue: "Use after step",
+      totalCost: "Indicative total cost",
+      totalGrant: "Grants",
+      totalNet: "Net remaining (indic.)",
+      suspended: "Suspended",
+      grantZero: "€0 — grants suspended",
+      openStage: "Details",
+      sharePlan: "Share with co-owners",
+      planShared: "Mock-up: the roadmap share link was copied (simulation).",
+      dossierTitle: "Compliance dossier",
+      dossierLede: "A living per-building file of proof that each renovation step was done, exported as one dated PDF for a buyer, a bank, a general meeting or an authority.",
+      autoFiled: "Documents filed automatically",
+      reviewQueue: "Human review queue",
+      reviewHint: "Unclear items are not guessed: they wait for a short human review.",
+      missingTitle: "Missing-proof checklist",
+      missingHint: "Tick items once they are on file. Missing evidence stays flagged.",
+      historyTitle: "Tamper-evident history",
+      historyHint: "Upload timestamp and file hash, with an append-only version history so nothing is silently changed.",
+      exportPdf: "Export PDF",
+      shareLink: "Share link",
+      agVersion: "General-meeting version",
+      progressToDeadline: "Progress toward the deadline",
+      proofsHeld: "{held} / {need} proofs on file",
+      suggestedMatch: "Suggested match",
+      autoFromCert: "From the certificate (module 01)",
+      autoFromPlan: "Matched to a plan step (module 02)",
+      hashOf: "hash",
+      prevHash: "prev.",
+      exportToast: "Mock-up: the print dialog will open. Choose “Save as PDF”.",
+      shareTitle: "Expiring share link",
+      shareBody: "A time-limited link for a notary, a buyer or a green-loan team. Simulation only.",
+      shareExpires: "Expires on {d} (14 days).",
+      copyLink: "Copy link",
+      close: "Close",
+      copied: "Link copied (simulation).",
+      agToast: "Mock-up: a general-meeting pack would be generated here (cover, works timeline, evidence per step).",
+      remindersTitle: "Reminders and alerts",
+      remindersLede: "Deadlines, missing evidence and messages for owners, buyers and authorities. Actions are simulated.",
+      recOwners: "Owners / co-owners",
+      recBuyers: "Buyers",
+      recAuthorities: "Authorities",
+      recSyndic: "Syndic (internal)",
+      recAgent: "Estate agency",
+      chEmail: "Email",
+      chApp: "In-app notification",
+      chLetter: "Letter",
+      dueOn: "Due {d}",
+      snooze: "Snooze 7 days",
+      markDone: "Mark done",
+      unsnooze: "Undo snooze",
+      snoozedUntil: "Snoozed until {d}",
+      markedDone: "Reminder marked as done.",
+      reminderSnoozed: "Reminder snoozed by 7 days.",
+      noReminders: "No reminders to show.",
+      upcoming: "Upcoming",
+      doneSection: "Done",
+      footer: "Static mock-up · RenoPath v0.4 (draft) · 23 November 2026 · Do not publish. No backend.",
+      printCover: "Compliance dossier",
+      printSub: "Mock-up export — example data only",
+      evBefore: "PEB before works",
+      evAfter: "PEB after works",
+      evAfterMissing: "New certificate not yet filed",
+      m2: "m²",
+      missingBadge: "Missing",
+    }
+  };
+
+  /* Stage and document copy lives on the building records below (FR + EN). */
+
+  const BUILDINGS = [
+    {
+      id: "acacias",
+      name: "Résidence Les Acacias",
+      address: "42 rue de la Loi, 1040 Bruxelles",
+      region: "brussels",
+      typ: "copro",
+      units: 18,
+      area: 1280,
+      label: "F",
+      kwh: 312,
+      issued: "2026-03-12",
+      certifier: "Anne Dupont",
+      certNo: "PEB-BXL-26-18472",
+      status: "at_risk",
+      deadline: "2033-01-01",
+      collective: false,
+      house: false,
+      stages: [
+        { n: 1, fr: "Isolation de la toiture", en: "Roof insulation", cost: 18500, grant: 4200, afterLabel: "E", afterKwh: 286, done: false, frD: "Priorité haute : réduire les pertes par la toiture avant les autres enveloppes.", enD: "High priority: cut roof losses before other envelope works." },
+        { n: 2, fr: "Isolation des murs", en: "Wall insulation", cost: 42000, grant: 9000, afterLabel: "D", afterKwh: 238, done: false, frD: "Isolation par l’extérieur des façades communes, sous réserve de l’AG.", enD: "External insulation of common façades, subject to the general meeting." },
+        { n: 3, fr: "Remplacement des châssis", en: "Window replacement", cost: 28000, grant: 5100, afterLabel: "D", afterKwh: 214, done: false, frD: "Châssis à haut rendement sur les parties communes et les lots participants.", enD: "High-performance frames on common parts and participating units." },
+        { n: 4, fr: "Ventilation double flux", en: "Balanced ventilation", cost: 16000, grant: 2800, afterLabel: "D", afterKwh: 196, done: false, frD: "Système collectif, à coordonner avec les interventions d’enveloppe.", enD: "Collective system, to be coordinated with envelope works." },
+        { n: 5, fr: "Pompe à chaleur collective", en: "Collective heat pump", cost: 24000, grant: 6500, afterLabel: "C", afterKwh: 158, done: false, frD: "Remplacement de la chaudière gaz en salle technique.", enD: "Replacement of the gas boiler in the plant room." },
+        { n: 6, fr: "Nouveau certificat PEB", en: "New PEB certificate", cost: 650, grant: 0, afterLabel: "C", afterKwh: 158, done: false, frD: "Preuve de l’atteinte de l’objectif, à classer au dossier.", enD: "Proof that the objective has been met, to be filed in the dossier." }
+      ]
+    },
+    {
+      id: "stgilles",
+      name: "Immeuble Saint-Gilles",
+      address: "18 chaussée de Charleroi, 1060 Bruxelles",
+      region: "brussels",
+      typ: "copro",
+      units: 12,
+      area: 860,
+      label: "G",
+      kwh: 425,
+      issued: "2025-06-04",
+      certifier: "Marc Lemoine",
+      certNo: "PEB-BXL-25-09311",
+      status: "in_progress",
+      deadline: "2033-01-01",
+      collective: false,
+      house: false,
+      stages: [
+        { n: 1, fr: "Isolation de la toiture", en: "Roof insulation", cost: 14200, grant: 3100, afterLabel: "F", afterKwh: 368, done: true, frD: "Travaux achevés en septembre 2026. Facture classée au dossier.", enD: "Works completed in September 2026. Invoice filed in the dossier." },
+        { n: 2, fr: "Isolation des murs", en: "Wall insulation", cost: 33500, grant: 7200, afterLabel: "E", afterKwh: 290, done: false, frD: "Devis reçu ; vote prévu à la prochaine AG.", enD: "Quote received; vote planned at the next general meeting." },
+        { n: 3, fr: "Remplacement des châssis", en: "Window replacement", cost: 22100, grant: 4000, afterLabel: "D", afterKwh: 248, done: false, frD: "À lancer après l’isolation des murs.", enD: "To start after wall insulation." },
+        { n: 4, fr: "Pompe à chaleur", en: "Heat pump", cost: 19800, grant: 5400, afterLabel: "C", afterKwh: 162, done: false, frD: "Dernière étape technique avant le nouveau certificat.", enD: "Last technical step before the new certificate." },
+        { n: 5, fr: "Nouveau certificat PEB", en: "New PEB certificate", cost: 620, grant: 0, afterLabel: "C", afterKwh: 162, done: false, frD: "À commander une fois les travaux terminés.", enD: "To be commissioned once works are complete." }
+      ]
+    },
+    {
+      id: "ixelles",
+      name: "Maison rue du Cygne",
+      address: "7 rue du Cygne, 1050 Bruxelles",
+      region: "brussels",
+      typ: "house",
+      units: 1,
+      area: 142,
+      label: "E",
+      kwh: 268,
+      issued: "2026-01-20",
+      certifier: "Anne Dupont",
+      certNo: "PEB-BXL-26-11004",
+      status: "compliant",
+      deadline: "2033-01-01",
+      collective: false,
+      house: true,
+      stages: [
+        { n: 1, fr: "Isolation complémentaire des murs", en: "Additional wall insulation", cost: 9800, grant: 2200, afterLabel: "D", afterKwh: 210, done: false, frD: "Option pour anticiper l’objectif 150 kWh/m²/an (2045 au plus tôt).", enD: "Optional step toward the 150 kWh/m²/yr objective (2045 at the earliest)." },
+        { n: 2, fr: "Pompe à chaleur air-eau", en: "Air-to-water heat pump", cost: 14500, grant: 4000, afterLabel: "C", afterKwh: 148, done: false, frD: "Permettrait d’anticiper le seuil de 150 kWh/m²/an.", enD: "Would bring the home under the 150 kWh/m²/yr threshold." },
+        { n: 3, fr: "Nouveau certificat PEB", en: "New PEB certificate", cost: 480, grant: 0, afterLabel: "C", afterKwh: 148, done: false, frD: "Utile seulement après les travaux optionnels.", enD: "Only needed after the optional works." }
+      ]
+    },
+    {
+      id: "montgomery",
+      name: "Résidence Montgomery",
+      address: "25 avenue de Tervueren, 1040 Bruxelles",
+      region: "brussels",
+      typ: "copro",
+      units: 24,
+      area: 1920,
+      label: "D",
+      kwh: 210,
+      issued: "2025-11-02",
+      certifier: "Leila Haddad",
+      certNo: "PEB-BXL-25-22108",
+      status: "planned",
+      deadline: "2033-01-01",
+      collective: false,
+      house: false,
+      stages: [
+        { n: 1, fr: "Optimisation de l’isolation des combles", en: "Loft insulation upgrade", cost: 11200, grant: 2400, afterLabel: "D", afterKwh: 192, done: false, frD: "Plan préparé pour l’AG 2027, en vue de l’horizon 150 kWh.", enD: "Plan prepared for the 2027 AGM, toward the 150 kWh horizon." },
+        { n: 2, fr: "Pompe à chaleur collective", en: "Collective heat pump", cost: 36000, grant: 8000, afterLabel: "C", afterKwh: 146, done: false, frD: "Investissement de long terme, hors obligation 2033.", enD: "Long-term investment, outside the 2033 duty." },
+        { n: 3, fr: "Nouveau certificat PEB", en: "New PEB certificate", cost: 720, grant: 0, afterLabel: "C", afterKwh: 146, done: false, frD: "Après les travaux votés.", enD: "After the voted works." }
+      ]
+    },
+    {
+      id: "uccle",
+      name: "Villa Brugmann",
+      address: "56 avenue Brugmann, 1180 Uccle",
+      region: "brussels",
+      typ: "house",
+      units: 1,
+      area: 210,
+      label: "C",
+      kwh: 145,
+      issued: "2026-04-08",
+      certifier: "Marc Lemoine",
+      certNo: "PEB-BXL-26-19880",
+      status: "compliant",
+      deadline: "2033-01-01",
+      collective: false,
+      house: true,
+      stages: [
+        { n: 1, fr: "Entretien et suivi (aucun travaux requis pour 2033 ni 150 kWh)", en: "Monitoring only (no works required for 2033 or the 150 kWh target)", cost: 0, grant: 0, afterLabel: "C", afterKwh: 145, done: true, frD: "La consommation actuelle (145) est déjà sous 150 kWh/m²/an. Le dossier conserve le certificat en vigueur.", enD: "Current use (145) is already under 150 kWh/m²/yr. The dossier keeps the certificate in force." }
+      ]
+    },
+    {
+      id: "namur",
+      name: "Copropriété Namur Centre",
+      address: "8 rue de Fer, 5000 Namur",
+      region: "wallonia",
+      typ: "copro",
+      units: 14,
+      area: 980,
+      label: "E",
+      kwh: 248,
+      issued: "2026-09-18",
+      certifier: "Pierre Servais",
+      certNo: "PEB-WAL-26-44021",
+      status: "indicative",
+      deadline: null,
+      collective: false,
+      house: false,
+      stages: [
+        { n: 1, fr: "Isolation de la toiture", en: "Roof insulation", cost: 15200, grant: 3800, afterLabel: "D", afterKwh: 210, done: false, frD: "Proposition syndic pour une approche immeuble entier (le certificat d’appartement ne donne pas de coût).", enD: "Syndic proposal for a whole-building approach (the apartment certificate gives no cost)." },
+        { n: 2, fr: "Isolation des murs", en: "Wall insulation", cost: 28700, grant: 6400, afterLabel: "C", afterKwh: 168, done: false, frD: "Sous réserve d’un vote en AG.", enD: "Subject to a general-meeting vote." },
+        { n: 3, fr: "Chauffage et régulation", en: "Heating and controls", cost: 17600, grant: 4100, afterLabel: "B", afterKwh: 118, done: false, frD: "Étape suivante sur le parcours indicatif vers A.", enD: "Next step on the indicative pathway to A." },
+        { n: 4, fr: "Finitions vers le label A", en: "Works toward label A", cost: 12400, grant: 2500, afterLabel: "A", afterKwh: 82, done: false, frD: "Parcours indicatif uniquement — pas un devis.", enD: "Indicative pathway only — not a quote." }
+      ]
+    },
+    {
+      id: "liege-house",
+      name: "Maison Outremeuse",
+      address: "14 quai de la Dérivation, 4020 Liège",
+      region: "wallonia",
+      typ: "house",
+      units: 1,
+      area: 168,
+      label: "F",
+      kwh: 338,
+      issued: "2026-09-22",
+      certifier: "Claire Bernard",
+      certNo: "PEB-WAL-26-45117",
+      status: "planned",
+      deadline: null,
+      collective: false,
+      house: true,
+      stages: [
+        { n: 1, fr: "Isolation de la toiture", en: "Roof insulation", cost: 9800, grant: 2400, afterLabel: "E", afterKwh: 280, done: false, frD: "Fourchette indicative inspirée du parcours du certificat (maison). Données d’exemple.", enD: "Indicative range inspired by the certificate pathway (house). Example data." },
+        { n: 2, fr: "Isolation des murs et planchers", en: "Wall and floor insulation", cost: 18600, grant: 4500, afterLabel: "D", afterKwh: 215, done: false, frD: "Deuxième étape du parcours indicatif vers A.", enD: "Second step on the indicative pathway to A." },
+        { n: 3, fr: "Châssis et ventilation", en: "Windows and ventilation", cost: 12400, grant: 2800, afterLabel: "C", afterKwh: 160, done: false, frD: "Ordre recommandé par le certificat, coûts fictifs.", enD: "Order recommended by the certificate; costs are fictional." },
+        { n: 4, fr: "Pompe à chaleur", en: "Heat pump", cost: 15200, grant: 3600, afterLabel: "A", afterKwh: 88, done: false, frD: "Dernière étape technique du parcours indicatif.", enD: "Last technical step of the indicative pathway." }
+      ]
+    },
+    {
+      id: "coteaux",
+      name: "Résidence des Coteaux",
+      address: "3 place du Marché, 4000 Liège",
+      region: "wallonia",
+      typ: "copro",
+      units: 22,
+      area: 1540,
+      label: "G",
+      kwh: 401,
+      issued: "2026-10-08",
+      certifier: "Pierre Servais",
+      certNo: "PEB-WAL-26-47003",
+      status: "review",
+      deadline: null,
+      collective: true,
+      house: false,
+      stages: [
+        { n: 1, fr: "Audit / approche immeuble entier", en: "Audit / whole-building approach", cost: 3200, grant: 0, afterLabel: "G", afterKwh: 401, done: false, frD: "Le certificat (installation collective) ne fournit pas d’estimation de coût. Une décision de copropriété est requise.", enD: "The certificate (collective installation) gives no cost estimate. A co-ownership decision is required." },
+        { n: 2, fr: "Isolation de la toiture et des caves", en: "Roof and cellar insulation", cost: 24800, grant: 5200, afterLabel: "E", afterKwh: 290, done: false, frD: "Proposition syndic — montants indicatifs, hors devis.", enD: "Syndic proposal — indicative amounts, not a quote." },
+        { n: 3, fr: "Enveloppe et châssis communs", en: "Envelope and common windows", cost: 41200, grant: 8800, afterLabel: "C", afterKwh: 170, done: false, frD: "À chiffrer après l’approche immeuble entier.", enD: "To be costed after the whole-building approach." },
+        { n: 4, fr: "Chaufferie collective", en: "Collective plant room", cost: 28500, grant: 6100, afterLabel: "A", afterKwh: 95, done: false, frD: "Parcours indicatif vers A, soumis au vote.", enD: "Indicative pathway to A, subject to a vote." }
+      ]
+    }
+  ];
+
+  const DOCS = {
+    acacias: {
+      filed: [
+        { id: "d1", fr: "Certificat PEB 12 mars 2026", en: "PEB certificate 12 March 2026", kind: "peb", tag: "cert", hash: "a31c9e2b", date: "2026-03-14T09:12:00+01:00" },
+        { id: "d2", fr: "Devis isolation toiture — ToitSec SPRL", en: "Roof insulation quote — ToitSec SRL", kind: "quote", tag: "plan", step: 1, hash: "bb17d044", date: "2026-10-02T14:40:00+02:00" }
+      ],
+      queue: [
+        { id: "d3", fr: "Scan reçu par e-mail (expéditeur inconnu)", en: "Scan received by email (unknown sender)", kind: "other", tag: "queue", hash: "c90afe11", date: "2026-11-09T11:02:00+01:00" }
+      ],
+      checks: [
+        { id: "c1", fr: "Certificat PEB initial", en: "Initial PEB certificate", done: true, step: 0 },
+        { id: "c2", fr: "Devis étape 1 — isolation toiture", en: "Stage 1 quote — roof insulation", done: true, step: 1 },
+        { id: "c3", fr: "Facture étape 1 — isolation toiture", en: "Stage 1 invoice — roof insulation", done: false, step: 1 },
+        { id: "c4", fr: "Photos avant / après étape 1", en: "Before/after photos for stage 1", done: false, step: 1 },
+        { id: "c5", fr: "Fiche technique isolation", en: "Insulation technical sheet", done: false, step: 1 },
+        { id: "c6", fr: "Nouveau certificat PEB après travaux", en: "New PEB certificate after works", done: false, step: 6 }
+      ],
+      log: [
+        { i: 1, at: "2026-03-14T09:12:04+01:00", act_fr: "Dépôt du certificat PEB", act_en: "PEB certificate filed", hash: "a31c9e2b4c81d0f2", prev: "0000000000000000" },
+        { i: 2, at: "2026-03-14T09:12:06+01:00", act_fr: "Moteur de règles : Bruxelles, échéance 1er janv. 2033, objectif 275 kWh/m²/an", act_en: "Rules engine: Brussels, deadline 1 Jan 2033, target 275 kWh/m²/yr", hash: "d4e1b77390aa21c6", prev: "a31c9e2b4c81d0f2" },
+        { i: 3, at: "2026-09-20T16:03:11+02:00", act_fr: "Feuille de route indicative générée (6 étapes)", act_en: "Indicative roadmap generated (6 stages)", hash: "91f0c22ab7e34d18", prev: "d4e1b77390aa21c6" },
+        { i: 4, at: "2026-10-02T14:40:33+02:00", act_fr: "Devis ToitSec classé à l’étape 1 (empreinte bb17d044…)", act_en: "ToitSec quote filed under stage 1 (hash bb17d044…)", hash: "0e55a1c8f29b6d40", prev: "91f0c22ab7e34d18" },
+        { i: 5, at: "2026-11-09T11:02:18+01:00", act_fr: "Pièce incertaine envoyée en file de revue (non classée)", act_en: "Unclear document sent to the review queue (not filed)", hash: "77b2de901c4a58ef", prev: "0e55a1c8f29b6d40" }
+      ]
+    },
+    stgilles: {
+      filed: [
+        { id: "s1", fr: "Certificat PEB 4 juin 2025", en: "PEB certificate 4 June 2025", kind: "peb", tag: "cert", hash: "11ab90c2", date: "2025-06-06T10:00:00+02:00" },
+        { id: "s2", fr: "Facture isolation toiture — ToitSec SPRL", en: "Roof insulation invoice — ToitSec SRL", kind: "invoice", tag: "plan", step: 1, hash: "22cd81e0", date: "2026-09-28T17:15:00+02:00" },
+        { id: "s3", fr: "Photos après isolation de toiture", en: "Photos after roof insulation", kind: "photo", tag: "plan", step: 1, hash: "33d0aa19", date: "2026-09-28T17:16:00+02:00" },
+        { id: "s4", fr: "Devis isolation murs — FaçadePlus", en: "Wall insulation quote — FaçadePlus", kind: "quote", tag: "plan", step: 2, hash: "4481be27", date: "2026-10-15T09:45:00+02:00" }
+      ],
+      queue: [],
+      checks: [
+        { id: "sc1", fr: "Certificat PEB initial", en: "Initial PEB certificate", done: true, step: 0 },
+        { id: "sc2", fr: "Facture étape 1 — toiture", en: "Stage 1 invoice — roof", done: true, step: 1 },
+        { id: "sc3", fr: "Photos avant / après étape 1", en: "Before/after photos for stage 1", done: true, step: 1 },
+        { id: "sc4", fr: "Devis étape 2 — murs", en: "Stage 2 quote — walls", done: true, step: 2 },
+        { id: "sc5", fr: "Facture étape 2 — murs", en: "Stage 2 invoice — walls", done: false, step: 2 },
+        { id: "sc6", fr: "Nouveau certificat PEB après travaux", en: "New PEB certificate after works", done: false, step: 5 }
+      ],
+      log: [
+        { i: 1, at: "2025-06-06T10:00:12+02:00", act_fr: "Dépôt du certificat PEB", act_en: "PEB certificate filed", hash: "11ab90c24e77d1aa", prev: "0000000000000000" },
+        { i: 2, at: "2025-06-06T10:00:14+02:00", act_fr: "Moteur de règles : Bruxelles, échéance 1er janv. 2033", act_en: "Rules engine: Brussels, deadline 1 Jan 2033", hash: "29f3c0aa81b45c10", prev: "11ab90c24e77d1aa" },
+        { i: 3, at: "2026-09-28T17:15:44+02:00", act_fr: "Facture étape 1 classée — chaîne d’empreintes mise à jour", act_en: "Stage 1 invoice filed — hash chain updated", hash: "8c21d9e044ab71f2", prev: "29f3c0aa81b45c10" }
+      ]
+    }
+  };
+
+  const DEFAULT_DOCS = (b) => ({
+    filed: [
+      { id: b.id + "-peb", fr: "Certificat PEB " + b.certNo, en: "PEB certificate " + b.certNo, kind: "peb", tag: "cert", hash: "e2f10a01", date: b.issued + "T10:00:00+01:00" }
+    ],
+    queue: [],
+    checks: [
+      { id: b.id + "-c1", fr: "Certificat PEB initial", en: "Initial PEB certificate", done: true, step: 0 },
+      { id: b.id + "-c2", fr: "Devis de la première étape", en: "First-stage quote", done: false, step: 1 },
+      { id: b.id + "-c3", fr: "Facture de la première étape", en: "First-stage invoice", done: false, step: 1 },
+      { id: b.id + "-c4", fr: "Nouveau certificat PEB après travaux", en: "New PEB certificate after works", done: false, step: 99 }
+    ],
+    log: [
+      { i: 1, at: b.issued + "T10:00:04+01:00", act_fr: "Dépôt du certificat PEB", act_en: "PEB certificate filed", hash: "e2f10a01aa11bb22", prev: "0000000000000000" },
+      { i: 2, at: b.issued + "T10:00:06+01:00", act_fr: "Région et règle détectées", act_en: "Region and rule detected", hash: "f801cc2299dde433", prev: "e2f10a01aa11bb22" }
+    ]
+  });
+
+  const REMINDERS0 = [
+    { id: "r1", building: "acacias", due: "2026-12-01", rec: "recOwners", ch: "chEmail", done: false, snooze: null, fr: "AG du 14 mars 2027 : envoyer la feuille de route et le devis toiture aux copropriétaires.", en: "AGM of 14 March 2027: send the roadmap and the roof quote to co-owners." },
+    { id: "r2", building: "stgilles", due: "2026-11-30", rec: "recSyndic", ch: "chApp", done: false, snooze: null, fr: "Pièce manquante : facture d’isolation des murs (étape 2) dès que les travaux seront votés.", en: "Missing proof: wall-insulation invoice (stage 2) once the works are voted." },
+    { id: "r3", building: "montgomery", due: "2026-12-08", rec: "recAgent", ch: "chEmail", done: false, snooze: null, fr: "Mise en vente : joindre l’échéance 2033 (déjà atteinte) et l’estimation des travaux optionnels.", en: "Listing: attach the 2033 deadline (already met) and the optional works estimate." },
+    { id: "r4", building: "uccle", due: "2026-12-12", rec: "recBuyers", ch: "chEmail", done: false, snooze: null, fr: "Candidat acheteur : partager le dossier (certificat C, 145 kWh/m²/an) via un lien temporaire.", en: "Prospective buyer: share the dossier (label C, 145 kWh/m²/yr) via an expiring link." },
+    { id: "r5", building: "namur", due: "2026-12-18", rec: "recOwners", ch: "chLetter", done: false, snooze: null, fr: "Envoyer le parcours indicatif vers A avant l’AG — rappeler qu’il n’y a pas encore de mandat wallon.", en: "Send the indicative pathway to A before the AGM — recall that Wallonia has no mandate yet." },
+    { id: "r6", building: "coteaux", due: "2027-01-15", rec: "recOwners", ch: "chEmail", done: false, snooze: null, fr: "Décision de copropriété requise : le certificat (installation collective) ne chiffre pas les travaux.", en: "Co-ownership decision required: the certificate (collective installation) does not cost the works." },
+    { id: "r7", building: "acacias", due: "2030-10-01", rec: "recAuthorities", ch: "chLetter", done: false, snooze: null, fr: "Veille : un certificat PEB valide sera obligatoire pour tout bâtiment bruxellois à partir de fin 2030 au plus tôt.", en: "Watch: a valid PEB certificate will be mandatory for every Brussels building from end-2030 at the earliest." },
+    { id: "r8", building: "ixelles", due: "2027-01-20", rec: "recOwners", ch: "chEmail", done: false, snooze: null, fr: "Objectif 2033 déjà atteint (268 kWh). Rappeler l’horizon 150 kWh/m²/an à partir de 2045 au plus tôt.", en: "2033 objective already met (268 kWh). Recall the 150 kWh/m²/yr horizon from 2045 at the earliest." }
+  ];
+
+
+  const state = {
+    lang: "en",
+    view: "portfolio",
+    buildingId: "acacias",
+    region: "all",
+    status: "all",
+    query: "",
+    sidebarOpen: false,
+    parsing: false,
+    lastUpload: null,
+    reminders: REMINDERS0.map((r) => Object.assign({}, r)),
+    checks: {},
+    demoBuilding: null
+  };
+
+  BUILDINGS.forEach((b) => {
+    const pack = DOCS[b.id] || DEFAULT_DOCS(b);
+    state.checks[b.id] = pack.checks.map((c) => Object.assign({}, c));
+  });
+
+  const $ = (id) => document.getElementById(id);
+  const el = (html) => html;
+  const esc = (s) => String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  function t(key, params) {
+    const pack = I18N[state.lang] || I18N.fr;
+    let s = pack[key] || I18N.fr[key] || key;
+    if (params) {
+      Object.keys(params).forEach((k) => {
+        s = s.split("{" + k + "}").join(params[k]);
+      });
+    }
+    return s;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) {
+      const p = String(iso).slice(0, 10).split("-");
+      if (p.length === 3) return fmtYmd(p[0], p[1], p[2]);
+      return iso;
+    }
+    return new Intl.DateTimeFormat(state.lang === "fr" ? "fr-BE" : "en-GB", {
+      day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Brussels"
+    }).format(d);
+  }
+
+  function fmtYmd(y, m, d) {
+    return fmtDate(y + "-" + m + "-" + d + "T12:00:00+01:00");
+  }
+
+  function fmtDateTime(iso) {
+    const d = new Date(iso);
+    return new Intl.DateTimeFormat(state.lang === "fr" ? "fr-BE" : "en-GB", {
+      day: "numeric", month: "short", year: "numeric",
+      hour: "2-digit", minute: "2-digit", timeZone: "Europe/Brussels"
+    }).format(d);
+  }
+
+  function fmtMoney(n) {
+    const loc = state.lang === "fr" ? "fr-BE" : "en-BE";
+    return new Intl.NumberFormat(loc, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
+  }
+
+  function fmtNum(n) {
+    return new Intl.NumberFormat(state.lang === "fr" ? "fr-BE" : "en-BE").format(n);
+  }
+
+  function tag() {
+    return `<span class="ex-tag">${esc(t("example"))}</span>`;
+  }
+
+  function icon(name) {
+    const paths = {
+      grid: '<path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" fill="currentColor"/>',
+      cert: '<path d="M7 3h10a2 2 0 0 1 2 2v14l-7-3-7 3V5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+      plan: '<path d="M4 6h16M4 12h16M4 18h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+      folder: '<path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+      bell: '<path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15L6 16zm4 2a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+      search: '<circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 15.5 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+      upload: '<path d="M12 16V5m0 0 4 4M12 5 8 9M4 19h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+      plus: '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+      leaf: '<path d="M5 19c8-1 13-8 14-15-8 1-14 7-14 15z" fill="#164E50"/><path d="M6 18c3-3 6-6 9-12" stroke="#164E50" stroke-width="1.4" fill="none"/>',
+      menu: '<path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+      file: '<path d="M7 3h7l5 5v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.6"/>',
+      warn: '<path d="M12 4 21 20H3L12 4zm0 6v5m0 3h.01" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>'
+    };
+    return `<svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">${paths[name] || ""}</svg>`;
+  }
+
+  function buildings() {
+    const list = state.demoBuilding ? [state.demoBuilding].concat(BUILDINGS) : BUILDINGS.slice();
+    return list;
+  }
+
+  function getBuilding(id) {
+    return buildings().find((b) => b.id === id) || BUILDINGS[0];
+  }
+
+  function docsFor(id) {
+    const b = getBuilding(id);
+    return DOCS[id] || DEFAULT_DOCS(b);
+  }
+
+  function proofRatio(id) {
+    const checks = state.checks[id] || [];
+    if (!checks.length) return { held: 0, need: 0, pct: 0 };
+    const held = checks.filter((c) => c.done).length;
+    return { held, need: checks.length, pct: Math.round((held / checks.length) * 100) };
+  }
+
+  function meets2033(b) {
+    return b.region === "brussels" && b.kwh <= 275;
+  }
+
+  function gapTo275(b) {
+    return Math.max(0, Math.round(b.kwh - 275));
+  }
+
+  function countdownParts(untilIso) {
+    const now = new Date();
+    const end = new Date(untilIso + "T00:00:00+01:00");
+    let days = Math.round((end - now) / 86400000);
+    if (days < 0) days = 0;
+    const years = Math.floor(days / 365);
+    const rem = days - years * 365;
+    const months = Math.floor(rem / 30);
+    return { days, years, months };
+  }
+
+  function formatSpan(untilIso) {
+    const { years, months, days } = countdownParts(untilIso);
+    const bits = [];
+    if (years > 1) bits.push(t("years", { n: years }));
+    else if (years === 1) bits.push(t("year1"));
+    if (months > 1) bits.push(t("months", { n: months }));
+    else if (months === 1) bits.push(t("month1"));
+    if (!years && !months) bits.push(t("days", { n: days }));
+    return t("countdownIn", { t: bits.join(" · ") });
+  }
+
+  function go(view, id) {
+    if (id) state.buildingId = id;
+    state.view = view;
+    state.sidebarOpen = false;
+    const path = view === "portfolio" ? "#/portfolio"
+      : view === "reminders" ? "#/reminders"
+      : view === "plan" ? "#/plan/" + state.buildingId
+      : view === "dossier" ? "#/dossier/" + state.buildingId
+      : view === "new" ? "#/building/new"
+      : "#/building/" + state.buildingId;
+    if (location.hash !== path) history.pushState(null, "", path);
+    render();
+  }
+
+  function parseHash() {
+    const h = (location.hash || "#/portfolio").replace(/^#/, "");
+    const parts = h.split("/").filter(Boolean);
+    const v = parts[0] || "portfolio";
+    if (v === "portfolio") { state.view = "portfolio"; return; }
+    if (v === "reminders") { state.view = "reminders"; return; }
+    if (v === "plan") { state.view = "plan"; if (parts[1]) state.buildingId = parts[1]; return; }
+    if (v === "dossier") { state.view = "dossier"; if (parts[1]) state.buildingId = parts[1]; return; }
+    if (v === "building" && parts[1] === "new") { state.view = "new"; return; }
+    if (v === "building") { state.view = "building"; if (parts[1]) state.buildingId = parts[1]; return; }
+    state.view = "portfolio";
+  }
+
+  function setLang(lang) {
+    state.lang = lang === "fr" ? "fr" : "en";
+    document.documentElement.lang = state.lang;
+    document.title = t("title");
+    try { localStorage.setItem("renopath-lang-v2", state.lang); } catch (e) {}
+    render();
+  }
+
+  function renderSidebar() {
+    const b = getBuilding(state.buildingId);
+    const item = (view, label, mod, ico) => {
+      const active = state.view === view || (view === "building" && state.view === "new");
+      return `<button class="nav-btn${active ? " active" : ""}" data-go="${view}">
+        ${icon(ico)}<span>${esc(label)}</span>${mod ? `<span class="nav-mod">${mod}</span>` : ""}
+      </button>`;
+    };
+    $("sidebar").innerHTML = `
+      <div class="brand">
+        <div class="brand-mark">${icon("leaf")}</div>
+        <div>
+          <div class="brand-name">${esc(t("wordmark"))}<span>.</span></div>
+          <div class="brand-sub">${esc(t("workingName"))}</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <div class="nav-label">${esc(t("navModules"))}</div>
+        ${item("portfolio", t("navPortfolio"), "04", "grid")}
+        ${item("building", t("navCert"), "01", "cert")}
+        ${item("plan", t("navPlan"), "02", "plan")}
+        ${item("dossier", t("navDossier"), "03", "folder")}
+        ${item("reminders", t("navReminders"), "", "bell")}
+        <div class="nav-label">${esc(t("navActive"))}</div>
+        <div class="nav-building">
+          <div class="nb-v">${esc(b.name)}</div>
+          <div class="nb-k">${esc(b.address)}</div>
+        </div>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="${state.lang === "fr" ? "on" : ""}" data-lang="fr">FR</button>
+          <button class="${state.lang === "en" ? "on" : ""}" data-lang="en">EN</button>
+        </div>
+      </div>`;
+    $("sidebar").classList.toggle("open", state.sidebarOpen);
+    $("scrim").classList.toggle("on", state.sidebarOpen);
+  }
+
+  function renderBanner() {
+    $("banner").innerHTML = `<span class="dot"></span><span>${esc(t("banner"))}</span>`;
+  }
+
+  function renderTopbar() {
+    const crumbs = {
+      portfolio: t("crumbsHome"),
+      building: t("navCert"),
+      plan: t("navPlan"),
+      dossier: t("navDossier"),
+      reminders: t("navReminders"),
+      new: t("newBuildingTitle")
+    };
+    const b = getBuilding(state.buildingId);
+    const extra = (state.view === "building" || state.view === "plan" || state.view === "dossier")
+      ? ` / <b>${esc(b.name)}</b>` : "";
+    const trail = state.view === "portfolio"
+      ? `<b>${esc(t("crumbsHome"))}</b>`
+      : `${esc(t("crumbsHome"))} / <b>${esc(crumbs[state.view] || "")}</b>${extra}`;
+    $("topbar").innerHTML = `
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">${icon("menu")}</button>
+      <div class="crumbs">${trail}</div>
+      <div class="topbar-right">
+        <label class="search">${icon("search")}<input id="q" type="search" placeholder="${esc(t("searchPh"))}" value="${esc(state.query)}" /></label>
+        <div class="userpill">
+          <div class="avatar">SL</div>
+          <div class="umeta"><div class="un">${esc(t("user"))}</div><div class="ur">${esc(t("org"))}</div></div>
+        </div>
+      </div>`;
+  }
+
+  function filteredBuildings() {
+    const q = state.query.trim().toLowerCase();
+    return buildings().filter((b) => {
+      if (state.region !== "all" && b.region !== state.region) return false;
+      if (state.status !== "all" && b.status !== state.status) return false;
+      if (q && !(b.name + " " + b.address).toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }
+
+  function seg(group, value, opts) {
+    return `<div class="seg" role="group">${opts.map((o) =>
+      `<button class="${value === o.v ? "on" : ""}" data-filter="${group}" data-val="${o.v}">${esc(o.l)}</button>`
+    ).join("")}</div>`;
+  }
+
+  function renderPortfolio() {
+    const all = buildings();
+    const atRisk = all.filter((b) => b.region === "brussels" && (b.label === "F" || b.label === "G")).length;
+    const compliant = all.filter(meets2033).length;
+    const wal = all.filter((b) => b.region === "wallonia").length;
+    const rows = filteredBuildings();
+    const statusOpts = ["all", "at_risk", "in_progress", "planned", "compliant", "indicative", "review"]
+      .map((s) => ({ v: s, l: s === "all" ? t("all") : t("st_" + s) }));
+
+    $("main").innerHTML = `
+      <h1>${esc(t("headline"))}</h1>
+      <p class="lede">${esc(t("portfolioLede"))}</p>
+      <div class="kpis">
+        <div class="kpi"><div class="k">${esc(t("kpiBuildings"))}</div><div class="v">${all.length} ${tag()}</div><div class="s">${esc(t("kpiBuildingsSub"))}</div></div>
+        <div class="kpi danger"><div class="k">${esc(t("kpiAtRisk"))}</div><div class="v">${atRisk} ${tag()}</div><div class="s">${esc(t("kpiAtRiskSub"))}</div></div>
+        <div class="kpi ok"><div class="k">${esc(t("kpiCompliant"))}</div><div class="v">${compliant} ${tag()}</div><div class="s">${esc(t("kpiCompliantSub"))}</div></div>
+        <div class="kpi"><div class="k">${esc(t("kpiWallonia"))}</div><div class="v">${wal} ${tag()}</div><div class="s">${esc(t("kpiWalloniaSub"))}</div></div>
+      </div>
+      <div class="toolbar">
+        ${seg("region", state.region, [
+          { v: "all", l: t("all") },
+          { v: "brussels", l: t("brussels") },
+          { v: "wallonia", l: t("wallonia") }
+        ])}
+        ${seg("status", state.status, statusOpts)}
+        <button class="btn primary" data-go="new">${icon("plus")}${esc(t("addBuilding"))}</button>
+      </div>
+      <div class="card">
+        ${rows.length === 0 ? `<div class="empty">${esc(t("emptyFilter"))}</div>` : `
+        <table class="list">
+          <thead><tr>
+            <th>${esc(t("colBuilding"))}</th>
+            <th>${esc(t("colRegion"))}</th>
+            <th>${esc(t("colPeb"))}</th>
+            <th>${esc(t("colValue"))}</th>
+            <th>${esc(t("colDeadline"))}</th>
+            <th>${esc(t("colCountdown"))}</th>
+            <th>${esc(t("colStatus"))}</th>
+            <th>${esc(t("colProof"))}</th>
+          </tr></thead>
+          <tbody>
+            ${rows.map((b) => rowHtml(b)).join("")}
+          </tbody>
+        </table>`}
+      </div>
+      <p class="faint" style="margin-top:18px;font-size:12px">${esc(t("footer"))}</p>`;
+  }
+
+  function rowHtml(b) {
+    const pr = proofRatio(b.id);
+    return `<tr data-open="${esc(b.id)}">
+      <td><div class="bname">${esc(b.name)}</div><div class="baddr">${esc(b.address)} · ${esc(typeLabel(b))}</div></td>
+      <td><span class="reg ${b.region === "wallonia" ? "wal" : ""}"><i></i>${esc(t(b.region))}</span></td>
+      <td><span class="chip ${b.label}">${b.label}</span></td>
+      <td>${fmtNum(b.kwh)} ${tag()}</td>
+      <td class="nowrap">${b.deadline ? fmtDate(b.deadline) : esc(t("deadlineNone"))}</td>
+      <td>${countdownCell(b)}</td>
+      <td><span class="st ${b.status}">${esc(t("st_" + b.status))}</span></td>
+      <td>
+        <div class="progress" style="width:72px" title="${pr.held}/${pr.need}"><span style="width:${pr.pct}%"></span></div>
+        <div class="faint" style="font-size:11px;margin-top:3px">${pr.held}/${pr.need}</div>
+      </td>
+    </tr>`;
+  }
+
+  function typeLabel(b) {
+    return b.typ === "house" ? t("house") : t("copro") + " · " + t("units", { n: b.units });
+  }
+
+  function countdownCell(b) {
+    if (b.region === "wallonia") return `<span class="cdown mute">${esc(t("pathwayOnly"))}</span>`;
+    if (meets2033(b)) return `<span class="cdown ok">${esc(t("alreadyMet"))}</span>`;
+    return `<span class="cdown warn">${esc(formatSpan(b.deadline))}</span>`;
+  }
+
+  function renderBuilding() {
+    const isNew = state.view === "new";
+    const b = isNew && !state.demoBuilding ? null : getBuilding(isNew ? (state.demoBuilding ? state.demoBuilding.id : state.buildingId) : state.buildingId);
+    $("main").innerHTML = `
+      <h1>${esc(isNew && !b ? t("newBuildingTitle") : t("certTitle"))}</h1>
+      <p class="lede">${esc(isNew && !b ? t("newBuildingLede") : t("certLede"))}</p>
+      ${uploadBox(!!b)}
+      ${b ? certCard(b) + ruleCard(b) : ""}
+      ${b ? `<div class="actions">
+        <button class="btn primary" data-go="plan" data-id="${esc(b.id)}">${esc(t("openPlan"))}</button>
+        <button class="btn" data-go="dossier" data-id="${esc(b.id)}">${esc(t("openDossier"))}</button>
+      </div>` : ""}
+      <p class="faint" style="margin-top:18px;font-size:12px">${esc(t("footer"))}</p>`;
+    bindUpload();
+  }
+
+  function uploadBox(compact) {
+    const msg = state.parsing ? t("parsing") : (state.lastUpload ? t("parsedOk") + " — " + state.lastUpload : t("uploadHint"));
+    const inner = compact
+      ? `<div class="upload compact" id="drop">
+          ${icon("upload")}
+          <div class="up-copy"><h3>${esc(t("uploadTitle"))}</h3><p>${esc(msg)}</p></div>
+          <button class="btn primary" id="pickBtn" type="button">${esc(t("chooseFile"))}</button>
+          <input id="fileIn" type="file" accept=".pdf,application/pdf,.png,.jpg" class="hidden" />
+        </div>`
+      : `<div class="upload" id="drop">
+          ${icon("upload")}
+          <h3>${esc(t("uploadTitle"))}</h3>
+          <p>${esc(msg)}</p>
+          <button class="btn primary" id="pickBtn" type="button">${esc(t("chooseFile"))}</button>
+          <input id="fileIn" type="file" accept=".pdf,application/pdf,.png,.jpg" class="hidden" />
+        </div>`;
+    return `<div class="card" style="margin-bottom:14px"><div class="card-b" style="${compact ? "padding:12px 14px" : ""}">${inner}</div></div>`;
+  }
+
+  function certCard(b) {
+    return `<div class="grid-2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-h"><h2>${esc(t("currentCert"))}</h2>${tag()}</div>
+        <div class="card-b">
+          <div class="peb-big">
+            <span class="chip ${b.label}">${b.label}</span>
+            <div>
+              <div class="kwh">${fmtNum(b.kwh)}</div>
+              <div class="unit">kWh/m²/${state.lang === "fr" ? "an" : "yr"}</div>
+            </div>
+          </div>
+          <div style="margin-top:14px">
+            <div class="metric-row"><span class="muted">${esc(t("colBuilding"))}</span><span>${esc(b.name)}</span></div>
+            <div class="metric-row"><span class="muted">${esc(t("colRegion"))}</span><span>${esc(t(b.region))}</span></div>
+            <div class="metric-row"><span class="muted">${esc(t("issued"))}</span><span>${fmtDate(b.issued)}</span></div>
+            <div class="metric-row"><span class="muted">${esc(t("certifier"))}</span><span>${esc(b.certifier)}</span></div>
+            <div class="metric-row"><span class="muted">${esc(t("certNo"))}</span><span>${esc(b.certNo)}</span></div>
+            <div class="metric-row"><span class="muted">${esc(t("floorArea"))}</span><span>${fmtNum(b.area)} ${esc(t("m2"))} ${tag()}</span></div>
+            <div class="metric-row"><span class="muted">${esc(typeLabel(b).split("·")[0])}</span><span>${esc(typeLabel(b))}</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>${esc(t("colStatus"))}</h2></div>
+        <div class="card-b">
+          <span class="st ${b.status}">${esc(t("st_" + b.status))}</span>
+          <div style="margin-top:12px">${countdownCell(b)}</div>
+          <div class="muted" style="margin-top:8px">${esc(b.address)}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function ruleCard(b) {
+    const brussels = b.region === "brussels";
+    const met = brussels && meets2033(b);
+    const why = brussels ? (met ? t("ruleBrusselsMet") : t("ruleBrussels")) : t("ruleWallonia");
+    const gap = gapTo275(b);
+    const capped = Math.min(gap, 125);
+    let fineHtml = "";
+    if (brussels && !met && gap > 0) {
+      const amount = new Intl.NumberFormat(state.lang === "fr" ? "fr-BE" : "en-BE", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(2.5 * capped);
+      fineHtml = `<p class="fine-note">${esc(t("fineIllust", { gap: capped, amount }))}${gap > 125 ? " " + esc(t("fineCapped", { raw: gap })) : ""}</p>`;
+    }
+    let extra = "";
+    if (!brussels && (b.typ === "copro" || b.collective)) extra = `<p class="fine-note">${esc(t("walloniaAptNote"))}</p>`;
+    if (!brussels && b.house) extra = `<p class="fine-note">${esc(t("walloniaHouseNote"))}</p>`;
+    return `<div class="rule">
+      <h3>${esc(t("ruleTitle"))}</h3>
+      <p class="why"><strong>${esc(t("whyTitle"))}</strong> ${esc(why)}</p>
+      <dl>
+        <dt>${esc(t("fieldRegion"))}</dt><dd>${esc(t(b.region))}</dd>
+        <dt>${esc(t("fieldTrigger"))}</dt><dd>${esc(brussels ? t("triggerAll") : t("triggerCert"))}</dd>
+        <dt>${esc(t("fieldTarget"))}</dt><dd>${esc(brussels ? t("target275") : t("targetA"))}${brussels ? `<div class="faint" style="font-weight:500;margin-top:2px">${esc(t("target150"))}</div>` : ""}</dd>
+        <dt>${esc(t("fieldDeadline"))}</dt><dd>${brussels ? fmtDate(b.deadline) : esc(t("deadlineNone"))} ${tag()}</dd>
+        <dt>${esc(t("fieldGap"))}</dt><dd>${brussels && !met ? esc(t("gapUnit", { n: fmtNum(gap) })) + " " + tag() : (brussels ? "0" : "—")}</dd>
+        <dt>${esc(t("fieldSanction"))}</dt><dd>${esc(brussels ? t("sanctionBrussels") : t("sanctionNone"))}</dd>
+      </dl>
+      ${fineHtml}${extra}
+    </div>`;
+  }
+
+  function bindUpload() {
+    const drop = $("drop");
+    const input = $("fileIn");
+    if (!drop || !input) return;
+    const start = (name) => simulateParse(name);
+    $("pickBtn").addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); input.click(); });
+    input.addEventListener("change", () => {
+      const f = input.files && input.files[0];
+      start(f ? f.name : t("demoParsedName"));
+    });
+    ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("drag"); }));
+    ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("drag"); }));
+    drop.addEventListener("drop", (e) => {
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      start(f ? f.name : t("demoParsedName"));
+    });
+  }
+
+  function simulateParse(name) {
+    state.parsing = true;
+    state.lastUpload = null;
+    render();
+    setTimeout(() => {
+      state.parsing = false;
+      state.lastUpload = name || t("demoParsedName");
+      if (state.view === "new" && !state.demoBuilding) {
+        state.demoBuilding = {
+          id: "schaerbeek",
+          name: "Immeuble Josaphat",
+          address: "19 rue Josaphat, 1030 Schaerbeek",
+          region: "brussels",
+          typ: "copro",
+          units: 9,
+          area: 640,
+          label: "F",
+          kwh: 329,
+          issued: "2026-11-02",
+          certifier: "Leila Haddad",
+          certNo: "PEB-BXL-26-33019",
+          status: "review",
+          deadline: "2033-01-01",
+          collective: false,
+          house: false,
+          stages: BUILDINGS[0].stages.map((s) => Object.assign({}, s, { done: false }))
+        };
+        state.checks.schaerbeek = DEFAULT_DOCS(state.demoBuilding).checks.map((c) => Object.assign({}, c));
+        state.buildingId = "schaerbeek";
+        state.view = "building";
+        history.pushState(null, "", "#/building/schaerbeek");
+        toast(t("parsedOk"));
+      } else {
+        toast(t("parsedOk"));
+      }
+      render();
+    }, 900);
+  }
+
+  function renderPlan() {
+    const b = getBuilding(state.buildingId);
+    const brussels = b.region === "brussels";
+    const cost = b.stages.reduce((s, x) => s + x.cost, 0);
+    const grantRaw = b.stages.reduce((s, x) => s + x.grant, 0);
+    const grant = brussels ? 0 : grantRaw;
+    const net = cost - grant;
+    $("main").innerHTML = `
+      <h1>${esc(t("planTitle"))}</h1>
+      <p class="lede">${esc(b.name)} — ${esc(b.address)}. ${esc(t("planLede"))}</p>
+      ${brussels
+        ? `<div class="notice alert" style="margin-bottom:14px">${icon("warn")}<div>${esc(t("renolutionNotice"))}</div></div>`
+        : `<div class="notice info" style="margin-bottom:14px">${icon("plan")}<div>${esc(t("walloniaGrantNote"))} ${b.typ === "copro" || b.collective ? esc(t("walloniaAptNote")) : esc(t("walloniaPathwayAuto"))}</div></div>`}
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-b">
+          ${b.stages.map((s) => stageHtml(b, s, brussels)).join("")}
+          <div class="totals">
+            <div class="tot"><div class="k">${esc(t("totalCost"))} ${tag()}</div><div class="v">${fmtMoney(cost)}</div></div>
+            <div class="tot"><div class="k">${esc(t("totalGrant"))} ${tag()}</div><div class="v">${brussels ? esc(t("grantZero")) : fmtMoney(grant)}</div></div>
+            <div class="tot"><div class="k">${esc(t("totalNet"))} ${tag()}</div><div class="v">${fmtMoney(net)}</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-go="building" data-id="${esc(b.id)}">${esc(t("navCert"))}</button>
+        <button class="btn primary" data-go="dossier" data-id="${esc(b.id)}">${esc(t("openDossier"))}</button>
+        <button class="btn lime" id="sharePlanBtn">${esc(t("sharePlan"))}</button>
+      </div>
+      <p class="faint" style="margin-top:8px;font-size:12px">${esc(t("footer"))}</p>`;
+  }
+
+  function stageHtml(b, s, brussels) {
+    const title = state.lang === "fr" ? s.fr : s.en;
+    const detail = state.lang === "fr" ? s.frD : s.enD;
+    const grantTxt = brussels
+      ? (s.grant
+          ? `<div class="grant">${fmtMoney(s.grant)} · ${esc(t("suspended"))}</div>`
+          : `<div class="grant faint">—</div>`)
+      : `<div class="grant">${s.grant ? fmtMoney(s.grant) + " " + tag() : "—"}</div>`;
+    return `<div class="stage ${s.done ? "done" : ""} ${brussels && s.grant ? "suspended-grant" : ""}" data-stage="${s.n}">
+      <div class="stage-h">
+        <div class="stage-n">${s.done ? "✓" : s.n}</div>
+        <div><div class="ttl">${esc(title)}</div><div class="meta">${esc(t("afterLabel"))}: ${s.afterLabel} · ${esc(t("afterValue"))}: ${fmtNum(s.afterKwh)}</div></div>
+        <div class="money">${fmtMoney(s.cost)} ${tag()}</div>
+        ${grantTxt}
+        <div class="faint" style="font-size:11px">${esc(t("openStage"))}</div>
+      </div>
+      <div class="stage-b">${esc(detail)}</div>
+    </div>`;
+  }
+
+  function renderDossier() {
+    const b = getBuilding(state.buildingId);
+    const pack = docsFor(b.id);
+    const checks = state.checks[b.id] || pack.checks;
+    const pr = proofRatio(b.id);
+    const heldHtml = checks.map((c) => {
+      return `<label class="check ${c.done ? "done" : ""}">
+        <input type="checkbox" data-check="${esc(b.id + ":" + c.id)}" ${c.done ? "checked" : ""} />
+        <div>
+          <div class="ct">${esc(state.lang === "fr" ? c.fr : c.en)}</div>
+          ${c.done ? "" : `<span class="badge missing">${esc(t("missingBadge"))}</span>`}
+        </div>
+      </label>`;
+    }).join("");
+    const docRow = (d) => {
+      const name = state.lang === "fr" ? d.fr : d.en;
+      const badge = d.tag === "cert" ? t("autoFromCert") : d.tag === "plan" ? t("autoFromPlan") + (d.step ? " · " + d.step : "") : t("reviewQueue");
+      return `<div class="doc">
+        <div class="di">${icon("file")}</div>
+        <div><div class="dt">${esc(name)}</div><div class="ds">${fmtDateTime(d.date)} · ${esc(t("hashOf"))} ${esc(d.hash)}… ${tag()}</div></div>
+        <span class="badge ${d.tag === "queue" ? "queue" : ""}">${esc(d.tag === "plan" ? t("suggestedMatch") : badge)}</span>
+      </div>`;
+    };
+    const logHtml = pack.log.map((e) => `
+      <div class="log-row">
+        <div class="idx">#${String(e.i).padStart(3, "0")}</div>
+        <div>
+          <div class="act">${esc(state.lang === "fr" ? e.act_fr : e.act_en)}</div>
+          <div class="when">${fmtDateTime(e.at)}</div>
+          <div class="hash">${esc(t("hashOf"))} sha256:${esc(e.hash)}</div>
+          <div class="prev">${esc(t("prevHash"))} ${esc(e.prev)}</div>
+        </div>
+      </div>`).join("");
+
+    const progressNote = b.region === "brussels"
+      ? (meets2033(b) ? t("alreadyMet") : formatSpan(b.deadline) + " · 1 Jan 2033")
+      : t("deadlineNone");
+
+    $("main").innerHTML = `
+      <h1>${esc(t("dossierTitle"))}</h1>
+      <p class="lede">${esc(b.name)} — ${esc(t("dossierLede"))}</p>
+      <div class="actions no-print">
+        <button class="btn primary" id="pdfBtn">${esc(t("exportPdf"))}</button>
+        <button class="btn" id="shareBtn">${esc(t("shareLink"))}</button>
+        <button class="btn" id="agBtn">${esc(t("agVersion"))}</button>
+      </div>
+      <div class="grid-2" style="margin-bottom:14px">
+        <div class="card">
+          <div class="card-h"><h2>${esc(t("progressToDeadline"))}</h2>${tag()}</div>
+          <div class="card-b">
+            <div class="progress" style="height:10px"><span style="width:${pr.pct}%"></span></div>
+            <div class="muted" style="margin-top:8px">${esc(t("proofsHeld", { held: pr.held, need: pr.need }))} · ${esc(progressNote)}</div>
+            <div class="peb-pair">
+              <div>
+                <div class="unit">${esc(t("evBefore"))}</div>
+                <div class="peb-big" style="margin-top:6px"><span class="chip ${b.label}">${b.label}</span><div><div class="kwh" style="font-size:22px">${fmtNum(b.kwh)}</div><div class="unit">kWh/m²/${state.lang === "fr" ? "an" : "yr"}</div></div></div>
+              </div>
+              <div>
+                <div class="unit">${esc(t("evAfter"))}</div>
+                <p class="muted" style="margin:8px 0 0">${esc(t("evAfterMissing"))}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h2>${esc(t("missingTitle"))}</h2></div>
+          <div class="card-b">
+            <p class="muted" style="margin:0 0 8px">${esc(t("missingHint"))}</p>
+            ${heldHtml}
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-h"><h2>${esc(t("autoFiled"))}</h2></div>
+        <div class="card-b docs">${pack.filed.map(docRow).join("")}</div>
+      </div>
+      ${pack.queue.length ? `<div class="card" style="margin-bottom:14px">
+        <div class="card-h"><h2>${esc(t("reviewQueue"))}</h2></div>
+        <div class="card-b"><p class="muted" style="margin:0 0 8px">${esc(t("reviewHint"))}</p><div class="docs">${pack.queue.map(docRow).join("")}</div></div>
+      </div>` : ""}
+      <div class="card">
+        <div class="card-h"><h2>${esc(t("historyTitle"))}</h2></div>
+        <div class="card-b">
+          <p class="muted" style="margin:0 0 8px">${esc(t("historyHint"))}</p>
+          <div class="log">${logHtml}</div>
+        </div>
+      </div>
+      <p class="faint no-print" style="margin-top:18px;font-size:12px">${esc(t("footer"))}</p>`;
+  }
+
+  function renderReminders() {
+    const upcoming = state.reminders.filter((r) => !r.done).slice().sort(cmpDue);
+    const done = state.reminders.filter((r) => r.done);
+    const block = (list) => list.length === 0 ? `<div class="empty">${esc(t("noReminders"))}</div>` : list.map(reminderHtml).join("");
+    $("main").innerHTML = `
+      <h1>${esc(t("remindersTitle"))}</h1>
+      <p class="lede">${esc(t("remindersLede"))}</p>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-h"><h2>${esc(t("upcoming"))}</h2></div>
+        <div class="card-b">${block(upcoming)}</div>
+      </div>
+      ${done.length ? `<div class="card"><div class="card-h"><h2>${esc(t("doneSection"))}</h2></div><div class="card-b">${block(done)}</div></div>` : ""}
+      <p class="faint" style="margin-top:18px;font-size:12px">${esc(t("footer"))}</p>`;
+  }
+
+  function cmpDue(a, b) {
+    const da = a.snooze || a.due;
+    const db = b.snooze || b.due;
+    return da < db ? -1 : da > db ? 1 : 0;
+  }
+
+  function reminderHtml(r) {
+    const b = getBuilding(r.building);
+    const due = r.snooze || r.due;
+    const snoozeNote = r.snooze ? ` · ${t("snoozedUntil", { d: fmtDate(r.snooze) })}` : "";
+    return `<div class="remind ${r.done ? "done" : ""}">
+      <div>
+        <div class="rt">${esc(state.lang === "fr" ? r.fr : r.en)}</div>
+        <div class="rm">
+          <button class="icon-btn" style="padding:0;color:var(--teal-700);font-weight:700" data-go="building" data-id="${esc(b.id)}">${esc(b.name)}</button>
+          · ${esc(t(r.rec))} · ${esc(t(r.ch))}
+          · ${esc(t("dueOn", { d: fmtDate(due) }))}${esc(snoozeNote)} ${tag()}
+        </div>
+      </div>
+      <div class="racts no-print">
+        ${r.done ? "" : `<button class="btn" data-snooze="${esc(r.id)}">${esc(r.snooze ? t("unsnooze") : t("snooze"))}</button>`}
+        ${r.done ? "" : `<button class="btn primary" data-done="${esc(r.id)}">${esc(t("markDone"))}</button>`}
+      </div>
+    </div>`;
+  }
+
+  function toast(msg) {
+    const wrap = $("toasts");
+    const n = document.createElement("div");
+    n.className = "toast";
+    n.textContent = msg;
+    wrap.appendChild(n);
+    setTimeout(() => { n.remove(); }, 3200);
+  }
+
+  function openShareModal() {
+    const b = getBuilding(state.buildingId);
+    const exp = new Date();
+    exp.setDate(exp.getDate() + 14);
+    const expStr = exp.toISOString().slice(0, 10);
+    const link = "https://app.renopath.example/share/" + b.id + "-8f3a?exp=" + expStr;
+    $("modal-root").innerHTML = `
+      <div class="modal-back" id="modalBack">
+        <div class="modal" role="dialog" aria-modal="true">
+          <h3>${esc(t("shareTitle"))}</h3>
+          <p class="muted">${esc(t("shareBody"))}</p>
+          <div class="share-box" id="shareVal">${esc(link)}</div>
+          <p class="muted">${esc(t("shareExpires", { d: fmtDate(expStr) }))} ${tag()}</p>
+          <div class="actions">
+            <button class="btn primary" id="copyShare">${esc(t("copyLink"))}</button>
+            <button class="btn" id="closeShare">${esc(t("close"))}</button>
+          </div>
+        </div>
+      </div>`;
+    const close = () => { $("modal-root").innerHTML = ""; };
+    $("closeShare").onclick = close;
+    $("modalBack").addEventListener("click", (e) => { if (e.target.id === "modalBack") close(); });
+    $("copyShare").onclick = () => {
+      const val = link;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(val).catch(() => {});
+      }
+      toast(t("copied"));
+    };
+  }
+
+  function addDays(iso, n) {
+    const d = new Date(iso + "T12:00:00+01:00");
+    d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
+
+  function bindMainEvents() {
+    const main = $("main");
+    main.querySelectorAll("[data-open]").forEach((tr) => {
+      tr.addEventListener("click", () => go("building", tr.getAttribute("data-open")));
+    });
+    main.querySelectorAll("[data-filter]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const g = btn.getAttribute("data-filter");
+        const v = btn.getAttribute("data-val");
+        if (g === "region") state.region = v;
+        if (g === "status") state.status = v;
+        render();
+      });
+    });
+    main.querySelectorAll("[data-go]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        go(btn.getAttribute("data-go"), btn.getAttribute("data-id") || state.buildingId);
+      });
+    });
+    main.querySelectorAll(".stage-h").forEach((h) => {
+      h.addEventListener("click", () => h.parentElement.classList.toggle("open"));
+    });
+    const sharePlan = $("sharePlanBtn");
+    if (sharePlan) sharePlan.addEventListener("click", () => toast(t("planShared")));
+    const pdfBtn = $("pdfBtn");
+    if (pdfBtn) pdfBtn.addEventListener("click", () => { toast(t("exportToast")); setTimeout(() => window.print(), 250); });
+    const shareBtn = $("shareBtn");
+    if (shareBtn) shareBtn.addEventListener("click", openShareModal);
+    const agBtn = $("agBtn");
+    if (agBtn) agBtn.addEventListener("click", () => toast(t("agToast")));
+    main.querySelectorAll("[data-check]").forEach((box) => {
+      box.addEventListener("change", () => {
+        const [bid, cid] = box.getAttribute("data-check").split(":");
+        const list = state.checks[bid] || [];
+        const item = list.find((c) => c.id === cid);
+        if (item) item.done = box.checked;
+        render();
+      });
+    });
+    main.querySelectorAll("[data-done]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const r = state.reminders.find((x) => x.id === btn.getAttribute("data-done"));
+        if (r) { r.done = true; toast(t("markedDone")); render(); }
+      });
+    });
+    main.querySelectorAll("[data-snooze]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const r = state.reminders.find((x) => x.id === btn.getAttribute("data-snooze"));
+        if (!r) return;
+        if (r.snooze) r.snooze = null;
+        else r.snooze = addDays(r.due, 7);
+        toast(t("reminderSnoozed"));
+        render();
+      });
+    });
+  }
+
+  /* Fix search rebind: use a named handler stored on state */
+  function bindSearch() {
+    const q = $("q");
+    if (!q) return;
+    q.oninput = () => {
+      state.query = q.value;
+      if (state.view !== "portfolio") {
+        state.view = "portfolio";
+        history.pushState(null, "", "#/portfolio");
+      }
+      const caret = q.selectionStart;
+      renderPortfolio();
+      bindMainEvents();
+      renderTopbar();
+      const nq = $("q");
+      if (nq) {
+        nq.value = state.query;
+        nq.focus();
+        try { nq.setSelectionRange(caret, caret); } catch (e) {}
+        bindSearch();
+      }
+    };
+  }
+
+  function render() {
+    parseHash();
+    renderSidebar();
+    renderBanner();
+    renderTopbar();
+    if (state.view === "portfolio") renderPortfolio();
+    else if (state.view === "plan") renderPlan();
+    else if (state.view === "dossier") renderDossier();
+    else if (state.view === "reminders") renderReminders();
+    else renderBuilding();
+    bindMainEvents();
+    bindSearch();
+    const menu = $("menuBtn");
+    if (menu) menu.onclick = () => { state.sidebarOpen = !state.sidebarOpen; renderSidebar(); };
+    $("scrim").onclick = () => { state.sidebarOpen = false; renderSidebar(); };
+    $("sidebar").querySelectorAll("[data-go]").forEach((btn) => {
+      btn.onclick = () => go(btn.getAttribute("data-go"), state.buildingId);
+    });
+    $("sidebar").querySelectorAll("[data-lang]").forEach((btn) => {
+      btn.onclick = () => setLang(btn.getAttribute("data-lang"));
+    });
+  };
+
+  try {
+    const saved = localStorage.getItem("renopath-lang-v2");
+    if (saved === "en" || saved === "fr") state.lang = saved;
+  } catch (e) {}
+  const params = new URLSearchParams(location.search);
+  if (params.get("lang") === "en" || params.get("lang") === "fr") state.lang = params.get("lang");
+
+  window.addEventListener("hashchange", () => render());
+  window.addEventListener("popstate", () => render());
+  if (!location.hash) history.replaceState(null, "", "#/portfolio");
+  document.documentElement.lang = state.lang;
+  document.title = t("title");
+  render();
+})();
+</script>
+</body>
+</html>
