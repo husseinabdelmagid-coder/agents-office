@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-11-23T14:14:19Z",
+  "updatedAt": "2026-11-23T14:17:09Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "3a48a61f-5e48-4510-80f4-83a668552dec",
-    "activeAgentName": "El Profesor \u00b7 Deep researcher",
+    "activeAgentId": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
+    "activeAgentName": "Neo \u00b7 Coding Wizard",
     "lastBusyAt": "2026-11-22T18:24:02.196000Z",
     "liveFeed": "ok"
   },
@@ -36,7 +36,9 @@
       "status": "working",
       "task": "Deep research",
       "task_title": "Deep research",
-      "color": "#c9473f"
+      "color": "#c9473f",
+      "taskId": "c99bf4ae5f43df97",
+      "sendToAgent": "Neo"
     },
     {
       "id": "d5d825f5-d637-4a7e-b2e8-48e5d5048e5e",
@@ -51,10 +53,12 @@
       "id": "e86192fb-f95f-40d2-ad1a-21023a9adac2",
       "name": "Neo \u00b7 Coding Wizard",
       "title": "Coding specialist",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
-      "color": "#2a9d8f"
+      "status": "working",
+      "task": "Second Brain web app",
+      "task_title": "Second Brain web app",
+      "color": "#2a9d8f",
+      "taskId": "c99bf4ae5f43df97",
+      "sendToAgent": "El Profesor"
     },
     {
       "id": "a04bdbb3-b652-4846-ad72-f8f0149c0689",
