@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-23T12:34:07Z",
+  "updatedAt": "2026-11-23T12:34:57Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
@@ -67,7 +67,7 @@
     },
     {
       "id": "2335cf8d-309f-4f2d-b512-3715a9bbff07",
-      "name": "Pixel \u00b7 Photo & Video Studio",
+      "name": "Da Vinci",
       "title": "Photo & Video Studio",
       "status": "idle",
       "task": "Standing by",
