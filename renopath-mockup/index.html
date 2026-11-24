@@ -400,11 +400,97 @@
     .peb-big .unit { font-size: 12px; color: var(--faint); }
     .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
     .fine-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
-    @media (max-width: 1100px) {
+
+    /* —— v2 visual dashboard & touch-friendly UI —— */
+    .nav-btn { min-height: 44px; padding: 10px 12px; }
+    .btn { min-height: 44px; padding: 10px 16px; }
+    .menu-btn { width: 44px; height: 44px; }
+    .seg button { min-height: 40px; padding: 8px 14px; }
+    .lang-toggle button { min-height: 36px; }
+    .page-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+    .page-head h1 { margin-bottom: 0; }
+    .page-head .lede { margin: 6px 0 0; }
+    .kpi { position: relative; }
+    .kpi .v { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .kpi .delta { font-size: 12px; font-weight: 700; }
+    .kpi .delta.up { color: var(--ok); }
+    .kpi .delta.down { color: var(--danger); }
+    .kpi .delta.flat { color: var(--faint); }
+    .kpi .spark { display: block; margin-top: 8px; width: 100%; height: 28px; }
+    .dash-row { display: grid; gap: 14px; margin-bottom: 14px; }
+    .dash-row.kpis4 { grid-template-columns: repeat(4, 1fr); margin-bottom: 14px; }
+    .dash-row.two { grid-template-columns: 1fr 1.4fr; }
+    .dash-row.two-eq { grid-template-columns: 1fr 1fr; }
+    .dash-row.three { grid-template-columns: 1.1fr 0.9fr 1.1fr; }
+    .chart-card .card-h { align-items: center; }
+    .chart-card h2 { font-size: 14px; }
+    .chart-svg { width: 100%; height: auto; display: block; overflow: visible; }
+    .chart-svg .hit { cursor: pointer; }
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; font-size: 11px; color: var(--muted); }
+    .chart-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+    .chart-legend button { border: 0; background: transparent; color: inherit; padding: 4px 0; min-height: 32px; cursor: pointer; font-weight: 600; }
+    .chart-legend button:hover { color: var(--ink); }
+    .chart-tip {
+      position: fixed; z-index: 90; display: none;
+      background: var(--teal-950); color: #fff; padding: 8px 10px; border-radius: 10px;
+      font-size: 12px; line-height: 1.35; max-width: 260px; pointer-events: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,.22);
+    }
+    .chart-tip.on { display: block; }
+    .chart-tip b { display: block; margin-bottom: 2px; }
+    .attn-list { display: flex; flex-direction: column; gap: 8px; }
+    .attn {
+      display: grid; grid-template-columns: 36px 1fr auto; gap: 10px; align-items: center;
+      border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: #fff;
+      text-align: left; width: 100%; color: inherit; min-height: 64px; cursor: pointer;
+    }
+    .attn:hover { border-color: var(--teal-700); box-shadow: var(--shadow); }
+    .attn .at { font-weight: 700; font-size: 13px; }
+    .attn .as { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .ring-wrap { display: flex; align-items: center; gap: 16px; }
+    .ring-meta .big { font-size: 22px; font-weight: 750; letter-spacing: -.03em; }
+    .bcards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .bcard {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 16px; text-align: left; color: inherit;
+      width: 100%; cursor: pointer; min-height: 168px;
+      display: flex; flex-direction: column; gap: 8px;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+    .bcard:hover { border-color: var(--teal-700); box-shadow: 0 6px 20px rgba(16,40,36,.1); transform: translateY(-1px); }
+    .bcard-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .bcard h3 { margin: 0; font-size: 15px; letter-spacing: -.02em; }
+    .bcard-mid { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+    .bcard-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .peb-scale { width: 100%; }
+    .kwh-gauge { width: 100%; }
+    .gantt-scroller, .cal-scroller { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .wf-svg, .gantt-svg { width: 100%; min-width: 0; }
+    .cal-svg { min-width: 520px; }
+    .cal-day { fill: #fff; stroke: var(--line); }
+    .cal-day.has { fill: var(--lime-wash); stroke: var(--teal-700); cursor: pointer; }
+    .cal-day.today { stroke: var(--teal-900); stroke-width: 2; }
+    .hatch { fill: url(#hatchSuspended); }
+    .axis { font-size: 10px; fill: var(--faint); }
+    .axis-title { font-size: 11px; fill: var(--muted); font-weight: 600; }
+    .milestone { stroke: var(--danger); stroke-dasharray: 4 3; }
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 6px; min-height: 36px;
+      border-radius: 999px; border: 1px solid var(--teal-700); background: var(--info-bg);
+      color: var(--teal-900); font-weight: 700; font-size: 12px; padding: 0 12px; cursor: pointer;
+    }
+    .view-toggle .seg { margin-left: 0; }
+
+    @media (max-width: 1200px) {
+      .bcards { grid-template-columns: repeat(2, 1fr); }
+      .dash-row.three { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 980px) {
+      .dash-row.kpis4, .dash-row.two, .dash-row.two-eq, .dash-row.three { grid-template-columns: 1fr 1fr; }
       .kpis { grid-template-columns: repeat(2, 1fr); }
       .grid-2, .grid-3, .totals, .stage-h { grid-template-columns: 1fr; }
       .stage-h { display: flex; flex-wrap: wrap; }
-      .search { display: none; }
+      .search { width: 180px; }
       .sidebar {
         position: fixed; left: 0; top: 0; z-index: 50;
         transform: translateX(-105%); transition: transform .2s ease;
@@ -413,11 +499,18 @@
       .menu-btn { display: inline-flex; }
       .scrim.on { display: block; }
     }
-    @media (max-width: 720px) {
+    @media (max-width: 768px) {
       main { padding: 16px 14px 40px; }
-      .kpis { grid-template-columns: 1fr; }
+      .dash-row.kpis4, .dash-row.two, .dash-row.two-eq, .dash-row.three, .kpis, .bcards { grid-template-columns: 1fr; }
       .userpill .umeta { display: none; }
+      .search { display: none; }
+      .page-head { flex-direction: column; }
+      h1 { font-size: 20px; }
     }
+    @media (min-width: 981px) and (max-width: 1100px) {
+      .search { width: 160px; }
+    }
+
     @media print {
       .sidebar, .banner, .topbar, .toast-wrap, .modal-back, .scrim, .no-print, .menu-btn { display: none !important; }
       .workspace { display: block; }
@@ -622,6 +715,47 @@
       evAfterMissing: "Nouveau certificat non encore déposé",
       m2: "m²",
       missingBadge: "Manquant",
+      navDashboard: "Vue d’ensemble",
+      dashTitle: "Tableau de bord du portefeuille",
+      dashLede: "Tendances, indicateurs et aides visuelles pour tout le portefeuille à Bruxelles et en Wallonie. Tous les chiffres sont des données d’exemple.",
+      dashCta: "Voir les immeubles à risque",
+      kpiAvgKwh: "Moyenne du portefeuille",
+      kpiAvgKwhSub: "Après travaux (indic.) : {n} kWh/m²/an",
+      vsYear: "sur 1 an",
+      vs2025: "vs 2025",
+      chartPeb: "Répartition des étiquettes PEB",
+      chartEnergy: "Tendance énergétique",
+      chartTimeline: "Échéances sur la ligne de temps",
+      chartCapex: "Investissements prévus par année",
+      chartEvidence: "Preuves et répartition régionale",
+      chartRegion: "Répartition régionale",
+      chartClickHint: "Cliquez une classe, une région ou un immeuble pour filtrer ou ouvrir.",
+      buildingsShort: "immeubles",
+      ms2033: "Bruxelles 275 · 2033",
+      ms2045: "150 kWh dès 2045",
+      ms2030: "PEB obligatoire (au plus tôt)",
+      histSeries: "Historique (certificats, exemple)",
+      projSeries: "Projection après travaux",
+      cat_envelope: "Enveloppe",
+      cat_windows: "Châssis / ventilation",
+      cat_heating: "Chauffage",
+      cat_cert: "Audit / certificat",
+      suspendedSeries: "RENOLUTION suspendu",
+      needsAttention: "Points d’attention",
+      byArea: "Par surface de plancher",
+      viewCards: "Cartes",
+      viewTable: "Tableau",
+      pebScale: "Échelle PEB",
+      kwhGauge: "Consommation actuelle et visée",
+      scaleNow: "Aujourd’hui",
+      afterWorks: "Après travaux",
+      ganttTitle: "Calendrier des étapes",
+      waterfallTitle: "Cascade des coûts",
+      calTitle: "Calendrier des rappels",
+      calLater: "Plus tard",
+      evidenceHint: "Preuves déposées sur l’ensemble du portefeuille.",
+      filterLabel: "Classe {l}",
+      clearFilter: "Effacer",
     },
     en: {
       title: "RenoPath — mock-up",
@@ -799,6 +933,47 @@
       evAfterMissing: "New certificate not yet filed",
       m2: "m²",
       missingBadge: "Missing",
+      navDashboard: "Overview",
+      dashTitle: "Portfolio dashboard",
+      dashLede: "Trends, KPIs and visual aids for the whole Brussels and Wallonia portfolio. Every figure is example data.",
+      dashCta: "View buildings at risk",
+      kpiAvgKwh: "Portfolio average",
+      kpiAvgKwhSub: "After works (indic.): {n} kWh/m²/yr",
+      vsYear: "vs last year",
+      vs2025: "vs 2025",
+      chartPeb: "PEB label distribution",
+      chartEnergy: "Energy trend",
+      chartTimeline: "Deadline timeline",
+      chartCapex: "Planned capex by year",
+      chartEvidence: "Evidence and region split",
+      chartRegion: "Region split",
+      chartClickHint: "Click a class, a region or a building to filter or open it.",
+      buildingsShort: "buildings",
+      ms2033: "Brussels 275 · 2033",
+      ms2045: "150 kWh from 2045",
+      ms2030: "PEB mandatory (earliest)",
+      histSeries: "History (certificates, example)",
+      projSeries: "Projected after works",
+      cat_envelope: "Envelope",
+      cat_windows: "Windows / ventilation",
+      cat_heating: "Heating",
+      cat_cert: "Audit / certificate",
+      suspendedSeries: "RENOLUTION suspended",
+      needsAttention: "Needs attention",
+      byArea: "By floor area",
+      viewCards: "Cards",
+      viewTable: "Table",
+      pebScale: "PEB scale",
+      kwhGauge: "Current and target use",
+      scaleNow: "Now",
+      afterWorks: "After works",
+      ganttTitle: "Stage timeline",
+      waterfallTitle: "Cost waterfall",
+      calTitle: "Reminder calendar",
+      calLater: "Later",
+      evidenceHint: "Proofs filed across the portfolio.",
+      filterLabel: "Label {l}",
+      clearFilter: "Clear",
     }
   };
 
@@ -1082,6 +1257,8 @@
     region: "all",
     status: "all",
     query: "",
+    portfolioView: "cards",
+    labelFilter: "all",
     sidebarOpen: false,
     parsing: false,
     lastUpload: null,
@@ -1157,6 +1334,9 @@
       folder: '<path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" fill="none" stroke="currentColor" stroke-width="1.8"/>',
       bell: '<path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15L6 16zm4 2a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
       search: '<circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 15.5 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+      dash: '<path d="M4 13h6v7H4v-7zm10-6h6v13h-6V7zM4 4h6v7H4V4z" fill="currentColor"/>',
+      cards: '<path d="M4 5h7v6H4V5zm9 0h7v6h-7V5zM4 13h7v6H4v-6zm9 0h7v6h-7v-6z" fill="currentColor"/>',
+      table: '<path d="M4 5h16v14H4V5z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 9h16M10 5v14" stroke="currentColor" stroke-width="1.7"/>',
       upload: '<path d="M12 16V5m0 0 4 4M12 5 8 9M4 19h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
       plus: '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
       leaf: '<path d="M5 19c8-1 13-8 14-15-8 1-14 7-14 15z" fill="#164E50"/><path d="M6 18c3-3 6-6 9-12" stroke="#164E50" stroke-width="1.4" fill="none"/>',
@@ -1218,11 +1398,636 @@
     return t("countdownIn", { t: bits.join(" · ") });
   }
 
+
+  const PEB_COLORS = { A:"#007A3D", B:"#50A30A", C:"#C0C000", D:"#F7E300", E:"#F5A000", F:"#E85D04", G:"#D0001F" };
+  const CAT_COLORS = { envelope:"#164E50", windows:"#21776A", heating:"#88DE7B", cert:"#A3B8B3" };
+
+  /* Indicative works years — example schedule, consistent with existing stages. */
+  const STAGE_META = {
+    acacias:     {1:{year:2027,cat:"envelope"},2:{year:2028,cat:"envelope"},3:{year:2029,cat:"windows"},4:{year:2030,cat:"heating"},5:{year:2031,cat:"heating"},6:{year:2031,cat:"cert"}},
+    stgilles:    {1:{year:2026,cat:"envelope"},2:{year:2028,cat:"envelope"},3:{year:2029,cat:"windows"},4:{year:2030,cat:"heating"},5:{year:2030,cat:"cert"}},
+    ixelles:     {1:{year:2029,cat:"envelope"},2:{year:2030,cat:"heating"},3:{year:2030,cat:"cert"}},
+    montgomery:  {1:{year:2027,cat:"envelope"},2:{year:2030,cat:"heating"},3:{year:2031,cat:"cert"}},
+    uccle:       {1:{year:2026,cat:"cert"}},
+    namur:       {1:{year:2027,cat:"envelope"},2:{year:2028,cat:"envelope"},3:{year:2029,cat:"heating"},4:{year:2030,cat:"envelope"}},
+    "liege-house":{1:{year:2027,cat:"envelope"},2:{year:2028,cat:"envelope"},3:{year:2029,cat:"windows"},4:{year:2030,cat:"heating"}},
+    coteaux:     {1:{year:2027,cat:"cert"},2:{year:2028,cat:"envelope"},3:{year:2029,cat:"windows"},4:{year:2030,cat:"heating"}},
+    schaerbeek:  {1:{year:2028,cat:"envelope"},2:{year:2029,cat:"envelope"},3:{year:2030,cat:"windows"},4:{year:2031,cat:"heating"},5:{year:2031,cat:"heating"},6:{year:2031,cat:"cert"}}
+  };
+
+  /* Example historical portfolio averages (certificates), 2018–2025. */
+  const ENERGY_HISTORY = [
+    [2018, 348],[2019, 342],[2020, 336],[2021, 329],[2022, 322],[2023, 316],[2024, 310],[2025, 307]
+  ];
+  const KPI_SPARK = {
+    buildings: [5,5,6,6,7,7,8,8],
+    atRisk: [4,4,3,3,3,3,2,2],
+    compliant: [1,1,1,2,2,2,3,3],
+    kwh: [348,342,336,329,322,316,310,307]
+  };
+
+  function stageMeta(b, s) {
+    const pack = STAGE_META[b.id] || {};
+    return pack[s.n] || { year: 2028, cat: "envelope" };
+  }
+
+  function totalArea() {
+    return buildings().reduce((s, b) => s + b.area, 0);
+  }
+  function areaWeighted(kwhMap) {
+    let sum = 0, area = 0;
+    buildings().forEach((b) => {
+      const k = kwhMap[b.id] != null ? kwhMap[b.id] : b.kwh;
+      sum += k * b.area;
+      area += b.area;
+    });
+    return area ? sum / area : 0;
+  }
+  function certAverage() {
+    const m = {};
+    buildings().forEach((b) => { m[b.id] = b.kwh; });
+    return areaWeighted(m);
+  }
+  function kwhAfterYear(year) {
+    const kwh = {};
+    buildings().forEach((b) => { kwh[b.id] = b.kwh; });
+    buildings().forEach((b) => {
+      b.stages.slice().sort((a, c) => a.n - c.n).forEach((s) => {
+        if (stageMeta(b, s).year <= year) kwh[b.id] = s.afterKwh;
+      });
+    });
+    return areaWeighted(kwh);
+  }
+  function projectedAfterWorks() {
+    const kwh = {};
+    buildings().forEach((b) => {
+      const last = b.stages[b.stages.length - 1];
+      kwh[b.id] = last ? last.afterKwh : b.kwh;
+    });
+    return areaWeighted(kwh);
+  }
+  function proofPortfolio() {
+    let held = 0, need = 0;
+    buildings().forEach((b) => {
+      const r = proofRatio(b.id);
+      held += r.held; need += r.need;
+    });
+    return { held, need, pct: need ? Math.round((held / need) * 100) : 0 };
+  }
+  function capexData() {
+    const years = [2026, 2027, 2028, 2029, 2030, 2031];
+    const data = {};
+    years.forEach((y) => { data[y] = { envelope:0, windows:0, heating:0, cert:0, grants:0, suspended:0 }; });
+    buildings().forEach((b) => {
+      b.stages.forEach((s) => {
+        const m = stageMeta(b, s);
+        if (!data[m.year]) return;
+        data[m.year][m.cat] += s.cost;
+        if (b.region === "brussels") data[m.year].suspended += (s.grant || 0);
+        else data[m.year].grants += (s.grant || 0);
+      });
+    });
+    return { years, data };
+  }
+
+  /* ——— charts ——— */
+  function ensureTip() {
+    let el = document.getElementById("chartTip");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "chartTip";
+      el.className = "chart-tip";
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+  function showTip(ev, html) {
+    const el = ensureTip();
+    el.innerHTML = html;
+    el.classList.add("on");
+    const x0 = ev.clientX != null ? ev.clientX : (ev.changedTouches && ev.changedTouches[0].clientX) || 0;
+    const y0 = ev.clientY != null ? ev.clientY : (ev.changedTouches && ev.changedTouches[0].clientY) || 0;
+    const r = el.getBoundingClientRect();
+    let x = x0 + 14, y = y0 + 14;
+    if (x + r.width > window.innerWidth - 8) x = x0 - r.width - 12;
+    if (y + r.height > window.innerHeight - 8) y = y0 - r.height - 12;
+    el.style.left = Math.max(8, x) + "px";
+    el.style.top = Math.max(8, y) + "px";
+  }
+  function hideTip() {
+    const el = document.getElementById("chartTip");
+    if (el) el.classList.remove("on");
+  }
+
+  function sparkline(vals, color) {
+    const w = 120, h = 28;
+    const min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+    const span = max - min || 1;
+    const pts = vals.map((v, i) => {
+      const x = (i / (vals.length - 1)) * w;
+      const y = h - 2 - ((v - min) / span) * (h - 4);
+      return x.toFixed(1) + "," + y.toFixed(1);
+    }).join(" ");
+    return `<svg class="spark" viewBox="0 0 ${w} ${h}" width="100%" height="28" preserveAspectRatio="none" aria-hidden="true"><polyline fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${pts}"/></svg>`;
+  }
+
+  function svgRing(pct, size, stroke) {
+    const s = size || 88, sw = stroke || 10;
+    const r = (s / 2) - sw;
+    const c = 2 * Math.PI * r;
+    const p = Math.max(0, Math.min(100, pct));
+    const dash = (p / 100) * c;
+    return `<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" aria-hidden="true">
+      <circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="#e6ecea" stroke-width="${sw}"/>
+      <circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="#21776A" stroke-width="${sw}"
+        stroke-linecap="round" stroke-dasharray="${dash} ${c - dash}" transform="rotate(-90 ${s/2} ${s/2})"/>
+    </svg>`;
+  }
+
+  function pebDonutChart(counts) {
+    const labels = ["A","B","C","D","E","F","G"];
+    const total = labels.reduce((s, l) => s + (counts[l] || 0), 0) || 1;
+    const cx = 90, cy = 90, r = 58, r0 = 34;
+    let a0 = -Math.PI / 2;
+    const slices = [];
+    labels.forEach((l) => {
+      const n = counts[l] || 0;
+      const a1 = a0 + (n / total) * Math.PI * 2;
+      if (n > 0) {
+        const large = (a1 - a0) > Math.PI ? 1 : 0;
+        const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+        const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+        const ix0 = cx + r0 * Math.cos(a0), iy0 = cy + r0 * Math.sin(a0);
+        const ix1 = cx + r0 * Math.cos(a1), iy1 = cy + r0 * Math.sin(a1);
+        const d = `M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} L ${ix1} ${iy1} A ${r0} ${r0} 0 ${large} 0 ${ix0} ${iy0} Z`;
+        const tip = `${l}: ${n} · ${Math.round((n / total) * 100)}%`;
+        slices.push(`<path class="hit" d="${d}" fill="${PEB_COLORS[l]}" data-tip="${esc(tip)}" data-filter-label="${l}"/>`);
+      }
+      a0 = a1;
+    });
+    const max = Math.max.apply(null, labels.map((l) => counts[l] || 0)) || 1;
+    const bars = labels.map((l, i) => {
+      const n = counts[l] || 0;
+      const x = 190, y = 14 + i * 22, w = Math.max(n ? 8 : 0, (n / max) * 90);
+      return `<g class="hit" data-filter-label="${l}" data-tip="${l}: ${n}">
+        <text class="axis" x="${x}" y="${y + 11}" font-weight="700">${l}</text>
+        <rect x="${x + 16}" y="${y + 2}" width="${w}" height="12" rx="3" fill="${PEB_COLORS[l]}"/>
+        <text class="axis" x="${x + 22 + w}" y="${y + 12}">${n}</text>
+      </g>`;
+    }).join("");
+    return `<svg class="chart-svg" viewBox="0 0 320 190" role="img" aria-label="${esc(t("chartPeb"))}" data-chart="peb-distribution">
+      ${slices.join("")}
+      <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="18" font-weight="750" fill="#181818">${total}</text>
+      <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="10" fill="#7F7F7F">${esc(t("buildingsShort"))}</text>
+      ${bars}
+    </svg>`;
+  }
+
+  function deadlineTimeline() {
+    const w = 640, h = 168, padL = 36, padR = 16, padT = 28, padB = 28;
+    const inner = w - padL - padR;
+    const y0 = 2026, y1 = 2045;
+    const xOf = (year, month) => padL + ((year + (month || 0) / 12) - y0) / (y1 - y0) * inner;
+    const ticks = [];
+    for (let y = y0; y <= y1; y += 1) {
+      if (y === y0 || y === y1 || y % 3 === 0 || y === 2033) {
+        const x = xOf(y, 0);
+        ticks.push(`<line x1="${x}" y1="${padT}" x2="${x}" y2="${h - padB}" stroke="#E2E8E5"/>
+          <text class="axis" x="${x}" y="${h - 10}" text-anchor="middle">${y}</text>`);
+      }
+    }
+    const x2033 = xOf(2033, 0);
+    const x2045 = xOf(2045, 0);
+    const x2030 = xOf(2030, 11);
+    const bxl = buildings().filter((b) => b.region === "brussels");
+    const wal = buildings().filter((b) => b.region === "wallonia");
+    const dots = bxl.map((b, i) => {
+      const x = x2033;
+      const y = padT + 14 + i * 16;
+      const tip = `${b.name} · PEB ${b.label} · ${fmtNum(b.kwh)} · 1 Jan 2033${meets2033(b) ? " · " + t("alreadyMet") : ""}`;
+      return `<g class="hit" data-go-building="${b.id}" data-tip="${esc(tip)}">
+        <circle cx="${x}" cy="${y}" r="7" fill="${PEB_COLORS[b.label]}" stroke="#fff" stroke-width="1.5"/>
+        <text class="axis" x="${x + 12}" y="${y + 4}" fill="#181818">${esc(b.name.split(" ").pop())}</text>
+      </g>`;
+    }).join("");
+    const walDots = wal.map((b, i) => {
+      const x = padL + inner - 8 - i * 18;
+      const y = h - padB - 10;
+      const tip = `${b.name} · ${t("pathwayOnly")} · PEB ${b.label}`;
+      return `<g class="hit" data-go-building="${b.id}" data-tip="${esc(tip)}">
+        <circle cx="${x}" cy="${y}" r="6" fill="${PEB_COLORS[b.label]}" stroke="#fff" stroke-width="1.5"/>
+      </g>`;
+    }).join("");
+    return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("chartTimeline"))}" data-chart="deadline-timeline">
+      ${ticks.join("")}
+      <line x1="${x2033}" y1="${padT - 6}" x2="${x2033}" y2="${h - padB}" class="milestone"/>
+      <text x="${x2033 + 4}" y="${padT - 8}" font-size="10" fill="#B42318" font-weight="700">${esc(t("ms2033"))}</text>
+      <line x1="${x2045}" y1="${padT}" x2="${x2045}" y2="${h - padB}" stroke="#21776A" stroke-dasharray="3 3"/>
+      <text x="${x2045 - 4}" y="${padT - 8}" font-size="10" fill="#21776A" text-anchor="end" font-weight="700">${esc(t("ms2045"))}</text>
+      <line x1="${x2030}" y1="${padT}" x2="${x2030}" y2="${h - padB}" stroke="#7F7F7F" stroke-dasharray="2 3"/>
+      <text x="${x2030 - 4}" y="${padT - 8}" font-size="9" fill="#7F7F7F" text-anchor="end">${esc(t("ms2030"))}</text>
+      <text class="axis-title" x="${padL}" y="14">${esc(t("brussels"))}</text>
+      ${dots}
+      <text class="axis-title" x="${padL}" y="${h - padB - 8}">${esc(t("wallonia"))}</text>
+      ${walDots}
+    </svg>`;
+  }
+
+  function energyTrendChart() {
+    const hist = ENERGY_HISTORY.slice();
+    const now = certAverage();
+    hist.push([2026, Math.round(now)]);
+    const proj = [[2026, Math.round(now)]];
+    for (let y = 2027; y <= 2033; y++) proj.push([y, Math.round(kwhAfterYear(y))]);
+    const all = hist.concat(proj);
+    const ys = all.map((p) => p[1]).concat([275, 150]);
+    const minY = 80, maxY = Math.max.apply(null, ys) + 20;
+    const w = 640, h = 210, l = 40, r = 12, top = 18, bot = 28;
+    const x0 = 2018, x1 = 2033;
+    const xOf = (yr) => l + ((yr - x0) / (x1 - x0)) * (w - l - r);
+    const yOf = (v) => top + (1 - (v - minY) / (maxY - minY)) * (h - top - bot);
+    const poly = (pts) => pts.map((p) => xOf(p[0]).toFixed(1) + "," + yOf(p[1]).toFixed(1)).join(" ");
+    const ticks = [];
+    for (let y = 2018; y <= 2033; y += 3) {
+      ticks.push(`<line x1="${xOf(y)}" y1="${top}" x2="${xOf(y)}" y2="${h-bot}" stroke="#E2E8E5"/><text class="axis" x="${xOf(y)}" y="${h-10}" text-anchor="middle">${y}</text>`);
+    }
+    [150, 275].forEach((th, i) => {
+      ticks.push(`<line x1="${l}" y1="${yOf(th)}" x2="${w-r}" y2="${yOf(th)}" stroke="${i ? "#B42318" : "#21776A"}" stroke-dasharray="4 3"/>
+        <text x="${l + 4}" y="${yOf(th) - 4}" font-size="10" fill="${i ? "#B42318" : "#21776A"}" font-weight="700">${th}</text>`);
+    });
+    const hits = hist.concat(proj.slice(1)).map((p) => {
+      const kind = p[0] <= 2026 ? t("histSeries") : t("projSeries");
+      return `<circle class="hit" cx="${xOf(p[0])}" cy="${yOf(p[1])}" r="7" fill="${p[0] <= 2026 ? "#164E50" : "#88DE7B"}" stroke="#fff" stroke-width="1.5"
+        data-tip="${esc(kind + " · " + p[0] + " · " + p[1] + " kWh/m²")}"/>`;
+    }).join("");
+    return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("chartEnergy"))}" data-chart="energy-trend">
+      ${ticks.join("")}
+      <polyline fill="none" stroke="#164E50" stroke-width="2.4" points="${poly(hist)}"/>
+      <polyline fill="none" stroke="#88DE7B" stroke-width="2.4" stroke-dasharray="6 4" points="${poly(proj)}"/>
+      ${hits}
+    </svg>
+    <div class="chart-legend">
+      <span><i style="background:#164E50"></i>${esc(t("histSeries"))} ${tag()}</span>
+      <span><i style="background:#88DE7B"></i>${esc(t("projSeries"))} ${tag()}</span>
+      <span><i style="background:#B42318"></i>275 kWh — 2033</span>
+      <span><i style="background:#21776A"></i>150 kWh — ${esc(t("ms2045"))}</span>
+    </div>`;
+  }
+
+  function capexChart() {
+    const { years, data } = capexData();
+    const cats = ["envelope","windows","heating","cert"];
+    const w = 640, h = 230, l = 44, r = 12, top = 16, bot = 36;
+    const groupW = (w - l - r) / years.length;
+    const max = Math.max.apply(null, years.map((y) => data[y].envelope + data[y].windows + data[y].heating + data[y].cert + data[y].suspended)) || 1;
+    const yOf = (v) => top + (1 - v / (max * 1.08)) * (h - top - bot);
+    const bars = years.map((year, i) => {
+      const x = l + i * groupW + groupW * 0.18;
+      const bw = groupW * 0.44;
+      let acc = 0;
+      const parts = cats.map((cat) => {
+        const v = data[year][cat];
+        const y = yOf(acc + v), y1 = yOf(acc);
+        acc += v;
+        if (!v) return "";
+        const tip = `${year} · ${t("cat_" + cat)} · ${fmtMoney(v)}`;
+        return `<rect class="hit" x="${x}" y="${y}" width="${bw}" height="${Math.max(0, y1 - y)}" fill="${CAT_COLORS[cat]}" data-tip="${esc(tip)}"/>`;
+      }).join("");
+      const gx = x + bw + 4;
+      const gw = groupW * 0.18;
+      const grantH = data[year].grants;
+      const susp = data[year].suspended;
+      const grantBar = grantH ? `<rect class="hit" x="${gx}" y="${yOf(grantH)}" width="${gw}" height="${Math.max(0, yOf(0) - yOf(grantH))}" fill="#16794A" data-tip="${esc(year + " · " + t("stageGrant") + " · " + fmtMoney(grantH))}"/>` : "";
+      const suspBar = susp ? `<rect class="hit hatch" x="${gx}" y="${yOf(susp)}" width="${gw}" height="${Math.max(0, yOf(0) - yOf(susp))}" data-tip="${esc(year + " · " + t("suspendedSeries") + " · " + fmtMoney(susp))}"/>` : "";
+      return `<g>${parts}${grantBar}${suspBar}<text class="axis" x="${l + i * groupW + groupW / 2}" y="${h - 12}" text-anchor="middle">${year}</text></g>`;
+    }).join("");
+    const yticks = [0, 0.5, 1].map((f) => {
+      const v = max * f;
+      return `<line x1="${l}" y1="${yOf(v)}" x2="${w-r}" y2="${yOf(v)}" stroke="#E2E8E5"/><text class="axis" x="${l-6}" y="${yOf(v)+3}" text-anchor="end">${fmtMoney(v).replace(/\s/g,"")}</text>`;
+    }).join("");
+    return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("chartCapex"))}" data-chart="capex-plan">
+      <defs><pattern id="hatchSuspended" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <rect width="6" height="6" fill="#FEE4E2"/>
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#B42318" stroke-width="3"/>
+      </pattern></defs>
+      ${yticks}${bars}
+    </svg>
+    <div class="chart-legend">
+      <span><i style="background:#164E50"></i>${esc(t("cat_envelope"))}</span>
+      <span><i style="background:#21776A"></i>${esc(t("cat_windows"))}</span>
+      <span><i style="background:#88DE7B"></i>${esc(t("cat_heating"))}</span>
+      <span><i style="background:#A3B8B3"></i>${esc(t("cat_cert"))}</span>
+      <span><i style="background:#16794A"></i>${esc(t("stageGrant"))} (${esc(t("wallonia"))})</span>
+      <span><i style="background:#FEE4E2;box-shadow:inset 0 0 0 1px #B42318"></i>${esc(t("suspendedSeries"))} ${tag()}</span>
+    </div>`;
+  }
+
+  function regionSplitChart() {
+    const all = buildings();
+    const bxl = all.filter((b) => b.region === "brussels");
+    const wal = all.filter((b) => b.region === "wallonia");
+    const aB = bxl.reduce((s, b) => s + b.area, 0);
+    const aW = wal.reduce((s, b) => s + b.area, 0);
+    const totA = aB + aW || 1;
+    const w = 320, h = 120;
+    const x = 16, bw = w - 32;
+    const wB = (aB / totA) * bw;
+    return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("chartRegion"))}" data-chart="region-split">
+      <text class="axis-title" x="${x}" y="16">${esc(t("byArea"))}</text>
+      <rect class="hit" x="${x}" y="26" width="${wB}" height="22" rx="6" fill="#164E50" data-filter-region="brussels" data-tip="${esc(t("brussels") + " · " + bxl.length + " · " + fmtNum(aB) + " m²")}"/>
+      <rect class="hit" x="${x + wB}" y="26" width="${bw - wB}" height="22" rx="6" fill="#C9842A" data-filter-region="wallonia" data-tip="${esc(t("wallonia") + " · " + wal.length + " · " + fmtNum(aW) + " m²")}"/>
+      <text class="hit" x="${x + 8}" y="42" fill="#fff" font-size="11" font-weight="700" data-filter-region="brussels">${esc(t("brussels"))} ${bxl.length}</text>
+      <text class="hit" x="${x + bw - 8}" y="42" fill="#fff" font-size="11" font-weight="700" text-anchor="end" data-filter-region="wallonia">${esc(t("wallonia"))} ${wal.length}</text>
+      <text class="axis" x="${x}" y="70">${fmtNum(aB)} m² · ${Math.round(aB/totA*100)}%</text>
+      <text class="axis" x="${x+bw}" y="70" text-anchor="end">${fmtNum(aW)} m² · ${Math.round(aW/totA*100)}%</text>
+    </svg>`;
+  }
+
+  function attentionItems() {
+    return [
+      { id:"acacias", title_en:"Résidence Les Acacias is off the 275 kWh path", title_fr:"Résidence Les Acacias est hors trajectoire 275 kWh", sub_en:"PEB F, 312 kWh/m²/yr — no works started. 2033 deadline.", sub_fr:"PEB F, 312 kWh/m²/an — aucun travaux lancé. Échéance 2033.", go:"plan" },
+      { id:"stgilles", title_en:"Saint-Gilles: missing wall-insulation invoice", title_fr:"Saint-Gilles : facture d’isolation des murs manquante", sub_en:"Roof is done (stage 1). Stage 2 evidence is still open.", sub_fr:"Toiture terminée (étape 1). Les preuves de l’étape 2 manquent.", go:"dossier" },
+      { id:"coteaux", title_en:"Résidence des Coteaux needs a co-ownership decision", title_fr:"La Résidence des Coteaux attend une décision de copropriété", sub_en:"PEB G, collective installation — the certificate gives no cost.", sub_fr:"PEB G, installation collective — le certificat ne chiffre pas les travaux.", go:"building" },
+      { id:"liege-house", title_en:"Maison Outremeuse: pathway planned, not started", title_fr:"Maison Outremeuse : parcours planifié, non commencé", sub_en:"PEB F, 338 kWh/m²/yr — indicative Walloon pathway to A.", sub_fr:"PEB F, 338 kWh/m²/an — parcours indicatif wallon vers A.", go:"plan" },
+      { id:"namur", title_en:"Namur Centre: share the pathway before the AGM", title_fr:"Namur Centre : partager le parcours avant l’AG", sub_en:"No Walloon mandate yet — keep co-owners informed.", sub_fr:"Pas encore de mandat wallon — informer les copropriétaires.", go:"plan" }
+    ];
+  }
+
+
+  function renderDashboard() {
+    const all = buildings();
+    const atRisk = all.filter((b) => b.region === "brussels" && (b.label === "F" || b.label === "G")).length;
+    const compliant = all.filter(meets2033).length;
+    const avg = certAverage();
+    const proj = projectedAfterWorks();
+    const pr = proofPortfolio();
+    const counts = { A:0,B:0,C:0,D:0,E:0,F:0,G:0 };
+    all.forEach((b) => { counts[b.label] = (counts[b.label] || 0) + 1; });
+    const kwhDelta = Math.round(avg - 307);
+    const kwhDeltaLbl = (kwhDelta === 0 ? "0" : (kwhDelta > 0 ? "+" : "") + kwhDelta) + " " + t("vs2025");
+
+    $("main").innerHTML = `
+      <div id="dash-overview" data-page="dashboard-v2" class="page-head">
+        <div>
+          <h1>${esc(t("dashTitle"))}</h1>
+          <p class="lede">${esc(t("dashLede"))}</p>
+        </div>
+        <button class="btn primary" data-go="portfolio" data-status="at_risk">${esc(t("dashCta"))}</button>
+      </div>
+      <div class="kpis dash-row kpis4">
+        <div class="kpi">
+          <div class="k">${esc(t("kpiBuildings"))}</div>
+          <div class="v">${all.length} ${tag()} <span class="delta up">+1 ${esc(t("vsYear"))}</span></div>
+          ${sparkline(KPI_SPARK.buildings, "#21776A")}
+          <div class="s">${esc(t("kpiBuildingsSub"))}</div>
+        </div>
+        <div class="kpi danger">
+          <div class="k">${esc(t("kpiAtRisk"))}</div>
+          <div class="v">${atRisk} ${tag()} <span class="delta up">−1 ${esc(t("vsYear"))}</span></div>
+          ${sparkline(KPI_SPARK.atRisk, "#B42318")}
+          <div class="s">${esc(t("kpiAtRiskSub"))}</div>
+        </div>
+        <div class="kpi ok">
+          <div class="k">${esc(t("kpiCompliant"))}</div>
+          <div class="v">${compliant} ${tag()} <span class="delta up">+1 ${esc(t("vsYear"))}</span></div>
+          ${sparkline(KPI_SPARK.compliant, "#16794A")}
+          <div class="s">${esc(t("kpiCompliantSub"))}</div>
+        </div>
+        <div class="kpi">
+          <div class="k">${esc(t("kpiAvgKwh"))}</div>
+          <div class="v">${fmtNum(Math.round(avg))} ${tag()} <span class="delta ${kwhDelta <= 0 ? "up" : "down"}">${esc(kwhDeltaLbl)}</span></div>
+          ${sparkline(KPI_SPARK.kwh.concat([Math.round(avg)]), "#164E50")}
+          <div class="s">${esc(t("kpiAvgKwhSub", { n: fmtNum(Math.round(proj)) }))}</div>
+        </div>
+      </div>
+      <div class="dash-row two">
+        <div class="card chart-card">
+          <div class="card-h"><h2>${esc(t("chartPeb"))}</h2>${tag()}</div>
+          <div class="card-b">${pebDonutChart(counts)}<p class="faint" style="margin:8px 0 0;font-size:11px">${esc(t("chartClickHint"))}</p></div>
+        </div>
+        <div class="card chart-card">
+          <div class="card-h"><h2>${esc(t("chartEnergy"))}</h2>${tag()}</div>
+          <div class="card-b">${energyTrendChart()}</div>
+        </div>
+      </div>
+      <div class="dash-row">
+        <div class="card chart-card">
+          <div class="card-h"><h2>${esc(t("chartTimeline"))}</h2>${tag()}</div>
+          <div class="card-b">${deadlineTimeline()}</div>
+        </div>
+      </div>
+      <div class="dash-row three">
+        <div class="card chart-card">
+          <div class="card-h"><h2>${esc(t("chartCapex"))}</h2>${tag()}</div>
+          <div class="card-b">${capexChart()}</div>
+        </div>
+        <div class="card chart-card">
+          <div class="card-h"><h2>${esc(t("chartEvidence"))}</h2>${tag()}</div>
+          <div class="card-b">
+            <div class="ring-wrap">
+              ${svgRing(pr.pct, 100, 12)}
+              <div class="ring-meta">
+                <div class="big">${pr.pct}%</div>
+                <div class="muted">${esc(t("proofsHeld", { held: pr.held, need: pr.need }))}</div>
+                <div class="s faint" style="margin-top:6px">${esc(t("evidenceHint"))}</div>
+              </div>
+            </div>
+            <div style="margin-top:16px">${regionSplitChart()}</div>
+          </div>
+        </div>
+        <div class="card chart-card">
+          <div class="card-h"><h2>${esc(t("needsAttention"))}</h2></div>
+          <div class="card-b"><div class="attn-list">
+            ${attentionItems().map((a) => `
+              <button class="attn" data-go="${a.go}" data-id="${a.id}">
+                <span class="chip ${getBuilding(a.id).label}">${getBuilding(a.id).label}</span>
+                <span><span class="at">${esc(state.lang === "fr" ? a.title_fr : a.title_en)}</span>
+                <span class="as">${esc(state.lang === "fr" ? a.sub_fr : a.sub_en)}</span></span>
+              </button>`).join("")}
+          </div></div>
+        </div>
+      </div>
+      <p class="faint" style="margin-top:8px;font-size:12px">${esc(t("footer"))}</p>`;
+  }
+
+  function pebbleCard(b) {
+    const pr = proofRatio(b.id);
+    return `<button class="bcard" data-open="${esc(b.id)}">
+      <div class="bcard-top">
+        <span class="chip ${b.label}">${b.label}</span>
+        <span class="st ${b.status}">${esc(t("st_" + b.status))}</span>
+      </div>
+      <h3>${esc(b.name)}</h3>
+      <div class="baddr">${esc(b.address)}</div>
+      <span class="reg ${b.region === "wallonia" ? "wal" : ""}"><i></i>${esc(t(b.region))}</span>
+      <div class="bcard-mid">
+        ${svgRing(pr.pct, 52, 6)}
+        <div>
+          <div class="bname">${fmtNum(b.kwh)} <span class="unit faint">kWh/m²</span> ${tag()}</div>
+          <div class="faint" style="font-size:11px">${pr.held}/${pr.need} ${esc(t("colProof").toLowerCase())}</div>
+        </div>
+      </div>
+      <div class="bcard-foot">${countdownCell(b)}</div>
+    </button>`;
+  }
+
+  function pebScaleGraphic(b) {
+    const labels = ["A","B","C","D","E","F","G"];
+    const cur = labels.indexOf(b.label);
+    const target2033 = 4; /* E — 275 ≈ class E max */
+    const target2045 = 2; /* C — 150 ≈ class C max */
+    const last = b.stages[b.stages.length - 1];
+    const afterL = last ? last.afterLabel : b.label;
+    const afterI = labels.indexOf(afterL);
+    const w = 640, h = 86, x0 = 28, bw = (w - 56) / 7;
+    const cells = labels.map((l, i) => {
+      const x = x0 + i * bw;
+      return `<rect x="${x}" y="28" width="${bw - 6}" height="22" rx="5" fill="${PEB_COLORS[l]}"/>
+        <text x="${x + (bw - 6) / 2}" y="44" text-anchor="middle" font-size="12" font-weight="800" fill="${l === "C" || l === "D" ? "#1a1a00" : "#fff"}">${l}</text>`;
+    }).join("");
+    const marker = (i, color, label, y) => {
+      const x = x0 + i * bw + (bw - 6) / 2;
+      return `<polygon points="${x},${y} ${x - 6},${y - 9} ${x + 6},${y - 9}" fill="${color}"/>
+        <text x="${x}" y="${y - 12}" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${esc(label)}</text>`;
+    };
+    return `<svg class="chart-svg peb-scale" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("pebScale"))}">
+      ${cells}
+      ${marker(cur, "#181818", t("scaleNow") + " " + b.label, 26)}
+      ${b.region === "brussels" ? marker(target2033, "#B42309", "2033 · E", 80) : ""}
+      ${afterI >= 0 ? `<circle cx="${x0 + afterI * bw + (bw - 6) / 2}" cy="39" r="11" fill="none" stroke="#164E50" stroke-width="2"/>` : ""}
+    </svg>
+    <div class="chart-legend">
+      <span>${esc(t("scaleNow"))}: <b>${b.label}</b> (${fmtNum(b.kwh)})</span>
+      ${b.region === "brussels" ? `<span>${esc(t("target275"))}</span>` : `<span>${esc(t("targetA"))}</span>`}
+      <span>${esc(t("afterWorks"))}: <b>${afterL}</b> (${last ? fmtNum(last.afterKwh) : "—"})</span>
+    </div>`;
+  }
+
+  function kwhGaugeGraphic(b) {
+    const last = b.stages[b.stages.length - 1];
+    const after = last ? last.afterKwh : b.kwh;
+    const max = 450;
+    const w = 640, h = 78, x0 = 28, iw = w - 56;
+    const xOf = (v) => x0 + (Math.max(0, Math.min(max, v)) / max) * iw;
+    return `<svg class="chart-svg kwh-gauge" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("kwhGauge"))}">
+      <rect x="${x0}" y="30" width="${iw}" height="14" rx="7" fill="#E6ECEA"/>
+      <rect x="${x0}" y="30" width="${xOf(b.kwh) - x0}" height="14" rx="7" fill="${PEB_COLORS[b.label]}"/>
+      <line x1="${xOf(275)}" y1="22" x2="${xOf(275)}" y2="52" stroke="#B42318" stroke-width="2"/>
+      <text x="${xOf(275)}" y="16" text-anchor="middle" font-size="10" fill="#B42318" font-weight="700">275</text>
+      <line x1="${xOf(150)}" y1="22" x2="${xOf(150)}" y2="52" stroke="#21776A" stroke-width="2" stroke-dasharray="3 2"/>
+      <text x="${xOf(150)}" y="16" text-anchor="middle" font-size="10" fill="#21776A" font-weight="700">150</text>
+      <polygon points="${xOf(b.kwh)},48 ${xOf(b.kwh) - 6},62 ${xOf(b.kwh) + 6},62" fill="#181818"/>
+      <text x="${xOf(b.kwh)}" y="74" text-anchor="middle" font-size="10" font-weight="700">${fmtNum(b.kwh)}</text>
+      <circle cx="${xOf(after)}" cy="37" r="6" fill="#88DE7B" stroke="#164E50" stroke-width="1.5"/>
+      <text x="${xOf(after)}" y="${xOf(after) < xOf(b.kwh) - 20 ? 26 : 74}" text-anchor="middle" font-size="10" fill="#164E50">${esc(t("afterWorks"))} ${fmtNum(after)}</text>
+    </svg>`;
+  }
+
+  function ganttGraphic(b) {
+    const years = [2026,2027,2028,2029,2030,2031];
+    const rowH = 28, top = 24, l = 160, w = 700, h = top + b.stages.length * rowH + 20;
+    const iw = w - l - 16;
+    const col = iw / years.length;
+    const rows = b.stages.map((s, i) => {
+      const m = stageMeta(b, s);
+      const yi = years.indexOf(m.year);
+      const x = l + (yi < 0 ? 0 : yi * col) + 4;
+      const y = top + i * rowH;
+      const title = state.lang === "fr" ? s.fr : s.en;
+      const fill = s.done ? "#16794A" : CAT_COLORS[m.cat] || "#164E50";
+      return `<text class="axis" x="8" y="${y + 16}" fill="#181818">${esc(title.length > 28 ? title.slice(0, 27) + "…" : title)}</text>
+        <rect class="hit" x="${x}" y="${y + 6}" width="${col - 8}" height="16" rx="4" fill="${fill}" data-tip="${esc(title + " · " + m.year + " · " + fmtMoney(s.cost))}"/>`;
+    }).join("");
+    const heads = years.map((y, i) => `<text class="axis" x="${l + i * col + col / 2}" y="16" text-anchor="middle">${y}</text>`).join("");
+    return `<div class="gantt-scroller"><svg class="chart-svg gantt-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("ganttTitle"))}">${heads}${rows}</svg></div>`;
+  }
+
+  function waterfallGraphic(b) {
+    const brussels = b.region === "brussels";
+    const items = b.stages.map((s) => ({ label: state.lang === "fr" ? s.fr : s.en, v: s.cost }));
+    const grants = b.stages.reduce((s, x) => s + (x.grant || 0), 0);
+    const gross = items.reduce((s, x) => s + x.v, 0);
+    const netGrant = brussels ? 0 : grants;
+    const steps = items.concat(netGrant ? [{ label: t("stageGrant"), v: -netGrant }] : []);
+    steps.push({ label: t("totalNet"), v: 0, total: gross - netGrant, isTotal: true });
+    const max = gross;
+    const n = steps.length;
+    const w = Math.max(640, 80 + n * 70), h = 200, l = 16, top = 16, bot = 48, col = (w - l - 16) / n;
+    const yOf = (v) => top + (1 - v / (max * 1.08 || 1)) * (h - top - bot);
+    let acc = 0;
+    const bars = steps.map((s, i) => {
+      let y, ht, fill, tip, base;
+      if (s.isTotal) {
+        y = yOf(s.total); ht = yOf(0) - y; fill = "#164E50"; tip = s.label + " · " + fmtMoney(s.total); base = 0;
+      } else if (s.v >= 0) {
+        y = yOf(acc + s.v); ht = yOf(acc) - y; fill = CAT_COLORS[stageMeta(b, b.stages[i] || {n:1}).cat] || "#21776A";
+        acc += s.v; tip = s.label + " · " + fmtMoney(s.v);
+      } else {
+        y = yOf(acc); ht = yOf(acc + s.v) - yOf(acc); fill = "#16794A";
+        tip = s.label + " · −" + fmtMoney(-s.v); acc += s.v;
+      }
+      const x = l + i * col + 8;
+      const lab = s.label.length > 14 ? s.label.slice(0, 13) + "…" : s.label;
+      return `<rect class="hit" x="${x}" y="${Math.min(y, y + (ht < 0 ? ht : 0))}" width="${col - 16}" height="${Math.abs(ht)}" fill="${fill}" data-tip="${esc(tip)}"/>
+        <text class="axis" x="${x + (col - 16) / 2}" y="${h - 20}" text-anchor="middle">${esc(lab)}</text>`;
+    }).join("");
+    const note = brussels ? `<p class="faint" style="margin:6px 0 0;font-size:11px">${esc(t("renolutionNotice"))}</p>` : "";
+    return `<div class="gantt-scroller"><svg class="chart-svg wf-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("waterfallTitle"))}">${bars}</svg></div>${note}`;
+  }
+
+  function dossierCats(b) {
+    const pack = docsFor(b.id);
+    const checks = state.checks[b.id] || pack.checks;
+    const cats = [
+      { k:"cert", fr:"Certificats", en:"Certificates", ids: (c) => /certificat|certificate|PEB/i.test(c.fr + c.en) },
+      { k:"quote", fr:"Devis", en:"Quotes", ids: (c) => /devis|quote/i.test(c.fr + c.en) },
+      { k:"invoice", fr:"Factures", en:"Invoices", ids: (c) => /facture|invoice/i.test(c.fr + c.en) },
+      { k:"photo", fr:"Photos / fiches", en:"Photos / sheets", ids: (c) => /photo|fiche|sheet/i.test(c.fr + c.en) }
+    ];
+    return cats.map((cat) => {
+      const items = checks.filter(cat.ids);
+      const held = items.filter((c) => c.done).length;
+      const need = items.length || 0;
+      return { label: state.lang === "fr" ? cat.fr : cat.en, held, need, pct: need ? Math.round(held / need * 100) : 0 };
+    });
+  }
+
+  function calendarStrip() {
+    const items = state.reminders.filter((r) => !r.done);
+    const start = new Date("2026-11-23T12:00:00+01:00");
+    const days = [];
+    for (let i = 0; i < 56; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      days.push(d);
+    }
+    const iso = (d) => d.toISOString().slice(0, 10);
+    const cell = 28, w = 16 + days.length * cell, h = 78;
+    const boxes = days.map((d, i) => {
+      const key = iso(d);
+      const hits = items.filter((r) => (r.snooze || r.due) === key);
+      const x = 8 + i * cell;
+      const isToday = key === "2026-11-23" || key === iso(new Date());
+      const cls = "cal-day" + (hits.length ? " has" : "") + (isToday ? " today" : "");
+      const tip = hits.length ? hits.map((r) => (state.lang === "fr" ? r.fr : r.en)).join(" · ") : fmtDate(key);
+      const later = false;
+      return `<g class="hit" data-tip="${esc(tip)}" ${hits.length ? `data-scroll-reminder="${hits[0].id}"` : ""}>
+        <rect class="${cls}" x="${x}" y="24" width="${cell - 4}" height="${cell - 2}" rx="6"/>
+        <text class="axis" x="${x + (cell - 4) / 2}" y="42" text-anchor="middle" fill="#181818">${d.getDate()}</text>
+        ${i === 0 || d.getDate() === 1 ? `<text class="axis" x="${x}" y="16">${fmtDate(key).replace(/\d+\s?/, "").slice(0, 8)}</text>` : ""}
+      </g>`;
+    }).join("");
+    const later = items.filter((r) => (r.snooze || r.due) > iso(days[days.length - 1]));
+    return `<div class="cal-scroller"><svg class="chart-svg cal-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("calTitle"))}">${boxes}</svg></div>
+      ${later.length ? `<p class="faint" style="margin:8px 0 0;font-size:12px">${esc(t("calLater"))}: ${later.length}</p>` : ""}`;
+  }
+
+
   function go(view, id) {
     if (id) state.buildingId = id;
     state.view = view;
     state.sidebarOpen = false;
-    const path = view === "portfolio" ? "#/portfolio"
+    const path = view === "dashboard" ? "#/dashboard"
+      : view === "portfolio" ? "#/portfolio"
       : view === "reminders" ? "#/reminders"
       : view === "plan" ? "#/plan/" + state.buildingId
       : view === "dossier" ? "#/dossier/" + state.buildingId
@@ -1235,14 +2040,15 @@
   function parseHash() {
     const h = (location.hash || "#/portfolio").replace(/^#/, "");
     const parts = h.split("/").filter(Boolean);
-    const v = parts[0] || "portfolio";
+    const v = parts[0] || "dashboard";
+    if (v === "dashboard" || v === "overview") { state.view = "dashboard"; return; }
     if (v === "portfolio") { state.view = "portfolio"; return; }
     if (v === "reminders") { state.view = "reminders"; return; }
     if (v === "plan") { state.view = "plan"; if (parts[1]) state.buildingId = parts[1]; return; }
     if (v === "dossier") { state.view = "dossier"; if (parts[1]) state.buildingId = parts[1]; return; }
     if (v === "building" && parts[1] === "new") { state.view = "new"; return; }
     if (v === "building") { state.view = "building"; if (parts[1]) state.buildingId = parts[1]; return; }
-    state.view = "portfolio";
+    state.view = "dashboard";
   }
 
   function setLang(lang) {
@@ -1271,6 +2077,7 @@
       </div>
       <nav class="nav">
         <div class="nav-label">${esc(t("navModules"))}</div>
+        ${item("dashboard", t("navDashboard"), "", "dash")}
         ${item("portfolio", t("navPortfolio"), "04", "grid")}
         ${item("building", t("navCert"), "01", "cert")}
         ${item("plan", t("navPlan"), "02", "plan")}
@@ -1298,7 +2105,8 @@
 
   function renderTopbar() {
     const crumbs = {
-      portfolio: t("crumbsHome"),
+      dashboard: t("navDashboard"),
+      portfolio: t("navPortfolio"),
       building: t("navCert"),
       plan: t("navPlan"),
       dossier: t("navDossier"),
@@ -1308,9 +2116,9 @@
     const b = getBuilding(state.buildingId);
     const extra = (state.view === "building" || state.view === "plan" || state.view === "dossier")
       ? ` / <b>${esc(b.name)}</b>` : "";
-    const trail = state.view === "portfolio"
-      ? `<b>${esc(t("crumbsHome"))}</b>`
-      : `${esc(t("crumbsHome"))} / <b>${esc(crumbs[state.view] || "")}</b>${extra}`;
+    const trail = state.view === "dashboard"
+      ? `<b>${esc(t("navDashboard"))}</b>`
+      : `${esc(t("navDashboard"))} / <b>${esc(crumbs[state.view] || "")}</b>${extra}`;
     $("topbar").innerHTML = `
       <button class="menu-btn" id="menuBtn" aria-label="Menu">${icon("menu")}</button>
       <div class="crumbs">${trail}</div>
@@ -1328,6 +2136,7 @@
     return buildings().filter((b) => {
       if (state.region !== "all" && b.region !== state.region) return false;
       if (state.status !== "all" && b.status !== state.status) return false;
+      if (state.labelFilter && state.labelFilter !== "all" && b.label !== state.labelFilter) return false;
       if (q && !(b.name + " " + b.address).toLowerCase().includes(q)) return false;
       return true;
     });
@@ -1358,15 +2167,22 @@
         <div class="kpi"><div class="k">${esc(t("kpiWallonia"))}</div><div class="v">${wal} ${tag()}</div><div class="s">${esc(t("kpiWalloniaSub"))}</div></div>
       </div>
       <div class="toolbar">
+        <div class="seg view-toggle" role="group">
+          <button class="${(state.portfolioView || "cards") === "cards" ? "on" : ""}" data-view="cards">${icon("cards")}${esc(t("viewCards"))}</button>
+          <button class="${state.portfolioView === "table" ? "on" : ""}" data-view="table">${icon("table")}${esc(t("viewTable"))}</button>
+        </div>
         ${seg("region", state.region, [
           { v: "all", l: t("all") },
           { v: "brussels", l: t("brussels") },
           { v: "wallonia", l: t("wallonia") }
         ])}
         ${seg("status", state.status, statusOpts)}
+        ${state.labelFilter && state.labelFilter !== "all" ? `<button class="filter-chip" data-clear-label="1">${esc(t("filterLabel", { l: state.labelFilter }))} ×</button>` : ""}
         <button class="btn primary" data-go="new">${icon("plus")}${esc(t("addBuilding"))}</button>
       </div>
-      <div class="card">
+      ${ (state.portfolioView || "cards") === "cards" ? (
+        rows.length === 0 ? `<div class="card"><div class="empty">${esc(t("emptyFilter"))}</div></div>` : `<div class="bcards">${rows.map((b) => pebbleCard(b)).join("")}</div>`
+      ) : `<div class="card">
         ${rows.length === 0 ? `<div class="empty">${esc(t("emptyFilter"))}</div>` : `
         <table class="list">
           <thead><tr>
@@ -1383,7 +2199,7 @@
             ${rows.map((b) => rowHtml(b)).join("")}
           </tbody>
         </table>`}
-      </div>
+      </div>`}
       <p class="faint" style="margin-top:18px;font-size:12px">${esc(t("footer"))}</p>`;
   }
 
@@ -1421,7 +2237,7 @@
       <h1>${esc(isNew && !b ? t("newBuildingTitle") : t("certTitle"))}</h1>
       <p class="lede">${esc(isNew && !b ? t("newBuildingLede") : t("certLede"))}</p>
       ${uploadBox(!!b)}
-      ${b ? certCard(b) + ruleCard(b) : ""}
+      ${b ? certCard(b) + `<div class="card" style="margin-bottom:14px"><div class="card-h"><h2>${esc(t("pebScale"))}</h2>${tag()}</div><div class="card-b">${pebScaleGraphic(b)}${kwhGaugeGraphic(b)}</div></div>` + ruleCard(b) : ""}
       ${b ? `<div class="actions">
         <button class="btn primary" data-go="plan" data-id="${esc(b.id)}">${esc(t("openPlan"))}</button>
         <button class="btn" data-go="dossier" data-id="${esc(b.id)}">${esc(t("openDossier"))}</button>
@@ -1582,6 +2398,16 @@
       ${brussels
         ? `<div class="notice alert" style="margin-bottom:14px">${icon("warn")}<div>${esc(t("renolutionNotice"))}</div></div>`
         : `<div class="notice info" style="margin-bottom:14px">${icon("plan")}<div>${esc(t("walloniaGrantNote"))} ${b.typ === "copro" || b.collective ? esc(t("walloniaAptNote")) : esc(t("walloniaPathwayAuto"))}</div></div>`}
+      <div class="dash-row two-eq">
+        <div class="card chart-card">
+          <div class="card-h"><h2>${esc(t("ganttTitle"))}</h2>${tag()}</div>
+          <div class="card-b">${ganttGraphic(b)}</div>
+        </div>
+        <div class="card chart-card">
+          <div class="card-h"><h2>${esc(t("waterfallTitle"))}</h2>${tag()}</div>
+          <div class="card-b">${waterfallGraphic(b)}</div>
+        </div>
+      </div>
       <div class="card" style="margin-bottom:14px">
         <div class="card-b">
           ${b.stages.map((s) => stageHtml(b, s, brussels)).join("")}
@@ -1670,7 +2496,16 @@
         <div class="card">
           <div class="card-h"><h2>${esc(t("progressToDeadline"))}</h2>${tag()}</div>
           <div class="card-b">
-            <div class="progress" style="height:10px"><span style="width:${pr.pct}%"></span></div>
+            <div class="ring-wrap" style="margin-bottom:12px">
+              ${svgRing(pr.pct, 88, 10)}
+              <div class="ring-meta">
+                <div class="big">${pr.pct}%</div>
+                <div class="muted">${esc(t("proofsHeld", { held: pr.held, need: pr.need }))}</div>
+                <div class="faint" style="margin-top:4px">${esc(progressNote)}</div>
+              </div>
+            </div>
+            ${dossierCats(b).map((c) => `<div class="metric-row"><span>${esc(c.label)}</span><span>${c.need ? c.held + "/" + c.need : "—"}</span></div><div class="progress" style="height:6px;margin:0 0 8px"><span style="width:${c.pct}%"></span></div>`).join("")}
+            <div class="progress" style="height:10px;margin-top:8px"><span style="width:${pr.pct}%"></span></div>
             <div class="muted" style="margin-top:8px">${esc(t("proofsHeld", { held: pr.held, need: pr.need }))} · ${esc(progressNote)}</div>
             <div class="peb-pair">
               <div>
@@ -1717,6 +2552,10 @@
     $("main").innerHTML = `
       <h1>${esc(t("remindersTitle"))}</h1>
       <p class="lede">${esc(t("remindersLede"))}</p>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-h"><h2>${esc(t("calTitle"))}</h2>${tag()}</div>
+        <div class="card-b">${calendarStrip()}</div>
+      </div>
       <div class="card" style="margin-bottom:14px">
         <div class="card-h"><h2>${esc(t("upcoming"))}</h2></div>
         <div class="card-b">${block(upcoming)}</div>
@@ -1814,7 +2653,54 @@
     main.querySelectorAll("[data-go]").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
+        hideTip();
+        if (btn.getAttribute("data-status")) state.status = btn.getAttribute("data-status");
         go(btn.getAttribute("data-go"), btn.getAttribute("data-id") || state.buildingId);
+      });
+    });
+    main.querySelectorAll("[data-tip]").forEach((node) => {
+      node.addEventListener("mouseenter", (e) => showTip(e, node.getAttribute("data-tip")));
+      node.addEventListener("mousemove", (e) => showTip(e, node.getAttribute("data-tip")));
+      node.addEventListener("mouseleave", hideTip);
+    });
+    main.querySelectorAll("[data-filter-label]").forEach((node) => {
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        hideTip();
+        state.labelFilter = node.getAttribute("data-filter-label") || "all";
+        go("portfolio");
+      });
+    });
+    main.querySelectorAll("[data-filter-region]").forEach((node) => {
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        hideTip();
+        state.region = node.getAttribute("data-filter-region") || "all";
+        go("portfolio");
+      });
+    });
+    main.querySelectorAll("[data-go-building]").forEach((node) => {
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        hideTip();
+        go("building", node.getAttribute("data-go-building"));
+      });
+    });
+    main.querySelectorAll("[data-view]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.portfolioView = btn.getAttribute("data-view") || "cards";
+        render();
+      });
+    });
+    main.querySelectorAll("[data-clear-label]").forEach((btn) => {
+      btn.addEventListener("click", () => { state.labelFilter = "all"; render(); });
+    });
+    main.querySelectorAll("[data-scroll-reminder]").forEach((node) => {
+      node.addEventListener("click", () => {
+        hideTip();
+        const id = node.getAttribute("data-scroll-reminder");
+        const el = document.querySelector("[data-done=\"" + id + "\"], [data-snooze=\"" + id + "\"]");
+        if (el) el.closest(".remind").scrollIntoView({ behavior: "smooth", block: "center" });
       });
     });
     main.querySelectorAll(".stage-h").forEach((h) => {
@@ -1884,7 +2770,8 @@
     renderSidebar();
     renderBanner();
     renderTopbar();
-    if (state.view === "portfolio") renderPortfolio();
+    if (state.view === "dashboard") renderDashboard();
+    else if (state.view === "portfolio") renderPortfolio();
     else if (state.view === "plan") renderPlan();
     else if (state.view === "dossier") renderDossier();
     else if (state.view === "reminders") renderReminders();
@@ -1911,7 +2798,7 @@
 
   window.addEventListener("hashchange", () => render());
   window.addEventListener("popstate", () => render());
-  if (!location.hash) history.replaceState(null, "", "#/portfolio");
+  if (!location.hash) history.replaceState(null, "", "#/dashboard");
   document.documentElement.lang = state.lang;
   document.title = t("title");
   render();
