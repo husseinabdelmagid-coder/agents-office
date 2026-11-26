@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="color-scheme" content="light" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#8da28a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>RenoPath — maquette</title>
   <style>
     :root {
@@ -511,6 +514,535 @@
       .search { width: 160px; }
     }
 
+    /* =====================================================================
+       v3 — "glass over map" theme
+       Dark frosted-glass cards over a full-bleed aerial neighbourhood map,
+       sage-green backdrop, lime accents. All imagery is inline SVG/CSS.
+       ===================================================================== */
+    :root {
+      --lime: #C8F03C;
+      --lime-ink: #14210F;
+      --lime-soft: rgba(200,240,60,.18);
+      --lime-wash: rgba(200,240,60,.10);
+      --ink: #EEF3E9;
+      --muted: rgba(238,243,233,.70);
+      --faint: rgba(238,243,233,.50);
+      --line: rgba(255,255,255,.09);
+      --line-strong: rgba(255,255,255,.2);
+      --bg: rgba(255,255,255,.06);
+      --card: rgba(24,38,26,.62);
+      --teal-950: #0B140D;
+      --teal-900: #17261A;
+      --teal-800: #D6F46A;
+      --teal-700: #C8F03C;
+      --teal-600: #A5DB2C;
+      --warn: #FFD27A; --warn-bg: rgba(255,200,87,.14);
+      --danger: #FF9C80; --danger-bg: rgba(255,122,89,.16);
+      --ok: #6FE3A5; --ok-bg: rgba(79,208,138,.16);
+      --info-bg: rgba(255,255,255,.07);
+      --banner-bg: rgba(255,200,87,.15); --banner-ink: #FFE2A3; --banner-line: rgba(255,200,87,.32);
+      --shadow: 0 18px 40px -20px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06);
+      --radius: 22px;
+      --sidebar: 216px;
+      --banner-h: 34px;
+      --topbar-h: 62px;
+      --frame: 18px;
+      --glass: linear-gradient(180deg, rgba(40,58,41,.58), rgba(21,33,23,.66));
+      --glass-line: rgba(255,255,255,.09);
+      --sans: ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    html { background: #7b9179; color-scheme: dark; }
+    body {
+      color: var(--ink);
+      font-weight: 450;
+      letter-spacing: -.005em;
+      background:
+        radial-gradient(1100px 600px at 16% -10%, rgba(255,255,255,.26), transparent 62%),
+        linear-gradient(180deg, #95aa92 0%, #7d937a 52%, #6b8168 100%);
+      background-attachment: fixed;
+      min-height: 100%;
+    }
+    ::selection { background: var(--lime); color: var(--lime-ink); }
+    a { color: var(--lime); }
+    h1, h2, h3 { font-weight: 560; letter-spacing: -.02em; }
+
+    /* device frame + full-bleed generated map */
+    .stage-bg {
+      position: fixed; inset: var(--frame); z-index: 0;
+      border-radius: 36px; overflow: hidden; background: #0e170f;
+      box-shadow: 0 0 0 6px #0b100d, 0 0 0 7px rgba(255,255,255,.05), 0 50px 80px -30px rgba(7,16,9,.7);
+    }
+    .stage-bg .map-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .stage-bg::after {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(120% 90% at 50% 30%, rgba(8,16,9,.22), rgba(6,12,7,.62) 100%),
+        linear-gradient(180deg, rgba(9,17,10,.38), rgba(9,17,10,.62));
+    }
+    .app {
+      position: fixed; inset: var(--frame); z-index: 1;
+      display: flex; gap: 16px; padding: 16px;
+      min-height: 0;
+    }
+    .workspace {
+      flex: 1; min-width: 0; min-height: 0; height: 100%;
+      overflow-y: auto; overflow-x: hidden;
+      -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.22) transparent;
+      padding: 0 6px 0 0;
+    }
+    .workspace::-webkit-scrollbar { width: 8px; }
+    .workspace::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 8px; }
+    main { padding: 18px 2px 36px; }
+
+    /* floating glass nav */
+    .sidebar {
+      position: relative; top: auto; height: 100%; min-height: 0;
+      flex: 0 0 var(--sidebar); width: var(--sidebar);
+      background: var(--glass);
+      -webkit-backdrop-filter: blur(26px) saturate(1.25); backdrop-filter: blur(26px) saturate(1.25);
+      border: 1px solid var(--glass-line); border-radius: 28px;
+      box-shadow: var(--shadow); color: var(--ink);
+    }
+    .brand { border-bottom: 0; padding: 20px 18px 8px; }
+    .brand-mark { background: var(--lime); border-radius: 11px; width: 34px; height: 34px; flex-basis: 34px; box-shadow: 0 8px 20px -6px rgba(200,240,60,.5); }
+    .brand-name { font-size: 21px; font-weight: 600; letter-spacing: -.03em; }
+    .brand-name span { color: var(--lime); }
+    .brand-sub { color: var(--faint); }
+    .nav { padding: 10px 10px 6px; gap: 4px; }
+    .nav-label { color: var(--faint); font-weight: 600; letter-spacing: .1em; padding: 14px 12px 6px; }
+    .nav-btn { color: var(--muted); border-radius: 16px; min-height: 46px; padding: 10px 12px; font-weight: 500; font-size: 14px; transition: background .15s, color .15s; }
+    .nav-btn svg { width: 20px; height: 20px; flex-basis: 20px; opacity: .85; }
+    .nav-btn:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .nav-btn.active { background: rgba(255,255,255,.15); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.1); }
+    .nav-btn.active svg { color: var(--lime); opacity: 1; }
+    .nav-btn .nav-badge-dot { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); }
+    .nav-mod { color: var(--faint); }
+    .nav-btn.active .nav-mod { color: var(--lime); }
+    .nav-building {
+      background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 18px; padding: 12px;
+    }
+    .nav-building .nb-k { color: var(--faint); }
+    .nav-building .nb-v { font-weight: 600; }
+    .sidebar-foot { border-top: 0; padding: 8px 14px 16px; }
+    .lang-toggle { background: rgba(0,0,0,.28); border: 1px solid var(--line); }
+    .lang-toggle button { color: var(--muted); }
+    .lang-toggle button.on { background: var(--lime); color: var(--lime-ink); }
+
+    /* header block: example banner + topbar */
+    .banner {
+      position: sticky; top: 0; z-index: 41;
+      height: auto; min-height: var(--banner-h); padding: 6px 14px; text-align: center;
+      background: linear-gradient(180deg, rgba(60,52,26,.72), rgba(40,36,20,.72));
+      -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px);
+      border: 1px solid var(--banner-line); border-bottom: 0;
+      border-radius: 22px 22px 0 0; color: var(--banner-ink);
+      font-weight: 550; font-size: 12px;
+    }
+    .banner .dot { background: #FFC857; box-shadow: 0 0 0 4px rgba(255,200,87,.18); flex: 0 0 7px; }
+    .topbar {
+      position: sticky; top: var(--banner-h); z-index: 40;
+      height: var(--topbar-h); padding: 0 14px 0 18px; gap: 12px;
+      background: var(--glass);
+      -webkit-backdrop-filter: blur(26px) saturate(1.25); backdrop-filter: blur(26px) saturate(1.25);
+      border: 1px solid var(--glass-line); border-radius: 0 0 22px 22px;
+      box-shadow: var(--shadow);
+    }
+    .menu-btn { background: rgba(255,255,255,.08); border: 1px solid var(--line); color: var(--ink); border-radius: 50%; }
+    .crumbs { color: var(--muted); }
+    .crumbs b { color: #fff; font-weight: 600; }
+    .search {
+      background: rgba(8,14,9,.5); border: 1px solid var(--line); border-radius: 999px;
+      height: 44px; padding: 0 16px; width: 280px; gap: 8px;
+    }
+    .search input { color: var(--ink); }
+    .search input::placeholder { color: var(--faint); }
+    .search svg { color: var(--muted); width: 17px; height: 17px; flex-basis: 17px; }
+    .bell-btn {
+      position: relative; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+      background: rgba(255,255,255,.08); border: 1px solid var(--line); color: var(--ink);
+    }
+    .bell-btn svg { width: 19px; height: 19px; }
+    .bell-btn .dot { position: absolute; top: 9px; right: 10px; width: 9px; height: 9px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 2px #1b2a1d; }
+    .userpill { background: rgba(255,255,255,.08); border: 1px solid var(--line); border-radius: 999px; padding: 4px 16px 4px 4px; gap: 10px; }
+    .avatar { width: 36px; height: 36px; background: radial-gradient(circle at 30% 25%, #E4FA7A, var(--lime)); color: var(--lime-ink); font-size: 12px; font-weight: 700; }
+    .userpill { flex: 0 0 auto; white-space: nowrap; }
+    .crumbs { flex: 1 1 auto; min-width: 0; }
+    .userpill .un { color: #fff; font-weight: 600; }
+    .userpill .ur { color: var(--faint); }
+
+    /* type */
+    h1 { font-size: 30px; font-weight: 520; letter-spacing: -.035em; line-height: 1.1; }
+    .lede { color: var(--muted); font-size: 14.5px; }
+    .faint, .baddr { color: var(--faint); }
+    .muted { color: var(--muted); }
+    .ex-tag { background: rgba(255,200,87,.12); color: #FFD98A; border: 1px solid rgba(255,200,87,.3); font-weight: 650; }
+
+    /* glass surfaces */
+    .card, .bcard {
+      background: var(--glass);
+      -webkit-backdrop-filter: blur(24px) saturate(1.2); backdrop-filter: blur(24px) saturate(1.2);
+      border: 1px solid var(--glass-line); border-radius: 26px; box-shadow: var(--shadow);
+      overflow: hidden; color: var(--ink);
+    }
+    .card-h { padding: 18px 20px 0; }
+    .card-h h2 { font-size: 17px; font-weight: 520; letter-spacing: -.02em; }
+    .card-b { padding: 14px 20px 20px; }
+    .chart-card h2 { font-size: 17px; }
+    .bcard { padding: 18px; min-height: 176px; }
+    .bcard:hover { border-color: rgba(200,240,60,.5); box-shadow: 0 24px 50px -22px rgba(0,0,0,.7), 0 0 0 1px rgba(200,240,60,.25); transform: translateY(-2px); }
+    .bcard h3 { font-size: 16px; font-weight: 560; }
+    .kpi {
+      background: rgba(255,255,255,.055); border: 1px solid var(--line); border-radius: 22px; box-shadow: none;
+      padding: 16px 18px; color: var(--ink);
+    }
+    .kpi .k { color: var(--muted); font-weight: 500; font-size: 12.5px; }
+    .kpi .v { font-size: 32px; font-weight: 450; letter-spacing: -.04em; color: #fff; }
+    .kpi .s { color: var(--faint); }
+    .kpi.warn .v { color: #FFD27A; }
+    .kpi.danger .v { color: #FFA48A; }
+    .kpi.ok .v { color: #fff; }
+    .kpi .delta { font-size: 11.5px; font-weight: 650; padding: 3px 9px; border-radius: 999px; letter-spacing: 0; }
+    .kpi .delta.up { color: var(--lime); background: rgba(200,240,60,.1); border: 1px solid rgba(200,240,60,.3); }
+    .kpi .delta.down { color: #FF9C80; background: rgba(255,122,89,.1); border: 1px solid rgba(255,122,89,.3); }
+    .kpi .delta.flat { color: var(--muted); background: rgba(255,255,255,.06); border: 1px solid var(--line); }
+    .kpi .spark { height: 32px; }
+    .tot { background: rgba(255,255,255,.055); border: 1px solid var(--line); border-radius: 18px; }
+    .tot .k { color: var(--muted); }
+
+    /* buttons, chips, segmented */
+    .btn {
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: var(--ink);
+      border-radius: 999px; min-height: 46px; padding: 10px 20px; font-weight: 600;
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+      transition: background .15s, border-color .15s, transform .1s;
+    }
+    .btn:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.26); }
+    .btn:active { transform: scale(.985); }
+    .btn.primary, .btn.lime {
+      background: var(--lime); border-color: var(--lime); color: var(--lime-ink); font-weight: 700;
+      box-shadow: 0 12px 28px -10px rgba(200,240,60,.55);
+    }
+    .btn.primary:hover, .btn.lime:hover { background: #D6F85A; border-color: #D6F85A; }
+    .btn.ghost { background: transparent; }
+    .seg {
+      background: rgba(8,14,9,.45); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px;
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    }
+    .seg button { color: var(--muted); border-right: 0; border-radius: 999px; font-weight: 600; padding: 8px 15px; }
+    .seg button:hover { color: #fff; }
+    .seg button.on { background: var(--lime); color: var(--lime-ink); }
+    .seg button svg { vertical-align: -3px; margin-right: 6px; }
+    .filter-chip { background: var(--lime-soft); border-color: rgba(200,240,60,.5); color: var(--lime); }
+    .icon-btn { color: var(--muted); }
+    .chip { color: #fff; border-radius: 9px; }
+    .chip.C, .chip.D { color: #1a1a00; }
+    .st { padding: 4px 10px; font-weight: 650; border: 1px solid transparent; }
+    .st.at_risk { background: rgba(255,122,89,.16); color: #FFA48A; border-color: rgba(255,122,89,.3); }
+    .st.in_progress { background: rgba(200,240,60,.12); color: var(--lime); border-color: rgba(200,240,60,.3); }
+    .st.planned { background: rgba(255,200,87,.13); color: #FFD27A; border-color: rgba(255,200,87,.28); }
+    .st.compliant { background: rgba(111,227,165,.14); color: #7FE8B0; border-color: rgba(111,227,165,.3); }
+    .st.indicative { background: rgba(255,255,255,.07); color: var(--muted); border-color: var(--line); }
+    .st.review { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.2); }
+    .reg { color: #DDF58A; }
+    .reg i { background: var(--lime); }
+    .reg.wal { color: #F4CD8C; }
+    .reg.wal i { background: #E8A94A; }
+    .cdown.ok { color: #7FE8B0; }
+    .cdown.warn { color: #FFD27A; }
+    .cdown.mute { color: var(--faint); }
+    .badge { background: var(--lime-soft); color: var(--lime); }
+    .badge.queue { background: var(--warn-bg); color: var(--warn); }
+    .badge.missing { background: var(--danger-bg); color: var(--danger); }
+
+    /* tables & lists */
+    table.list th { background: transparent; color: var(--faint); border-bottom: 1px solid var(--line); }
+    table.list td { border-bottom: 1px solid var(--line); }
+    table.list tbody tr:hover { background: rgba(255,255,255,.05); }
+    .bname { color: #fff; font-weight: 600; }
+    .metric-row + .metric-row { border-top-color: var(--line); }
+    .stage { background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 20px; }
+    .stage.done { border-color: rgba(111,227,165,.35); }
+    .stage-n { background: rgba(255,255,255,.14); color: #fff; border-radius: 10px; }
+    .stage.done .stage-n { background: var(--lime); color: var(--lime-ink); }
+    .stage-b { color: var(--muted); }
+    .grant { color: #7FE8B0; }
+    .stage.suspended-grant .grant { color: #FF9C80; }
+    .doc { background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 18px; }
+    .doc .di { background: var(--lime-soft); color: var(--lime); border-radius: 12px; }
+    .check { border-bottom-color: var(--line); }
+    .check input { accent-color: var(--lime); }
+    .progress { background: rgba(255,255,255,.1); }
+    .progress > span { background: linear-gradient(90deg, #4FD1A5, var(--lime)); }
+    .log .hash { color: #D8E6C9; }
+    .log .idx { color: var(--lime); }
+    .log .act { color: #fff; }
+    .log-row { border-bottom-color: var(--line); }
+    .remind { border-bottom-color: var(--line); }
+    .rule { background: rgba(255,255,255,.055); border: 1px solid var(--line); border-radius: 20px; }
+    .rule .why { color: var(--muted); }
+    .rule dt { color: var(--faint); }
+    .notice { border-radius: 18px; }
+    .notice.alert { background: rgba(255,122,89,.13); color: #FFC3B3; border-color: rgba(255,122,89,.32); }
+    .notice.warn { background: rgba(255,200,87,.11); color: #FFE0A0; border-color: rgba(255,200,87,.3); }
+    .notice.info { background: rgba(255,255,255,.06); color: var(--ink); border-color: var(--line); }
+    .upload { background: rgba(255,255,255,.04); border: 1.5px dashed rgba(255,255,255,.22); border-radius: 22px; color: var(--muted); }
+    .upload.drag { background: var(--lime-wash); border-color: var(--lime); }
+    .upload h3 { color: #fff; }
+    .upload .ico, .upload svg { color: var(--lime); }
+    .share-box { background: rgba(0,0,0,.3); border-color: var(--line); color: #E8F0DD; }
+    .attn { background: rgba(255,255,255,.055); border: 1px solid var(--line); border-radius: 20px; color: var(--ink); transition: border-color .15s, background .15s; }
+    .attn:hover { border-color: rgba(200,240,60,.55); background: rgba(255,255,255,.09); box-shadow: none; }
+    .attn .as { color: var(--muted); }
+    .chart-legend { color: var(--muted); }
+    .chart-legend button:hover { color: #fff; }
+    .chart-tip, .toast { background: rgba(14,22,15,.92); color: #fff; border: 1px solid rgba(255,255,255,.14); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+    .toast { border-radius: 16px; }
+    .modal-back { background: rgba(5,10,6,.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .modal { background: linear-gradient(180deg, rgba(36,52,38,.96), rgba(20,31,22,.97)); border: 1px solid var(--glass-line); color: var(--ink); border-radius: 28px; }
+    .cal-day { fill: rgba(255,255,255,.04); stroke: rgba(255,255,255,.1); }
+    .cal-day.has { fill: rgba(200,240,60,.18); stroke: var(--lime); }
+    .cal-day.today { stroke: #fff; }
+    .axis { fill: rgba(238,243,233,.55); }
+    .axis-title { fill: var(--muted); }
+    .chart-svg text { font-family: var(--sans); }
+    .chart-svg text:not([fill]) { fill: var(--ink); }
+    h2.sec { color: #fff; }
+    .scrim { z-index: 45; }
+
+    /* ---------- map hero ---------- */
+    .map-wrap { position: relative; margin-bottom: 16px; }
+    .map-stage {
+      position: relative; isolation: isolate; overflow: hidden;
+      aspect-ratio: 16 / 10; border-radius: 30px;
+      background: #26331f; border: 1px solid rgba(255,255,255,.1);
+      box-shadow: 0 30px 60px -28px rgba(0,0,0,.7);
+    }
+    .map-stage .map-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .map-stage::before {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(9,16,10,.55), rgba(9,16,10,.0) 26%, rgba(9,16,10,.0) 62%, rgba(9,16,10,.5)),
+        radial-gradient(110% 100% at 50% 45%, rgba(0,0,0,0) 55%, rgba(4,9,5,.55) 100%),
+        rgba(18,30,18,.34);
+    }
+    .map-title {
+      position: absolute; z-index: 3; left: 18px; bottom: 14px; display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: rgba(255,255,255,.78); text-shadow: 0 1px 8px rgba(0,0,0,.6);
+    }
+    .map-title .scale { display: inline-block; width: 54px; height: 6px; border: 1.5px solid rgba(255,255,255,.7); border-top: 0; margin-right: 4px; }
+    .map-chips {
+      position: absolute; z-index: 4; top: 14px; left: 14px; right: 14px;
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    }
+    .map-chip {
+      min-height: 40px; padding: 0 18px; border-radius: 999px; font-weight: 600; font-size: 13.5px;
+      background: rgba(12,20,13,.72); color: #fff; border: 1px solid rgba(255,255,255,.12);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+      display: inline-flex; align-items: center; gap: 8px; transition: background .15s, color .15s;
+    }
+    .map-chip:hover { background: rgba(30,46,31,.85); }
+    .map-chip.on { background: var(--lime); color: var(--lime-ink); border-color: var(--lime); box-shadow: 0 10px 24px -8px rgba(200,240,60,.55); }
+    .map-chips .map-tag { margin-left: auto; }
+    .parcel { position: absolute; z-index: 2; left: var(--xn); top: var(--y); width: 170px; height: 132px; transform: translate(-50%, -52%); pointer-events: none; overflow: visible; }
+    .parcel polygon { fill: rgba(200,240,60,.16); stroke: var(--lime); stroke-width: 1.8; stroke-linejoin: round; }
+    .pin {
+      position: absolute; z-index: 3; left: var(--xn); top: var(--y);
+      transform: translate(-50%, calc(-100% + 8px));
+      display: flex; flex-direction: column; align-items: center;
+      background: none; border: 0; padding: 0; color: #fff; cursor: pointer;
+    }
+    .pin-chip {
+      display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px 0 11px; border-radius: 999px;
+      background: rgba(12,20,13,.78); border: 1px solid rgba(255,255,255,.14); color: #fff; font-size: 12.5px; white-space: nowrap;
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      box-shadow: 0 8px 22px -8px rgba(0,0,0,.6); transition: background .15s, transform .15s;
+    }
+    .pin-chip .pdot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, #fff); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c, #fff) 25%, transparent); flex: 0 0 8px; }
+    .pin-chip b { font-weight: 650; }
+    .pin-chip em { font-style: normal; color: rgba(255,255,255,.66); display: inline-flex; align-items: center; gap: 5px; }
+    .pin-chip .chip.mini { min-width: 18px; height: 18px; padding: 0 4px; font-size: 10.5px; border-radius: 5px; }
+    .pin-stem { width: 1.5px; height: 9px; background: rgba(255,255,255,.7); }
+    .pin-dot { width: 13px; height: 13px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.2), 0 4px 10px rgba(0,0,0,.5); }
+    .pin:hover .pin-chip { background: rgba(32,48,33,.9); transform: translateY(-1px); }
+    .pin.sel { z-index: 5; }
+    .pin.sel .pin-chip { background: var(--lime); color: var(--lime-ink); border-color: transparent; box-shadow: 0 10px 26px -6px rgba(200,240,60,.6); }
+    .pin.sel .pin-chip em { color: rgba(20,33,15,.72); }
+    .pin.sel .pin-chip .pdot { background: var(--lime-ink); box-shadow: none; }
+    .pin.sel .pin-dot { background: var(--lime); animation: pinPulse 2.4s ease-out infinite; }
+    @keyframes pinPulse { 0% { box-shadow: 0 0 0 0 rgba(200,240,60,.7), 0 4px 10px rgba(0,0,0,.5); } 80%,100% { box-shadow: 0 0 0 16px rgba(200,240,60,0), 0 4px 10px rgba(0,0,0,.5); } }
+    @media (prefers-reduced-motion: reduce) { .pin.sel .pin-dot { animation: none; } }
+
+    .proj-card {
+      position: relative; z-index: 6; margin-top: 12px; padding: 12px; border-radius: 28px;
+      background: linear-gradient(180deg, rgba(38,54,40,.88), rgba(19,30,21,.93));
+      -webkit-backdrop-filter: blur(26px) saturate(1.2); backdrop-filter: blur(26px) saturate(1.2);
+      border: 1px solid rgba(255,255,255,.12); box-shadow: 0 30px 60px -24px rgba(0,0,0,.7);
+    }
+    .proj-art { position: relative; height: 128px; border-radius: 20px; overflow: hidden; background: #1b2b1d; }
+    .proj-art svg { display: block; width: 100%; height: 100%; }
+    .proj-badge {
+      position: absolute; left: 10px; top: 10px; display: inline-flex; align-items: center; gap: 6px;
+      height: 28px; padding: 0 12px 0 9px; border-radius: 999px; font-size: 12px; font-weight: 650;
+      background: rgba(10,16,11,.78); color: #fff; border: 1px solid rgba(255,255,255,.14);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    }
+    .proj-badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--lime)); }
+    .proj-title { margin: 14px 6px 2px; font-size: 20px; font-weight: 560; letter-spacing: -.025em; line-height: 1.2; }
+    .proj-sub { margin: 0 6px 10px; color: var(--muted); font-size: 12.5px; }
+    .proj-metric { display: flex; align-items: center; gap: 12px; margin: 4px 6px 4px; }
+    .proj-metric .chip { width: 44px; height: 44px; font-size: 22px; border-radius: 13px; }
+    .proj-metric .big { font-size: 30px; font-weight: 450; letter-spacing: -.04em; line-height: 1; color: #fff; }
+    .proj-metric .big small { font-size: 12px; color: var(--faint); letter-spacing: 0; font-weight: 500; margin-left: 4px; }
+    .proj-metric .trend { margin-left: auto; font-size: 11.5px; font-weight: 650; color: var(--lime); background: rgba(200,240,60,.1); border: 1px solid rgba(200,240,60,.3); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+    .proj-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 8px 6px 14px; color: var(--faint); font-size: 12px; }
+    .proj-meta b { color: var(--ink); font-weight: 600; }
+    .proj-meta s { color: #FF9C80; }
+    .proj-cta { width: 100%; justify-content: center; min-height: 52px; font-size: 15px; }
+    .proj-links { display: flex; gap: 8px; margin-top: 8px; }
+    .proj-links .btn { flex: 1; justify-content: center; min-height: 44px; padding: 8px 10px; font-size: 13px; }
+
+    @media (min-width: 1160px) {
+      .map-stage { aspect-ratio: auto; height: clamp(480px, 63vh, 600px); }
+      .pin, .parcel { left: var(--xw); }
+      .proj-card { position: absolute; right: 16px; bottom: 16px; width: 308px; margin-top: 0; }
+    }
+
+    /* ---------- overview panel, work-mix donut, spend pills ---------- */
+    .panel-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 18px 20px 4px; }
+    .panel-h h2 { margin: 0; font-size: 21px; font-weight: 500; letter-spacing: -.03em; }
+    .panel-h .sub { color: var(--faint); font-size: 12.5px; margin-top: 2px; }
+    .round-btn {
+      width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; flex: 0 0 44px;
+      background: rgba(255,255,255,.07); border: 1px solid var(--line); color: var(--ink);
+    }
+    .round-btn:hover { background: rgba(255,255,255,.14); }
+    .round-btn svg { width: 18px; height: 18px; }
+    .panel-b { padding: 12px 16px 16px; }
+    .panel-b .kpis { margin-bottom: 0; }
+    .mix { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; padding-top: 6px; }
+    .mix-ring { position: relative; width: 188px; height: 188px; flex: 0 0 188px; }
+    .mix-ring svg { width: 100%; height: 100%; display: block; }
+    .mix-ring .ctr { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+    .mix-ring .ctr b { font-size: 19px; font-weight: 500; letter-spacing: -.03em; line-height: 1.05; }
+    .mix-ring .ctr span { font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-top: 3px; }
+    .mix-legend { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 150px; }
+    .mix-legend .row { display: flex; align-items: center; gap: 10px; }
+    .mix-legend .sw { width: 9px; height: 9px; border-radius: 3px; flex: 0 0 9px; }
+    .mix-legend .nm { color: var(--muted); font-size: 12.5px; flex: 1; }
+    .mix-legend .pc { font-size: 18px; font-weight: 450; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+    .pills-wrap { position: relative; padding-top: 34px; }
+    .pills { position: relative; display: flex; align-items: flex-end; gap: 10px; height: 172px; padding-left: 38px; }
+    .pills::before {
+      content: ""; position: absolute; left: 38px; right: 0; top: 0; bottom: 0; pointer-events: none;
+      background: repeating-linear-gradient(180deg, rgba(255,255,255,.07) 0 1px, transparent 1px 25%);
+    }
+    .pills .ylab { position: absolute; left: 0; width: 32px; text-align: right; font-size: 10px; color: var(--faint); transform: translateY(50%); }
+    .pcol { position: relative; flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; }
+    .pcol .track { position: absolute; left: 50%; top: 0; bottom: 0; width: 70%; max-width: 30px; transform: translateX(-50%); border-radius: 999px; background: rgba(255,255,255,.045); }
+    .pcol .pill {
+      position: relative; width: 70%; max-width: 30px; border-radius: 999px; min-height: 8px;
+      background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.34));
+      transition: height .35s ease, background .2s;
+    }
+    .pcol:hover .pill { background: linear-gradient(180deg, #fff, rgba(255,255,255,.5)); }
+    .pcol.on .pill { background: linear-gradient(180deg, #D8FA55, #9CCB1E); box-shadow: 0 0 22px rgba(200,240,60,.35); }
+    .pcol .xl { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--faint); }
+    .pcol.on .xl { color: #fff; }
+    .ptip {
+      position: absolute; z-index: 3; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: var(--lime); color: var(--lime-ink); font-size: 12px; font-weight: 700; padding: 5px 11px; border-radius: 999px; white-space: nowrap;
+      box-shadow: 0 10px 22px -8px rgba(200,240,60,.6);
+    }
+    .spend-note { margin-top: 30px; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 16px; }
+    .spend-note b { color: #fff; font-weight: 600; }
+    .spend-note .susp { color: #FF9C80; }
+    .dash-row.two-eq .chart-card, .dash-row .chart-card { min-width: 0; }
+    .dash-cols { display: grid; gap: 16px; margin-bottom: 16px; }
+    .dash-cols.c2 { grid-template-columns: 1fr 1fr; }
+    .dash-cols.c2b { grid-template-columns: 1fr 1.25fr; }
+    .dash-cols.c3 { grid-template-columns: 1.15fr .85fr 1.1fr; }
+    .dash-row { gap: 16px; margin-bottom: 16px; }
+    .page-head { margin-bottom: 14px; align-items: center; }
+    .page-head .lede { max-width: 640px; }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 1100px) { .search { width: 200px; } }
+    @media (max-width: 980px) {
+      :root { --frame: 14px; }
+      .app { padding: 12px; gap: 0; }
+      .sidebar {
+        position: fixed; left: calc(var(--frame) + 12px); top: calc(var(--frame) + 12px);
+        height: calc(100% - 2 * (var(--frame) + 12px)); z-index: 50;
+        width: 268px; flex-basis: 268px; transform: translateX(-120%); transition: transform .25s ease;
+        background: linear-gradient(180deg, rgba(40,58,41,.94), rgba(18,29,20,.96));
+      }
+      .sidebar.open { transform: none; }
+      .dash-cols.c2, .dash-cols.c2b, .dash-cols.c3 { grid-template-columns: 1fr 1fr; }
+      .dash-row.kpis4 { grid-template-columns: 1fr 1fr; }
+      h1 { font-size: 27px; }
+    }
+    @media (max-width: 760px) {
+      .dash-cols.c2, .dash-cols.c2b, .dash-cols.c3 { grid-template-columns: 1fr; }
+    }
+    [data-chart="peb-distribution"] { max-width: 520px; margin-inline: auto; }
+    @media (min-width: 600px) and (max-width: 1159px) {
+      .proj-card { display: grid; grid-template-columns: minmax(200px, .8fr) 1.2fr; column-gap: 20px; align-items: start; padding: 14px; }
+      .proj-card > * { grid-column: 2; }
+      .proj-card > .proj-art { grid-column: 1; grid-row: 1 / span 7; height: 100%; min-height: 300px; }
+      .proj-title { margin-top: 4px; }
+    }
+    @media (max-width: 700px) {
+      :root { --frame: 0px; --topbar-h: 58px; }
+      html, body { height: auto; }
+      body { background-attachment: scroll; }
+      .stage-bg { border-radius: 0; box-shadow: none; }
+      .stage-bg::after { background: linear-gradient(180deg, rgba(120,142,118,.38), rgba(9,17,10,.62) 38%), rgba(9,17,10,.34); }
+      .app { position: relative; inset: auto; display: block; min-height: 100vh; padding: 10px 10px 24px; }
+      .workspace { height: auto; overflow: visible; padding: 0; }
+      main { padding: 14px 0 28px; }
+      .banner { position: static; border-radius: 18px; border-bottom: 1px solid var(--banner-line); margin-bottom: 8px; font-size: 11.5px; }
+      .topbar { top: 8px; border-radius: 22px; padding: 0 10px; gap: 8px; margin-bottom: 4px; }
+      .crumbs { display: none; }
+      .topbar-right { margin-left: auto; gap: 8px; }
+      .userpill { padding: 3px; }
+      .search { display: none; }
+      .sidebar { left: 10px; top: 10px; height: calc(100% - 20px); }
+      h1 { font-size: 25px; }
+      .page-head { flex-direction: column; align-items: flex-start; }
+      .page-head .btn { width: 100%; justify-content: center; }
+      .map-stage { aspect-ratio: 4 / 5; border-radius: 26px; }
+      .map-chips { gap: 6px; top: 10px; left: 10px; right: 10px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+      .map-chips::-webkit-scrollbar { display: none; }
+      .map-chip { padding: 0 14px; min-height: 38px; font-size: 13px; flex: 0 0 auto; }
+      .map-chips .map-tag { display: none; }
+      .pin-chip { height: 30px; padding: 0 10px 0 9px; font-size: 12px; }
+      .pin-chip b { display: none; }
+      .pin .pin-chip em .chip.mini { display: none; }
+      .parcel { width: 120px; height: 94px; }
+      .dash-cols.c2, .dash-cols.c2b, .dash-cols.c3, .dash-row.kpis4 { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .kpi { padding: 14px; }
+      .kpi .v { font-size: 27px; }
+      .panel-b { padding: 8px 10px 12px; }
+      .mix { gap: 14px; }
+      .mix-ring { width: 148px; height: 148px; flex-basis: 148px; margin: 0 auto; }
+      .bcards { grid-template-columns: 1fr; }
+      .toolbar { gap: 8px; }
+    }
+    @media (max-width: 420px) {
+      .kpis { grid-template-columns: 1fr; }
+    }
+    @media print {
+      .stage-bg { display: none !important; }
+      html, body { background: #fff !important; }
+      .app { position: static !important; display: block !important; padding: 0 !important; }
+      .workspace { overflow: visible !important; height: auto !important; }
+      svg text { fill: #111 !important; }
+      * { color: #111 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+      .card, .kpi, .stage, .doc, .rule, .tot { background: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+    }
+
     @media print {
       .sidebar, .banner, .topbar, .toast-wrap, .modal-back, .scrim, .no-print, .menu-btn { display: none !important; }
       .workspace { display: block; }
@@ -522,7 +1054,9 @@
   </style>
 </head>
 <body>
+  <div class="stage-bg" id="stageBg" aria-hidden="true"></div>
   <div class="app">
+    <div class="scrim" id="scrim"></div>
     <aside class="sidebar" id="sidebar"></aside>
     <div class="workspace">
       <div class="banner" id="banner"></div>
@@ -530,7 +1064,6 @@
       <main id="main"></main>
     </div>
   </div>
-  <div class="scrim" id="scrim"></div>
   <div class="toast-wrap" id="toasts"></div>
   <div id="modal-root"></div>
 
@@ -731,6 +1264,12 @@
       chartRegion: "Répartition régionale",
       chartClickHint: "Cliquez une classe, une région ou un immeuble pour filtrer ou ouvrir.",
       buildingsShort: "immeubles",
+      layerEnergy: "Énergie", layerBudget: "Budget", layerProofs: "Preuves", layerTimeline: "Échéances",
+      mapTitle: "Carte du portefeuille", mapNote: "Carte illustrative · données d’exemple",
+      ovTitle: "Vue du portefeuille",
+      workMixTitle: "Répartition des travaux", workMixSub: "Investissements prévus par système", totalCapex: "Investissement total",
+      spendTitle: "Dépenses prévues", spendSub: "Investissements par année, 2026–2031",
+      projSelected: "Projet sélectionné", projCapex: "Investissement", projGrants: "Aides", projProofs: "Preuves", projCert: "Certificat", projDossier: "Dossier",
       ms2033: "Bruxelles 275 · 2033",
       ms2045: "150 kWh dès 2045",
       ms2030: "PEB obligatoire (au plus tôt)",
@@ -949,6 +1488,12 @@
       chartRegion: "Region split",
       chartClickHint: "Click a class, a region or a building to filter or open it.",
       buildingsShort: "buildings",
+      layerEnergy: "Energy", layerBudget: "Budget", layerProofs: "Proofs", layerTimeline: "Timeline",
+      mapTitle: "Portfolio map", mapNote: "Illustrative map · example data",
+      ovTitle: "Portfolio overview",
+      workMixTitle: "Work mix", workMixSub: "Planned capex by system", totalCapex: "Total capex",
+      spendTitle: "Planned spend", spendSub: "Capex per year, 2026–2031",
+      projSelected: "Selected project", projCapex: "Capex", projGrants: "Grants", projProofs: "Proofs", projCert: "Certificate", projDossier: "Dossier",
       ms2033: "Brussels 275 · 2033",
       ms2045: "150 kWh from 2045",
       ms2030: "PEB mandatory (earliest)",
@@ -1264,7 +1809,10 @@
     lastUpload: null,
     reminders: REMINDERS0.map((r) => Object.assign({}, r)),
     checks: {},
-    demoBuilding: null
+    demoBuilding: null,
+    mapSel: "acacias",
+    mapLayer: "energy",
+    spendYear: null
   };
 
   BUILDINGS.forEach((b) => {
@@ -1329,17 +1877,20 @@
   function icon(name) {
     const paths = {
       grid: '<path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" fill="currentColor"/>',
-      cert: '<path d="M7 3h10a2 2 0 0 1 2 2v14l-7-3-7 3V5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+      cert: '<path d="M7 3h8l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 14 2 2 4-4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
       plan: '<path d="M4 6h16M4 12h16M4 18h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
-      folder: '<path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+      folder: '<path d="M3.5 7a1.5 1.5 0 0 1 1.5-1.5h4.2l2 2.3H19a1.5 1.5 0 0 1 1.5 1.5v8.2a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 17.5V7z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
       bell: '<path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15L6 16zm4 2a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
       search: '<circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 15.5 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
-      dash: '<path d="M4 13h6v7H4v-7zm10-6h6v13h-6V7zM4 4h6v7H4V4z" fill="currentColor"/>',
+      dash: '<rect x="4" y="4" width="6.5" height="6.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/>',
+      arrow: '<path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>',
+      home: '<path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 20v-5.5h4V20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+      route: '<circle cx="6" cy="6" r="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="18" cy="18" r="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.2 6H14a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h5.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
       cards: '<path d="M4 5h7v6H4V5zm9 0h7v6h-7V5zM4 13h7v6H4v-6zm9 0h7v6h-7v-6z" fill="currentColor"/>',
       table: '<path d="M4 5h16v14H4V5z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 9h16M10 5v14" stroke="currentColor" stroke-width="1.7"/>',
       upload: '<path d="M12 16V5m0 0 4 4M12 5 8 9M4 19h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
       plus: '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
-      leaf: '<path d="M5 19c8-1 13-8 14-15-8 1-14 7-14 15z" fill="#164E50"/><path d="M6 18c3-3 6-6 9-12" stroke="#164E50" stroke-width="1.4" fill="none"/>',
+      leaf: '<path d="M5 19c8-1 13-8 14-15-8 1-14 7-14 15z" fill="#14210F"/><path d="M6 18c3-3 6-6 9-12" stroke="#C8F03C" stroke-width="1.4" fill="none"/>',
       menu: '<path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
       file: '<path d="M7 3h7l5 5v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.6"/>',
       warn: '<path d="M12 4 21 20H3L12 4zm0 6v5m0 3h.01" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>'
@@ -1400,7 +1951,7 @@
 
 
   const PEB_COLORS = { A:"#007A3D", B:"#50A30A", C:"#C0C000", D:"#F7E300", E:"#F5A000", F:"#E85D04", G:"#D0001F" };
-  const CAT_COLORS = { envelope:"#164E50", windows:"#21776A", heating:"#88DE7B", cert:"#A3B8B3" };
+  const CAT_COLORS = { envelope:"#C8F03C", windows:"#2FB98A", heating:"#F4F7F0", cert:"#7F9188" };
 
   /* Indicative works years — example schedule, consistent with existing stages. */
   const STAGE_META = {
@@ -1538,8 +2089,8 @@
     const p = Math.max(0, Math.min(100, pct));
     const dash = (p / 100) * c;
     return `<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" aria-hidden="true">
-      <circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="#e6ecea" stroke-width="${sw}"/>
-      <circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="#21776A" stroke-width="${sw}"
+      <circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="${sw}"/>
+      <circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="#C8F03C" stroke-width="${sw}"
         stroke-linecap="round" stroke-dasharray="${dash} ${c - dash}" transform="rotate(-90 ${s/2} ${s/2})"/>
     </svg>`;
   }
@@ -1577,8 +2128,8 @@
     }).join("");
     return `<svg class="chart-svg" viewBox="0 0 320 190" role="img" aria-label="${esc(t("chartPeb"))}" data-chart="peb-distribution">
       ${slices.join("")}
-      <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="18" font-weight="750" fill="#181818">${total}</text>
-      <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="10" fill="#7F7F7F">${esc(t("buildingsShort"))}</text>
+      <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="18" font-weight="750" fill="#EEF2EA">${total}</text>
+      <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="10" fill="#9AA89C">${esc(t("buildingsShort"))}</text>
       ${bars}
     </svg>`;
   }
@@ -1592,7 +2143,7 @@
     for (let y = y0; y <= y1; y += 1) {
       if (y === y0 || y === y1 || y % 3 === 0 || y === 2033) {
         const x = xOf(y, 0);
-        ticks.push(`<line x1="${x}" y1="${padT}" x2="${x}" y2="${h - padB}" stroke="#E2E8E5"/>
+        ticks.push(`<line x1="${x}" y1="${padT}" x2="${x}" y2="${h - padB}" stroke="rgba(255,255,255,.09)"/>
           <text class="axis" x="${x}" y="${h - 10}" text-anchor="middle">${y}</text>`);
       }
     }
@@ -1606,8 +2157,8 @@
       const y = padT + 14 + i * 16;
       const tip = `${b.name} · PEB ${b.label} · ${fmtNum(b.kwh)} · 1 Jan 2033${meets2033(b) ? " · " + t("alreadyMet") : ""}`;
       return `<g class="hit" data-go-building="${b.id}" data-tip="${esc(tip)}">
-        <circle cx="${x}" cy="${y}" r="7" fill="${PEB_COLORS[b.label]}" stroke="#fff" stroke-width="1.5"/>
-        <text class="axis" x="${x + 12}" y="${y + 4}" fill="#181818">${esc(b.name.split(" ").pop())}</text>
+        <circle cx="${x}" cy="${y}" r="7" fill="${PEB_COLORS[b.label]}" stroke="#0f1a12" stroke-width="1.5"/>
+        <text class="axis" x="${x + 12}" y="${y + 4}" fill="#EEF2EA">${esc(b.name.split(" ").pop())}</text>
       </g>`;
     }).join("");
     const walDots = wal.map((b, i) => {
@@ -1615,17 +2166,17 @@
       const y = h - padB - 10;
       const tip = `${b.name} · ${t("pathwayOnly")} · PEB ${b.label}`;
       return `<g class="hit" data-go-building="${b.id}" data-tip="${esc(tip)}">
-        <circle cx="${x}" cy="${y}" r="6" fill="${PEB_COLORS[b.label]}" stroke="#fff" stroke-width="1.5"/>
+        <circle cx="${x}" cy="${y}" r="6" fill="${PEB_COLORS[b.label]}" stroke="#0f1a12" stroke-width="1.5"/>
       </g>`;
     }).join("");
     return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("chartTimeline"))}" data-chart="deadline-timeline">
       ${ticks.join("")}
       <line x1="${x2033}" y1="${padT - 6}" x2="${x2033}" y2="${h - padB}" class="milestone"/>
-      <text x="${x2033 + 4}" y="${padT - 8}" font-size="10" fill="#B42318" font-weight="700">${esc(t("ms2033"))}</text>
-      <line x1="${x2045}" y1="${padT}" x2="${x2045}" y2="${h - padB}" stroke="#21776A" stroke-dasharray="3 3"/>
-      <text x="${x2045 - 4}" y="${padT - 8}" font-size="10" fill="#21776A" text-anchor="end" font-weight="700">${esc(t("ms2045"))}</text>
-      <line x1="${x2030}" y1="${padT}" x2="${x2030}" y2="${h - padB}" stroke="#7F7F7F" stroke-dasharray="2 3"/>
-      <text x="${x2030 - 4}" y="${padT - 8}" font-size="9" fill="#7F7F7F" text-anchor="end">${esc(t("ms2030"))}</text>
+      <text x="${x2033 + 4}" y="${padT - 8}" font-size="10" fill="#FF8A6B" font-weight="700">${esc(t("ms2033"))}</text>
+      <line x1="${x2045}" y1="${padT}" x2="${x2045}" y2="${h - padB}" stroke="#4FD1A5" stroke-dasharray="3 3"/>
+      <text x="${x2045 - 4}" y="${padT - 8}" font-size="10" fill="#4FD1A5" text-anchor="end" font-weight="700">${esc(t("ms2045"))}</text>
+      <line x1="${x2030}" y1="${padT}" x2="${x2030}" y2="${h - padB}" stroke="#9AA89C" stroke-dasharray="2 3"/>
+      <text x="${x2030 - 4}" y="${padT - 8}" font-size="9" fill="#9AA89C" text-anchor="end">${esc(t("ms2030"))}</text>
       <text class="axis-title" x="${padL}" y="14">${esc(t("brussels"))}</text>
       ${dots}
       <text class="axis-title" x="${padL}" y="${h - padB - 8}">${esc(t("wallonia"))}</text>
@@ -1649,28 +2200,28 @@
     const poly = (pts) => pts.map((p) => xOf(p[0]).toFixed(1) + "," + yOf(p[1]).toFixed(1)).join(" ");
     const ticks = [];
     for (let y = 2018; y <= 2033; y += 3) {
-      ticks.push(`<line x1="${xOf(y)}" y1="${top}" x2="${xOf(y)}" y2="${h-bot}" stroke="#E2E8E5"/><text class="axis" x="${xOf(y)}" y="${h-10}" text-anchor="middle">${y}</text>`);
+      ticks.push(`<line x1="${xOf(y)}" y1="${top}" x2="${xOf(y)}" y2="${h-bot}" stroke="rgba(255,255,255,.09)"/><text class="axis" x="${xOf(y)}" y="${h-10}" text-anchor="middle">${y}</text>`);
     }
     [150, 275].forEach((th, i) => {
-      ticks.push(`<line x1="${l}" y1="${yOf(th)}" x2="${w-r}" y2="${yOf(th)}" stroke="${i ? "#B42318" : "#21776A"}" stroke-dasharray="4 3"/>
-        <text x="${l + 4}" y="${yOf(th) - 4}" font-size="10" fill="${i ? "#B42318" : "#21776A"}" font-weight="700">${th}</text>`);
+      ticks.push(`<line x1="${l}" y1="${yOf(th)}" x2="${w-r}" y2="${yOf(th)}" stroke="${i ? "#FF8A6B" : "#4FD1A5"}" stroke-dasharray="4 3"/>
+        <text x="${l + 4}" y="${yOf(th) - 4}" font-size="10" fill="${i ? "#FF8A6B" : "#4FD1A5"}" font-weight="700">${th}</text>`);
     });
     const hits = hist.concat(proj.slice(1)).map((p) => {
       const kind = p[0] <= 2026 ? t("histSeries") : t("projSeries");
-      return `<circle class="hit" cx="${xOf(p[0])}" cy="${yOf(p[1])}" r="7" fill="${p[0] <= 2026 ? "#164E50" : "#88DE7B"}" stroke="#fff" stroke-width="1.5"
+      return `<circle class="hit" cx="${xOf(p[0])}" cy="${yOf(p[1])}" r="7" fill="${p[0] <= 2026 ? "#E9EFE3" : "#C8F03C"}" stroke="#0f1a12" stroke-width="1.5"
         data-tip="${esc(kind + " · " + p[0] + " · " + p[1] + " kWh/m²")}"/>`;
     }).join("");
     return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("chartEnergy"))}" data-chart="energy-trend">
       ${ticks.join("")}
-      <polyline fill="none" stroke="#164E50" stroke-width="2.4" points="${poly(hist)}"/>
-      <polyline fill="none" stroke="#88DE7B" stroke-width="2.4" stroke-dasharray="6 4" points="${poly(proj)}"/>
+      <polyline fill="none" stroke="#E9EFE3" stroke-width="2.4" points="${poly(hist)}"/>
+      <polyline fill="none" stroke="#C8F03C" stroke-width="2.4" stroke-dasharray="6 4" points="${poly(proj)}"/>
       ${hits}
     </svg>
     <div class="chart-legend">
-      <span><i style="background:#164E50"></i>${esc(t("histSeries"))} ${tag()}</span>
-      <span><i style="background:#88DE7B"></i>${esc(t("projSeries"))} ${tag()}</span>
-      <span><i style="background:#B42318"></i>275 kWh — 2033</span>
-      <span><i style="background:#21776A"></i>150 kWh — ${esc(t("ms2045"))}</span>
+      <span><i style="background:#E9EFE3"></i>${esc(t("histSeries"))} ${tag()}</span>
+      <span><i style="background:#C8F03C"></i>${esc(t("projSeries"))} ${tag()}</span>
+      <span><i style="background:#FF8A6B"></i>275 kWh — 2033</span>
+      <span><i style="background:#4FD1A5"></i>150 kWh — ${esc(t("ms2045"))}</span>
     </div>`;
   }
 
@@ -1697,28 +2248,28 @@
       const gw = groupW * 0.18;
       const grantH = data[year].grants;
       const susp = data[year].suspended;
-      const grantBar = grantH ? `<rect class="hit" x="${gx}" y="${yOf(grantH)}" width="${gw}" height="${Math.max(0, yOf(0) - yOf(grantH))}" fill="#16794A" data-tip="${esc(year + " · " + t("stageGrant") + " · " + fmtMoney(grantH))}"/>` : "";
+      const grantBar = grantH ? `<rect class="hit" x="${gx}" y="${yOf(grantH)}" width="${gw}" height="${Math.max(0, yOf(0) - yOf(grantH))}" fill="#4FD08A" data-tip="${esc(year + " · " + t("stageGrant") + " · " + fmtMoney(grantH))}"/>` : "";
       const suspBar = susp ? `<rect class="hit hatch" x="${gx}" y="${yOf(susp)}" width="${gw}" height="${Math.max(0, yOf(0) - yOf(susp))}" data-tip="${esc(year + " · " + t("suspendedSeries") + " · " + fmtMoney(susp))}"/>` : "";
       return `<g>${parts}${grantBar}${suspBar}<text class="axis" x="${l + i * groupW + groupW / 2}" y="${h - 12}" text-anchor="middle">${year}</text></g>`;
     }).join("");
     const yticks = [0, 0.5, 1].map((f) => {
       const v = max * f;
-      return `<line x1="${l}" y1="${yOf(v)}" x2="${w-r}" y2="${yOf(v)}" stroke="#E2E8E5"/><text class="axis" x="${l-6}" y="${yOf(v)+3}" text-anchor="end">${fmtMoney(v).replace(/\s/g,"")}</text>`;
+      return `<line x1="${l}" y1="${yOf(v)}" x2="${w-r}" y2="${yOf(v)}" stroke="rgba(255,255,255,.09)"/><text class="axis" x="${l-6}" y="${yOf(v)+3}" text-anchor="end">${fmtMoney(v).replace(/\s/g,"")}</text>`;
     }).join("");
     return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("chartCapex"))}" data-chart="capex-plan">
       <defs><pattern id="hatchSuspended" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-        <rect width="6" height="6" fill="#FEE4E2"/>
-        <line x1="0" y1="0" x2="0" y2="6" stroke="#B42318" stroke-width="3"/>
+        <rect width="6" height="6" fill="rgba(255,138,107,.2)"/>
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#FF8A6B" stroke-width="3"/>
       </pattern></defs>
       ${yticks}${bars}
     </svg>
     <div class="chart-legend">
-      <span><i style="background:#164E50"></i>${esc(t("cat_envelope"))}</span>
-      <span><i style="background:#21776A"></i>${esc(t("cat_windows"))}</span>
-      <span><i style="background:#88DE7B"></i>${esc(t("cat_heating"))}</span>
-      <span><i style="background:#A3B8B3"></i>${esc(t("cat_cert"))}</span>
-      <span><i style="background:#16794A"></i>${esc(t("stageGrant"))} (${esc(t("wallonia"))})</span>
-      <span><i style="background:#FEE4E2;box-shadow:inset 0 0 0 1px #B42318"></i>${esc(t("suspendedSeries"))} ${tag()}</span>
+      <span><i style="background:#E9EFE3"></i>${esc(t("cat_envelope"))}</span>
+      <span><i style="background:#4FD1A5"></i>${esc(t("cat_windows"))}</span>
+      <span><i style="background:#C8F03C"></i>${esc(t("cat_heating"))}</span>
+      <span><i style="background:#7F9188"></i>${esc(t("cat_cert"))}</span>
+      <span><i style="background:#4FD08A"></i>${esc(t("stageGrant"))} (${esc(t("wallonia"))})</span>
+      <span><i style="background:rgba(255,138,107,.2);box-shadow:inset 0 0 0 1px #FF8A6B"></i>${esc(t("suspendedSeries"))} ${tag()}</span>
     </div>`;
   }
 
@@ -1734,7 +2285,7 @@
     const wB = (aB / totA) * bw;
     return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("chartRegion"))}" data-chart="region-split">
       <text class="axis-title" x="${x}" y="16">${esc(t("byArea"))}</text>
-      <rect class="hit" x="${x}" y="26" width="${wB}" height="22" rx="6" fill="#164E50" data-filter-region="brussels" data-tip="${esc(t("brussels") + " · " + bxl.length + " · " + fmtNum(aB) + " m²")}"/>
+      <rect class="hit" x="${x}" y="26" width="${wB}" height="22" rx="6" fill="#2E9E6A" data-filter-region="brussels" data-tip="${esc(t("brussels") + " · " + bxl.length + " · " + fmtNum(aB) + " m²")}"/>
       <rect class="hit" x="${x + wB}" y="26" width="${bw - wB}" height="22" rx="6" fill="#C9842A" data-filter-region="wallonia" data-tip="${esc(t("wallonia") + " · " + wal.length + " · " + fmtNum(aW) + " m²")}"/>
       <text class="hit" x="${x + 8}" y="42" fill="#fff" font-size="11" font-weight="700" data-filter-region="brussels">${esc(t("brussels"))} ${bxl.length}</text>
       <text class="hit" x="${x + bw - 8}" y="42" fill="#fff" font-size="11" font-weight="700" text-anchor="end" data-filter-region="wallonia">${esc(t("wallonia"))} ${wal.length}</text>
@@ -1753,6 +2304,328 @@
     ];
   }
 
+
+  /* ===================== v3: map hero, work-mix donut, spend pills ===================== */
+  function mulberry(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* Generated aerial "neighbourhood": rotated street grid, terraces, gardens, park, canal, a curved avenue. Pure SVG, no assets. */
+  function buildMapGroup() {
+    const R = mulberry(20261126);
+    const pick = (a) => a[Math.floor(R() * a.length)];
+    const roofs = ["#7d5a4c", "#6d4f44", "#8a6655", "#565b62", "#474c53", "#8f8573", "#75665a", "#645047"];
+    const greens = ["#2b5028", "#33602e", "#244822", "#3c6c33", "#2d562a", "#42753a"];
+    const parts = [];
+    const cx = 600, cy = 400, reach = 820;
+    // ground
+    parts.push(`<rect x="-600" y="-600" width="2400" height="2000" fill="#33422e"/>`);
+    parts.push(`<g transform="rotate(-16 ${cx} ${cy})">`);
+    // grid
+    const xs = [], ys = [];
+    for (let x = -700; x < 1900; x += 150 + Math.floor(R() * 120)) xs.push(x);
+    for (let y = -700; y < 1500; y += 130 + Math.floor(R() * 100)) ys.push(y);
+    // roads
+    xs.forEach((x, i) => parts.push(`<line x1="${x}" y1="-800" x2="${x}" y2="1600" stroke="#5f6057" stroke-width="${i % 3 === 0 ? 20 : 11}"/>`));
+    ys.forEach((y, i) => parts.push(`<line x1="-800" y1="${y}" x2="2000" y2="${y}" stroke="#5f6057" stroke-width="${i % 3 === 1 ? 20 : 11}"/>`));
+    // cells
+    for (let i = 0; i < xs.length - 1; i++) {
+      for (let j = 0; j < ys.length - 1; j++) {
+        const x0 = xs[i] + 13, x1 = xs[i + 1] - 13, y0 = ys[j] + 13, y1 = ys[j + 1] - 13;
+        const mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+        const rx = mx - cx, ry = my - cy;
+        if (Math.sqrt(rx * rx + ry * ry) > reach) continue;
+        const w = x1 - x0, h = y1 - y0;
+        if (w < 40 || h < 40) continue;
+        const roll = R();
+        if (roll < 0.2) {
+          // park with canopy
+          parts.push(`<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="10" fill="#2c4a28"/>`);
+          const n = Math.floor((w * h) / 520);
+          for (let k = 0; k < n; k++) {
+            const tx = x0 + 8 + R() * (w - 16), ty = y0 + 8 + R() * (h - 16), tr = 6 + R() * 9;
+            parts.push(`<circle cx="${(tx + 3).toFixed(1)}" cy="${(ty + 4).toFixed(1)}" r="${tr.toFixed(1)}" fill="rgba(0,0,0,.28)"/><circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="${tr.toFixed(1)}" fill="${pick(greens)}"/>`);
+          }
+        } else if (roll < 0.3) {
+          // planted rows (plots)
+          parts.push(`<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="6" fill="#4b6034"/>`);
+          for (let yy = y0 + 6; yy < y1 - 2; yy += 9) parts.push(`<line x1="${x0 + 4}" y1="${yy}" x2="${x1 - 4}" y2="${yy}" stroke="#2c4524" stroke-width="5" stroke-dasharray="7 3" stroke-linecap="round"/>`);
+        } else {
+          // gardens + terraces
+          parts.push(`<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="6" fill="#3a5232"/>`);
+          const rows = h > 120 ? 2 : 1;
+          for (let r = 0; r < rows; r++) {
+            const hy = rows === 1 ? my - 12 : (r === 0 ? y0 + 8 : y1 - 36);
+            let hx = x0 + 6;
+            while (hx < x1 - 24) {
+              const hw = 22 + Math.floor(R() * 22), hh = 20 + Math.floor(R() * 12);
+              if (hx + hw > x1 - 4) break;
+              if (R() > 0.12) {
+                const col = pick(roofs);
+                parts.push(`<rect x="${hx + 3}" y="${hy + 4}" width="${hw}" height="${hh}" rx="2" fill="rgba(0,0,0,.34)"/><rect x="${hx}" y="${hy}" width="${hw}" height="${hh}" rx="2" fill="${col}"/><line x1="${hx + 2}" y1="${hy + hh / 2}" x2="${hx + hw - 2}" y2="${hy + hh / 2}" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>`);
+              }
+              hx += hw + 3;
+            }
+          }
+          const tn = Math.floor((w * h) / 2600);
+          for (let k = 0; k < tn; k++) {
+            const tx = x0 + 6 + R() * (w - 12), ty = y0 + 6 + R() * (h - 12), tr = 4 + R() * 5;
+            parts.push(`<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="${tr.toFixed(1)}" fill="${pick(greens)}" opacity=".9"/>`);
+          }
+        }
+      }
+    }
+    // canal
+    parts.push(`<path d="M -900 90 C -200 20 360 280 1000 130 S 1900 80 2100 160" fill="none" stroke="#244a52" stroke-width="46" stroke-linecap="round"/>`);
+    parts.push(`<path d="M -900 90 C -200 20 360 280 1000 130 S 1900 80 2100 160" fill="none" stroke="#3b747c" stroke-width="30" stroke-linecap="round" opacity=".9"/>`);
+    parts.push(`<path d="M -900 90 C -200 20 360 280 1000 130 S 1900 80 2100 160" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3" stroke-dasharray="14 22"/>`);
+    parts.push(`</g>`);
+    // curved avenue (unrotated, sweeping)
+    const av = "M -120 640 C 220 470 470 700 760 520 S 1180 330 1400 420";
+    parts.push(`<path d="${av}" fill="none" stroke="#5f6054" stroke-width="40" stroke-linecap="round"/>`);
+    parts.push(`<path d="${av}" fill="none" stroke="#85867a" stroke-width="32" stroke-linecap="round"/>`);
+    parts.push(`<path d="${av}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="16 14"/>`);
+    // grain
+    for (let k = 0; k < 420; k++) {
+      parts.push(`<circle cx="${(R() * 1200).toFixed(0)}" cy="${(R() * 800).toFixed(0)}" r="${(0.8 + R() * 1.6).toFixed(1)}" fill="${R() > 0.5 ? "rgba(255,255,255,.08)" : "rgba(0,0,0,.1)"}"/>`);
+    }
+    return parts.join("");
+  }
+
+  function mapUseSvg() {
+    return `<svg class="map-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#rpMapG"></use></svg>`;
+  }
+
+  function initBackdrop() {
+    if (document.getElementById("rpMapDefs")) return;
+    const holder = document.createElement("div");
+    holder.innerHTML = `<svg id="rpMapDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><g id="rpMapG">${buildMapGroup()}</g></defs></svg>`;
+    document.body.insertBefore(holder.firstChild, document.body.firstChild);
+    const bg = document.getElementById("stageBg");
+    if (bg) bg.innerHTML = mapUseSvg();
+  }
+
+  /* ---- data helpers ---- */
+  const MAP_POS = {
+    stgilles: [14, 32], ixelles: [36, 26], montgomery: [50, 40], acacias: [31, 50], uccle: [12, 67],
+    namur: [51, 59], "liege-house": [34, 76], coteaux: [54, 82], schaerbeek: [14, 87]
+  };
+  const SHORT = { acacias: "Acacias", stgilles: "Saint-Gilles", ixelles: "Rue du Cygne", montgomery: "Montgomery", uccle: "Brugmann", namur: "Namur Centre", "liege-house": "Outremeuse", coteaux: "Coteaux", schaerbeek: "Schaerbeek" };
+  function shortName(b) { return SHORT[b.id] || b.name.split(" ").pop(); }
+  function mapPos(b, i) {
+    const p = MAP_POS[b.id] || [16 + (i % 4) * 12, 34 + (i % 5) * 11];
+    return { xw: p[0], xn: Math.min(86, Math.round(10 + (p[0] - 10) * 1.65)), y: p[1] };
+  }
+  const TONE = { at_risk: "#FF8A6B", in_progress: "#C8F03C", planned: "#FFC857", compliant: "#6FE3A5", indicative: "#AEB9AB", review: "#FFB199" };
+  function bTotals(b) {
+    let cost = 0, grant = 0;
+    b.stages.forEach((s) => { cost += s.cost || 0; grant += s.grant || 0; });
+    return { cost, grant };
+  }
+  function eurCompact(n) {
+    if (n >= 1e6) return "€" + (n / 1e6).toFixed(2).replace(/\.?0+$/, "") + "M";
+    if (n >= 1e3) return "€" + Math.round(n / 1e3) + "k";
+    return "€" + Math.round(n);
+  }
+  function layerChipHtml(b, layer) {
+    if (layer === "budget") return esc(eurCompact(bTotals(b).cost));
+    if (layer === "proofs") { const pr = proofRatio(b.id); return esc(pr.held + "/" + pr.need); }
+    if (layer === "timeline") return esc(meets2033(b) ? "✓ 2033" : (b.region === "wallonia" ? t("pathwayOnly") : (b.deadline ? b.deadline.slice(0, 4) : "—")));
+    return `<span class="chip mini ${b.label}">${b.label}</span>${fmtNum(b.kwh)}`;
+  }
+
+  function pinsHtml() {
+    const sel = state.mapSel;
+    const layer = state.mapLayer;
+    return buildings().map((b, i) => {
+      const p = mapPos(b, i);
+      const on = b.id === sel;
+      const parcel = on ? `<svg class="parcel" style="--xn:${p.xn}%;--xw:${p.xw}%;--y:${p.y}%" viewBox="0 0 170 132" aria-hidden="true"><polygon points="18,34 96,6 152,40 140,106 62,124 22,92"/></svg>` : "";
+      return `${parcel}<button class="pin${on ? " sel" : ""}" style="--xn:${p.xn}%;--xw:${p.xw}%;--y:${p.y}%;--c:${TONE[b.status] || "#fff"}" data-pin="${esc(b.id)}" aria-pressed="${on}" aria-label="${esc(b.name + " — " + t("st_" + b.status))}">
+        <span class="pin-chip"><i class="pdot"></i><b>${esc(shortName(b))}</b><em>${layerChipHtml(b, layer)}</em></span>
+        <span class="pin-stem"></span><span class="pin-dot"></span>
+      </button>`;
+    }).join("");
+  }
+
+  function houseArt(b) {
+    const col = PEB_COLORS[b.label] || "#C8F03C";
+    let body = "";
+    if (b.house) {
+      body = `<polygon points="82,92 150,40 218,92" fill="#8a5a47"/><polygon points="82,92 150,40 218,92" fill="rgba(255,255,255,.07)"/>
+        <rect x="96" y="90" width="108" height="46" fill="#d9d2bf"/><rect x="96" y="90" width="108" height="46" fill="rgba(0,0,0,.08)"/>
+        <rect x="108" y="102" width="22" height="22" rx="2" fill="${col}" opacity=".85"/><rect x="170" y="102" width="22" height="22" rx="2" fill="${col}" opacity=".85"/>
+        <rect x="141" y="108" width="18" height="28" rx="2" fill="#3d3328"/>`;
+    } else {
+      let w = "";
+      for (let r = 0; r < 4; r++) for (let c = 0; c < 6; c++) {
+        const lit = (r * 7 + c * 3) % 5 !== 0;
+        w += `<rect x="${86 + c * 22}" y="${34 + r * 24}" width="13" height="14" rx="2" fill="${lit ? col : "#2b3a2e"}" opacity="${lit ? .85 : 1}"/>`;
+      }
+      body = `<rect x="76" y="22" width="148" height="114" rx="4" fill="#cfc7b4"/><rect x="76" y="22" width="148" height="12" rx="4" fill="#8b8a80"/>${w}<rect x="140" y="112" width="20" height="24" rx="2" fill="#3d3328"/>`;
+    }
+    return `<svg viewBox="0 0 300 168" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f5e44"/><stop offset="1" stop-color="#1c2d20"/></linearGradient></defs>
+      <rect width="300" height="168" fill="url(#skyG)"/>
+      <g transform="translate(0,14)">
+      <circle cx="244" cy="30" r="26" fill="rgba(200,240,60,.14)"/><circle cx="244" cy="30" r="10" fill="rgba(200,240,60,.5)"/>
+      <ellipse cx="150" cy="144" rx="190" ry="30" fill="#2c4a2b"/>
+      ${body}
+      <g fill="#2f5a2c"><circle cx="42" cy="104" r="22"/><circle cx="66" cy="116" r="16"/><circle cx="262" cy="108" r="20"/><circle cx="238" cy="120" r="14"/></g>
+      <g fill="#447a3a" opacity=".8"><circle cx="38" cy="98" r="12"/><circle cx="266" cy="102" r="11"/></g>
+      </g>
+    </svg>`;
+  }
+
+  function projCardHtml(b) {
+    const tot = bTotals(b);
+    const pr = proofRatio(b.id);
+    const last = b.stages[b.stages.length - 1];
+    const afterL = last ? last.afterLabel : b.label;
+    const afterK = last ? last.afterKwh : b.kwh;
+    const susp = b.region === "brussels" && tot.grant > 0;
+    return `<aside class="proj-card" aria-label="${esc(t("projSelected"))}">
+      <div class="proj-art">${houseArt(b)}<span class="proj-badge" style="--c:${TONE[b.status] || "#C8F03C"}"><i></i>${esc(t("st_" + b.status))}</span></div>
+      <div class="proj-title">${esc(b.name)}</div>
+      <div class="proj-sub">${esc(typeLabel(b))} · ${fmtNum(b.area)} m² · ${esc(t(b.region))}</div>
+      <div class="proj-metric">
+        <span class="chip ${b.label}">${b.label}</span>
+        <span class="big">${fmtNum(b.kwh)}<small>kWh/m²/yr ${tag()}</small></span>
+      </div>
+      <div class="proj-metric" style="margin-top:2px"><span class="trend">${esc(t("afterWorks"))} → ${afterL} · ${fmtNum(afterK)}</span></div>
+      <div class="proj-meta">
+        <span>${esc(t("projCapex"))} <b>${esc(eurCompact(tot.cost))}</b></span>
+        <span>${esc(t("projGrants"))} ${susp ? `<s>${esc(eurCompact(tot.grant))}</s>` : `<b>${esc(eurCompact(tot.grant))}</b>`}</span>
+        <span>${esc(t("projProofs"))} <b>${pr.held}/${pr.need}</b></span>
+      </div>
+      <button class="btn lime proj-cta" data-go="plan" data-id="${esc(b.id)}">${esc(t("openPlan"))}</button>
+      <div class="proj-links">
+        <button class="btn" data-go="building" data-id="${esc(b.id)}">${esc(t("projCert"))}</button>
+        <button class="btn" data-go="dossier" data-id="${esc(b.id)}">${esc(t("projDossier"))}</button>
+      </div>
+    </aside>`;
+  }
+
+  function mapWrapInner() {
+    const b = getBuilding(state.mapSel) || buildings()[0];
+    const layers = [["energy", "layerEnergy"], ["budget", "layerBudget"], ["proofs", "layerProofs"], ["timeline", "layerTimeline"]];
+    return `<div class="map-stage" role="group" aria-label="${esc(t("mapTitle"))}">
+        ${mapUseSvg()}
+        <div class="map-chips" role="group" aria-label="Layers">
+          ${layers.map((l) => `<button class="map-chip${state.mapLayer === l[0] ? " on" : ""}" data-layer="${l[0]}" aria-pressed="${state.mapLayer === l[0]}">${esc(t(l[1]))}</button>`).join("")}
+          <span class="map-tag">${tag()}</span>
+        </div>
+        ${pinsHtml()}
+        <div class="map-title"><span class="scale"></span>${esc(t("mapNote"))}</div>
+      </div>
+      ${projCardHtml(b)}`;
+  }
+
+  function mixData() {
+    const { years, data } = capexData();
+    const cats = ["envelope", "windows", "heating", "cert"];
+    const tot = {};
+    cats.forEach((c) => { tot[c] = 0; years.forEach((y) => { tot[c] += data[y][c]; }); });
+    const sum = cats.reduce((s, c) => s + tot[c], 0) || 1;
+    return { cats, tot, sum };
+  }
+  const MIX_COL = { envelope: "#C8F03C", windows: "#2FB98A", heating: "#F4F7F0", cert: "#7F9188" };
+
+  function workMixHtml() {
+    const { cats, tot, sum } = mixData();
+    const cx = 94, cy = 94, sw = 8, gap = 3;
+    const sweep = 270, start = 135;
+    const polar = (r, ang) => { const a = ang * Math.PI / 180; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+    const arc = (r, a0, a1) => {
+      const [x0, y0] = polar(r, a0), [x1, y1] = polar(r, a1);
+      return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${(a1 - a0) > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+    };
+    const rings = cats.map((c, i) => {
+      const r = 84 - i * (sw + gap);
+      const share = tot[c] / sum;
+      const a1 = start + Math.max(0.02, share) * sweep;
+      return `<path d="${arc(r, start, start + sweep)}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="${sw}" stroke-linecap="round"/>
+        <path d="${arc(r, start, a1)}" fill="none" stroke="${MIX_COL[c]}" stroke-width="${sw}" stroke-linecap="round"/>`;
+    }).join("");
+    const legend = cats.map((c) => `<div class="row"><i class="sw" style="background:${MIX_COL[c]}"></i><span class="nm">${esc(t("cat_" + c))}</span><span class="pc">${Math.round(tot[c] / sum * 100)}%</span></div>`).join("");
+    return `<div class="mix">
+      <div class="mix-ring"><svg viewBox="0 0 188 188" role="img" aria-label="${esc(t("workMixTitle"))}">${rings}</svg>
+        <div class="ctr"><b>${esc(eurCompact(sum))}</b><span>${esc(t("totalCapex"))}</span></div></div>
+      <div class="mix-legend">${legend}</div>
+    </div>`;
+  }
+
+  function spendYears() {
+    const { years, data } = capexData();
+    const rows = years.map((y) => {
+      const d = data[y];
+      return { y, total: d.envelope + d.windows + d.heating + d.cert, grants: d.grants, susp: d.suspended };
+    });
+    return rows;
+  }
+  function spendHtml() {
+    const rows = spendYears();
+    const max = Math.max.apply(null, rows.map((r) => r.total)) || 1;
+    if (!state.spendYear || !rows.some((r) => r.y === state.spendYear)) {
+      state.spendYear = rows.reduce((m, r) => (r.total > m.total ? r : m), rows[0]).y;
+    }
+    const top = Math.ceil(max / 100000) * 100000;
+    const ticks = [0, 0.25, 0.5, 0.75, 1].map((f) => `<span class="ylab" style="bottom:${f * 100}%">${f === 0 ? "0" : eurCompact(top * f)}</span>`).join("");
+    const cols = rows.map((r) => {
+      const on = r.y === state.spendYear;
+      return `<button class="pcol${on ? " on" : ""}" data-spend="${r.y}" aria-pressed="${on}" aria-label="${r.y} ${esc(fmtMoney(r.total))}">
+        <span class="track"></span>
+        <span class="pill" style="height:${Math.max(4, r.total / top * 100).toFixed(1)}%">${on ? `<span class="ptip">${r.y} · ${esc(eurCompact(r.total))}</span>` : ""}</span>
+        <span class="xl">${r.y}</span></button>`;
+    }).join("");
+    const cur = rows.find((r) => r.y === state.spendYear);
+    return `<div class="pills-wrap"><div class="pills" style="height:172px">${ticks}${cols}</div>
+      <div class="spend-note"><span>${cur.y} · <b>${esc(fmtMoney(cur.total))}</b></span>
+        ${cur.grants ? `<span>${esc(t("stageGrant"))} (${esc(t("wallonia"))}) <b>${esc(fmtMoney(cur.grants))}</b></span>` : ""}
+        ${cur.susp ? `<span class="susp">${esc(t("suspendedSeries"))} ${esc(fmtMoney(cur.susp))}</span>` : ""}</div></div>`;
+  }
+
+  function bindGoIn(root) {
+    root.querySelectorAll("[data-go]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        hideTip();
+        if (btn.getAttribute("data-status")) state.status = btn.getAttribute("data-status");
+        go(btn.getAttribute("data-go"), btn.getAttribute("data-id") || state.buildingId);
+      });
+    });
+  }
+  function refreshMap() {
+    const w = $("mapWrap");
+    if (!w) return;
+    w.innerHTML = mapWrapInner();
+    bindMap(w);
+    bindGoIn(w);
+  }
+  function refreshSpend() {
+    const w = $("spendBody");
+    if (!w) return;
+    w.innerHTML = spendHtml();
+    bindSpend(w);
+  }
+  function bindMap(root) {
+    root.querySelectorAll("[data-pin]").forEach((p) => {
+      p.addEventListener("click", () => { state.mapSel = p.getAttribute("data-pin"); state.buildingId = state.mapSel; refreshMap(); const s = $("sidebar"); if (s) renderSidebar(); bindSidebar(); });
+    });
+    root.querySelectorAll("[data-layer]").forEach((c) => {
+      c.addEventListener("click", () => { state.mapLayer = c.getAttribute("data-layer"); refreshMap(); });
+    });
+  }
+  function bindSpend(root) {
+    root.querySelectorAll("[data-spend]").forEach((c) => {
+      c.addEventListener("click", () => { state.spendYear = parseInt(c.getAttribute("data-spend"), 10); refreshSpend(); });
+    });
+  }
 
   function renderDashboard() {
     const all = buildings();
@@ -1774,56 +2647,68 @@
         </div>
         <button class="btn primary" data-go="portfolio" data-status="at_risk">${esc(t("dashCta"))}</button>
       </div>
-      <div class="kpis dash-row kpis4">
-        <div class="kpi">
-          <div class="k">${esc(t("kpiBuildings"))}</div>
-          <div class="v">${all.length} ${tag()} <span class="delta up">+1 ${esc(t("vsYear"))}</span></div>
-          ${sparkline(KPI_SPARK.buildings, "#21776A")}
-          <div class="s">${esc(t("kpiBuildingsSub"))}</div>
-        </div>
-        <div class="kpi danger">
-          <div class="k">${esc(t("kpiAtRisk"))}</div>
-          <div class="v">${atRisk} ${tag()} <span class="delta up">−1 ${esc(t("vsYear"))}</span></div>
-          ${sparkline(KPI_SPARK.atRisk, "#B42318")}
-          <div class="s">${esc(t("kpiAtRiskSub"))}</div>
-        </div>
-        <div class="kpi ok">
-          <div class="k">${esc(t("kpiCompliant"))}</div>
-          <div class="v">${compliant} ${tag()} <span class="delta up">+1 ${esc(t("vsYear"))}</span></div>
-          ${sparkline(KPI_SPARK.compliant, "#16794A")}
-          <div class="s">${esc(t("kpiCompliantSub"))}</div>
-        </div>
-        <div class="kpi">
-          <div class="k">${esc(t("kpiAvgKwh"))}</div>
-          <div class="v">${fmtNum(Math.round(avg))} ${tag()} <span class="delta ${kwhDelta <= 0 ? "up" : "down"}">${esc(kwhDeltaLbl)}</span></div>
-          ${sparkline(KPI_SPARK.kwh.concat([Math.round(avg)]), "#164E50")}
-          <div class="s">${esc(t("kpiAvgKwhSub", { n: fmtNum(Math.round(proj)) }))}</div>
+      <div class="map-wrap" id="mapWrap">${mapWrapInner()}</div>
+      <div class="card chart-card" style="margin-bottom:16px">
+        <div class="panel-h"><div><h2>${esc(t("ovTitle"))}</h2></div><button class="round-btn" data-go="portfolio" aria-label="${esc(t("navPortfolio"))}">${icon("arrow")}</button></div>
+        <div class="panel-b">
+          <div class="kpis dash-row kpis4">
+            <div class="kpi">
+              <div class="k">${esc(t("kpiBuildings"))}</div>
+              <div class="v">${all.length} ${tag()} <span class="delta up">+1 ${esc(t("vsYear"))}</span></div>
+              ${sparkline(KPI_SPARK.buildings, "#C8F03C")}
+              <div class="s">${esc(t("kpiBuildingsSub"))}</div>
+            </div>
+            <div class="kpi danger">
+              <div class="k">${esc(t("kpiAtRisk"))}</div>
+              <div class="v">${atRisk} ${tag()} <span class="delta up">−1 ${esc(t("vsYear"))}</span></div>
+              ${sparkline(KPI_SPARK.atRisk, "#FF8A6B")}
+              <div class="s">${esc(t("kpiAtRiskSub"))}</div>
+            </div>
+            <div class="kpi ok">
+              <div class="k">${esc(t("kpiCompliant"))}</div>
+              <div class="v">${compliant} ${tag()} <span class="delta up">+1 ${esc(t("vsYear"))}</span></div>
+              ${sparkline(KPI_SPARK.compliant, "#C8F03C")}
+              <div class="s">${esc(t("kpiCompliantSub"))}</div>
+            </div>
+            <div class="kpi">
+              <div class="k">${esc(t("kpiAvgKwh"))}</div>
+              <div class="v">${fmtNum(Math.round(avg))} ${tag()} <span class="delta ${kwhDelta <= 0 ? "up" : "down"}">${esc(kwhDeltaLbl)}</span></div>
+              ${sparkline(KPI_SPARK.kwh.concat([Math.round(avg)]), "#E9EFE3")}
+              <div class="s">${esc(t("kpiAvgKwhSub", { n: fmtNum(Math.round(proj)) }))}</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="dash-row two">
+      <div class="dash-cols c2">
         <div class="card chart-card">
-          <div class="card-h"><h2>${esc(t("chartPeb"))}</h2>${tag()}</div>
-          <div class="card-b">${pebDonutChart(counts)}<p class="faint" style="margin:8px 0 0;font-size:11px">${esc(t("chartClickHint"))}</p></div>
+          <div class="panel-h"><div><h2>${esc(t("workMixTitle"))}</h2><div class="sub">${esc(t("workMixSub"))}</div></div>${tag()}</div>
+          <div class="panel-b">${workMixHtml()}</div>
         </div>
         <div class="card chart-card">
-          <div class="card-h"><h2>${esc(t("chartEnergy"))}</h2>${tag()}</div>
-          <div class="card-b">${energyTrendChart()}</div>
+          <div class="panel-h"><div><h2>${esc(t("spendTitle"))}</h2><div class="sub">${esc(t("spendSub"))}</div></div>${tag()}</div>
+          <div class="panel-b" id="spendBody">${spendHtml()}</div>
+        </div>
+      </div>
+      <div class="dash-cols c2b">
+        <div class="card chart-card">
+          <div class="panel-h"><div><h2>${esc(t("chartPeb"))}</h2></div>${tag()}</div>
+          <div class="panel-b">${pebDonutChart(counts)}<p class="faint" style="margin:8px 0 0;font-size:11px">${esc(t("chartClickHint"))}</p></div>
+        </div>
+        <div class="card chart-card">
+          <div class="panel-h"><div><h2>${esc(t("chartEnergy"))}</h2></div>${tag()}</div>
+          <div class="panel-b">${energyTrendChart()}</div>
         </div>
       </div>
       <div class="dash-row">
         <div class="card chart-card">
-          <div class="card-h"><h2>${esc(t("chartTimeline"))}</h2>${tag()}</div>
-          <div class="card-b">${deadlineTimeline()}</div>
+          <div class="panel-h"><div><h2>${esc(t("chartTimeline"))}</h2></div>${tag()}</div>
+          <div class="panel-b">${deadlineTimeline()}</div>
         </div>
       </div>
-      <div class="dash-row three">
+      <div class="dash-cols c2">
         <div class="card chart-card">
-          <div class="card-h"><h2>${esc(t("chartCapex"))}</h2>${tag()}</div>
-          <div class="card-b">${capexChart()}</div>
-        </div>
-        <div class="card chart-card">
-          <div class="card-h"><h2>${esc(t("chartEvidence"))}</h2>${tag()}</div>
-          <div class="card-b">
+          <div class="panel-h"><div><h2>${esc(t("chartEvidence"))}</h2></div>${tag()}</div>
+          <div class="panel-b">
             <div class="ring-wrap">
               ${svgRing(pr.pct, 100, 12)}
               <div class="ring-meta">
@@ -1836,8 +2721,8 @@
           </div>
         </div>
         <div class="card chart-card">
-          <div class="card-h"><h2>${esc(t("needsAttention"))}</h2></div>
-          <div class="card-b"><div class="attn-list">
+          <div class="panel-h"><div><h2>${esc(t("needsAttention"))}</h2></div></div>
+          <div class="panel-b"><div class="attn-list">
             ${attentionItems().map((a) => `
               <button class="attn" data-go="${a.go}" data-id="${a.id}">
                 <span class="chip ${getBuilding(a.id).label}">${getBuilding(a.id).label}</span>
@@ -1848,6 +2733,8 @@
         </div>
       </div>
       <p class="faint" style="margin-top:8px;font-size:12px">${esc(t("footer"))}</p>`;
+    bindMap($("mapWrap"));
+    bindSpend($("spendBody"));
   }
 
   function pebbleCard(b) {
@@ -1892,9 +2779,9 @@
     };
     return `<svg class="chart-svg peb-scale" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("pebScale"))}">
       ${cells}
-      ${marker(cur, "#181818", t("scaleNow") + " " + b.label, 26)}
-      ${b.region === "brussels" ? marker(target2033, "#B42309", "2033 · E", 80) : ""}
-      ${afterI >= 0 ? `<circle cx="${x0 + afterI * bw + (bw - 6) / 2}" cy="39" r="11" fill="none" stroke="#164E50" stroke-width="2"/>` : ""}
+      ${marker(cur, "#EEF2EA", t("scaleNow") + " " + b.label, 26)}
+      ${b.region === "brussels" ? marker(target2033, "#FF8A6B", "2033 · E", 80) : ""}
+      ${afterI >= 0 ? `<circle cx="${x0 + afterI * bw + (bw - 6) / 2}" cy="39" r="11" fill="none" stroke="#E9EFE3" stroke-width="2"/>` : ""}
     </svg>
     <div class="chart-legend">
       <span>${esc(t("scaleNow"))}: <b>${b.label}</b> (${fmtNum(b.kwh)})</span>
@@ -1910,16 +2797,16 @@
     const w = 640, h = 78, x0 = 28, iw = w - 56;
     const xOf = (v) => x0 + (Math.max(0, Math.min(max, v)) / max) * iw;
     return `<svg class="chart-svg kwh-gauge" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("kwhGauge"))}">
-      <rect x="${x0}" y="30" width="${iw}" height="14" rx="7" fill="#E6ECEA"/>
+      <rect x="${x0}" y="30" width="${iw}" height="14" rx="7" fill="rgba(255,255,255,.1)"/>
       <rect x="${x0}" y="30" width="${xOf(b.kwh) - x0}" height="14" rx="7" fill="${PEB_COLORS[b.label]}"/>
-      <line x1="${xOf(275)}" y1="22" x2="${xOf(275)}" y2="52" stroke="#B42318" stroke-width="2"/>
-      <text x="${xOf(275)}" y="16" text-anchor="middle" font-size="10" fill="#B42318" font-weight="700">275</text>
-      <line x1="${xOf(150)}" y1="22" x2="${xOf(150)}" y2="52" stroke="#21776A" stroke-width="2" stroke-dasharray="3 2"/>
-      <text x="${xOf(150)}" y="16" text-anchor="middle" font-size="10" fill="#21776A" font-weight="700">150</text>
-      <polygon points="${xOf(b.kwh)},48 ${xOf(b.kwh) - 6},62 ${xOf(b.kwh) + 6},62" fill="#181818"/>
+      <line x1="${xOf(275)}" y1="22" x2="${xOf(275)}" y2="52" stroke="#FF8A6B" stroke-width="2"/>
+      <text x="${xOf(275)}" y="16" text-anchor="middle" font-size="10" fill="#FF8A6B" font-weight="700">275</text>
+      <line x1="${xOf(150)}" y1="22" x2="${xOf(150)}" y2="52" stroke="#4FD1A5" stroke-width="2" stroke-dasharray="3 2"/>
+      <text x="${xOf(150)}" y="16" text-anchor="middle" font-size="10" fill="#4FD1A5" font-weight="700">150</text>
+      <polygon points="${xOf(b.kwh)},48 ${xOf(b.kwh) - 6},62 ${xOf(b.kwh) + 6},62" fill="#EEF2EA"/>
       <text x="${xOf(b.kwh)}" y="74" text-anchor="middle" font-size="10" font-weight="700">${fmtNum(b.kwh)}</text>
-      <circle cx="${xOf(after)}" cy="37" r="6" fill="#88DE7B" stroke="#164E50" stroke-width="1.5"/>
-      <text x="${xOf(after)}" y="${xOf(after) < xOf(b.kwh) - 20 ? 26 : 74}" text-anchor="middle" font-size="10" fill="#164E50">${esc(t("afterWorks"))} ${fmtNum(after)}</text>
+      <circle cx="${xOf(after)}" cy="37" r="6" fill="#C8F03C" stroke="#E9EFE3" stroke-width="1.5"/>
+      <text x="${xOf(after)}" y="${xOf(after) < xOf(b.kwh) - 20 ? 26 : 74}" text-anchor="middle" font-size="10" fill="#E9EFE3">${esc(t("afterWorks"))} ${fmtNum(after)}</text>
     </svg>`;
   }
 
@@ -1934,8 +2821,8 @@
       const x = l + (yi < 0 ? 0 : yi * col) + 4;
       const y = top + i * rowH;
       const title = state.lang === "fr" ? s.fr : s.en;
-      const fill = s.done ? "#16794A" : CAT_COLORS[m.cat] || "#164E50";
-      return `<text class="axis" x="8" y="${y + 16}" fill="#181818">${esc(title.length > 28 ? title.slice(0, 27) + "…" : title)}</text>
+      const fill = s.done ? "#4FD08A" : CAT_COLORS[m.cat] || "#E9EFE3";
+      return `<text class="axis" x="8" y="${y + 16}" fill="#EEF2EA">${esc(title.length > 28 ? title.slice(0, 27) + "…" : title)}</text>
         <rect class="hit" x="${x}" y="${y + 6}" width="${col - 8}" height="16" rx="4" fill="${fill}" data-tip="${esc(title + " · " + m.year + " · " + fmtMoney(s.cost))}"/>`;
     }).join("");
     const heads = years.map((y, i) => `<text class="axis" x="${l + i * col + col / 2}" y="16" text-anchor="middle">${y}</text>`).join("");
@@ -1958,12 +2845,12 @@
     const bars = steps.map((s, i) => {
       let y, ht, fill, tip, base;
       if (s.isTotal) {
-        y = yOf(s.total); ht = yOf(0) - y; fill = "#164E50"; tip = s.label + " · " + fmtMoney(s.total); base = 0;
+        y = yOf(s.total); ht = yOf(0) - y; fill = "#E9EFE3"; tip = s.label + " · " + fmtMoney(s.total); base = 0;
       } else if (s.v >= 0) {
-        y = yOf(acc + s.v); ht = yOf(acc) - y; fill = CAT_COLORS[stageMeta(b, b.stages[i] || {n:1}).cat] || "#21776A";
+        y = yOf(acc + s.v); ht = yOf(acc) - y; fill = CAT_COLORS[stageMeta(b, b.stages[i] || {n:1}).cat] || "#4FD1A5";
         acc += s.v; tip = s.label + " · " + fmtMoney(s.v);
       } else {
-        y = yOf(acc); ht = yOf(acc + s.v) - yOf(acc); fill = "#16794A";
+        y = yOf(acc); ht = yOf(acc + s.v) - yOf(acc); fill = "#4FD08A";
         tip = s.label + " · −" + fmtMoney(-s.v); acc += s.v;
       }
       const x = l + i * col + 8;
@@ -2012,7 +2899,7 @@
       const later = false;
       return `<g class="hit" data-tip="${esc(tip)}" ${hits.length ? `data-scroll-reminder="${hits[0].id}"` : ""}>
         <rect class="${cls}" x="${x}" y="24" width="${cell - 4}" height="${cell - 2}" rx="6"/>
-        <text class="axis" x="${x + (cell - 4) / 2}" y="42" text-anchor="middle" fill="#181818">${d.getDate()}</text>
+        <text class="axis" x="${x + (cell - 4) / 2}" y="42" text-anchor="middle" fill="#EEF2EA">${d.getDate()}</text>
         ${i === 0 || d.getDate() === 1 ? `<text class="axis" x="${x}" y="16">${fmtDate(key).replace(/\d+\s?/, "").slice(0, 8)}</text>` : ""}
       </g>`;
     }).join("");
@@ -2078,9 +2965,9 @@
       <nav class="nav">
         <div class="nav-label">${esc(t("navModules"))}</div>
         ${item("dashboard", t("navDashboard"), "", "dash")}
-        ${item("portfolio", t("navPortfolio"), "04", "grid")}
+        ${item("portfolio", t("navPortfolio"), "04", "home")}
         ${item("building", t("navCert"), "01", "cert")}
-        ${item("plan", t("navPlan"), "02", "plan")}
+        ${item("plan", t("navPlan"), "02", "route")}
         ${item("dossier", t("navDossier"), "03", "folder")}
         ${item("reminders", t("navReminders"), "", "bell")}
         <div class="nav-label">${esc(t("navActive"))}</div>
@@ -2124,6 +3011,7 @@
       <div class="crumbs">${trail}</div>
       <div class="topbar-right">
         <label class="search">${icon("search")}<input id="q" type="search" placeholder="${esc(t("searchPh"))}" value="${esc(state.query)}" /></label>
+        <button class="bell-btn" id="bellBtn" aria-label="${esc(t("navReminders"))}">${icon("bell")}${state.reminders.some((r) => !r.done) ? '<i class="dot"></i>' : ""}</button>
         <div class="userpill">
           <div class="avatar">SL</div>
           <div class="umeta"><div class="un">${esc(t("user"))}</div><div class="ur">${esc(t("org"))}</div></div>
@@ -2779,15 +3667,21 @@
     bindMainEvents();
     bindSearch();
     const menu = $("menuBtn");
-    if (menu) menu.onclick = () => { state.sidebarOpen = !state.sidebarOpen; renderSidebar(); };
-    $("scrim").onclick = () => { state.sidebarOpen = false; renderSidebar(); };
+    if (menu) menu.onclick = () => { state.sidebarOpen = !state.sidebarOpen; renderSidebar(); bindSidebar(); };
+    $("scrim").onclick = () => { state.sidebarOpen = false; renderSidebar(); bindSidebar(); };
+    bindSidebar();
+    const bell = $("bellBtn");
+    if (bell) bell.onclick = () => go("reminders", state.buildingId);
+  };
+
+  function bindSidebar() {
     $("sidebar").querySelectorAll("[data-go]").forEach((btn) => {
       btn.onclick = () => go(btn.getAttribute("data-go"), state.buildingId);
     });
     $("sidebar").querySelectorAll("[data-lang]").forEach((btn) => {
       btn.onclick = () => setLang(btn.getAttribute("data-lang"));
     });
-  };
+  }
 
   try {
     const saved = localStorage.getItem("renopath-lang-v2");
@@ -2801,6 +3695,7 @@
   if (!location.hash) history.replaceState(null, "", "#/dashboard");
   document.documentElement.lang = state.lang;
   document.title = t("title");
+  initBackdrop();
   render();
 })();
 </script>
