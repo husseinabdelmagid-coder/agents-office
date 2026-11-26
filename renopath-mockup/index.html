@@ -87,7 +87,6 @@
     .brand-mark svg { width: 18px; height: 18px; }
     .brand-name { font-weight: 700; font-size: 16px; letter-spacing: -.02em; line-height: 1.1; }
     .brand-name span { color: var(--lime); }
-    .brand-sub { font-size: 11px; color: rgba(255,255,255,.62); margin-top: 1px; }
     .nav { padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
     .nav-label {
       font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
@@ -606,11 +605,10 @@
       border: 1px solid var(--glass-line); border-radius: 28px;
       box-shadow: var(--shadow); color: var(--ink);
     }
-    .brand { border-bottom: 0; padding: 20px 18px 8px; }
+    .brand { border-bottom: 0; padding: 22px 18px 16px; }
     .brand-mark { background: var(--lime); border-radius: 11px; width: 34px; height: 34px; flex-basis: 34px; box-shadow: 0 8px 20px -6px rgba(200,240,60,.5); }
     .brand-name { font-size: 21px; font-weight: 600; letter-spacing: -.03em; }
     .brand-name span { color: var(--lime); }
-    .brand-sub { color: var(--faint); }
     .nav { padding: 10px 10px 6px; gap: 4px; }
     .nav-label { color: var(--faint); font-weight: 600; letter-spacing: .1em; padding: 14px 12px 6px; }
     .nav-btn { color: var(--muted); border-radius: 16px; min-height: 46px; padding: 10px 12px; font-weight: 500; font-size: 14px; transition: background .15s, color .15s; }
@@ -1057,9 +1055,8 @@
     /* ===================== v4: satellite imagery + lockup + NL ===================== */
     /* ---- brand lockup (leaf mark + 05b wordmark) ---- */
     .brand { align-items: center; gap: 12px; }
-    .brand-lock { display: flex; flex-direction: column; justify-content: center; min-width: 0; gap: 3px; }
-    .brand-logo { display: block; height: 40px; width: auto; max-width: 100%; }
-    .brand .brand-sub { margin-top: 0; padding-left: 2px; font-size: 10.5px; letter-spacing: .02em; }
+    .brand-lock { display: flex; align-items: center; min-width: 0; }
+    .brand-logo { display: block; height: 38px; width: auto; max-width: 100%; }
     .brand-mark { align-self: center; }
     .top-lock { display: none; align-items: center; gap: 9px; margin-right: 2px; min-width: 0; }
     .top-lock .tl-mark { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 9px; background: var(--lime); color: var(--lime-ink); display: grid; place-items: center; box-shadow: 0 6px 16px -6px rgba(200,240,60,.5); }
@@ -1158,7 +1155,6 @@
       mapNote: "Vue satellite · données d’exemple",
       mapCredit: "Tuiles © Esri — Source : Esri, Maxar, Earthstar Geographics et la communauté des utilisateurs SIG",
       imageryCredit: "Imagerie © Esri, Maxar, Earthstar Geographics",
-      workingName: "Nom de travail",
       org: "Cabinet Horizon Syndic",
       role: "Compte syndic",
       user: "Sophie Lemaire",
@@ -1393,7 +1389,6 @@
       mapNote: "Satellite view · example data",
       mapCredit: "Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
       imageryCredit: "Imagery © Esri, Maxar, Earthstar Geographics",
-      workingName: "Working name",
       org: "Cabinet Horizon Syndic",
       role: "Syndic account",
       user: "Sophie Lemaire",
@@ -1617,7 +1612,6 @@
     nl: {
       "title": "RenoPath — mock-up",
       "wordmark": "RenoPath",
-      "workingName": "Werktitel",
       "org": "Kantoor Horizon Syndic",
       "role": "Syndicusaccount",
       "user": "Sophie Lemaire",
@@ -3522,8 +3516,7 @@
       <div class="brand">
         <div class="brand-mark">${icon("leaf")}</div>
         <div class="brand-lock">
-          <img class="brand-logo" src="brand/renopath-logo-light.svg" alt="${esc(t("wordmark"))}" width="104" height="40" />
-          <div class="brand-sub">${esc(t("workingName"))}</div>
+          <img class="brand-logo" src="brand/renopath-logo-light.svg" alt="${esc(t("wordmark"))}" width="99" height="38" />
         </div>
       </div>
       <nav class="nav">
