@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
@@ -1052,6 +1053,75 @@
       .card { box-shadow: none; }
       a { color: inherit; text-decoration: none; }
     }
+
+    /* ===================== v4: satellite imagery + lockup + NL ===================== */
+    /* ---- brand lockup (leaf mark + 05b wordmark) ---- */
+    .brand { align-items: center; gap: 12px; }
+    .brand-lock { display: flex; flex-direction: column; justify-content: center; min-width: 0; gap: 3px; }
+    .brand-logo { display: block; height: 40px; width: auto; max-width: 100%; }
+    .brand .brand-sub { margin-top: 0; padding-left: 2px; font-size: 10.5px; letter-spacing: .02em; }
+    .brand-mark { align-self: center; }
+    .top-lock { display: none; align-items: center; gap: 9px; margin-right: 2px; min-width: 0; }
+    .top-lock .tl-mark { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 9px; background: var(--lime); color: var(--lime-ink); display: grid; place-items: center; box-shadow: 0 6px 16px -6px rgba(200,240,60,.5); }
+    .top-lock .tl-mark svg { width: 16px; height: 16px; }
+    .top-lock img { display: block; height: 30px; width: auto; }
+    @media (max-width: 980px) { .top-lock { display: inline-flex; } }
+    .sidebar-credit { margin-top: 10px; font-size: 10px; line-height: 1.35; color: rgba(255,255,255,.48); }
+    .sidebar-credit a { color: rgba(255,255,255,.62); text-decoration: none; }
+    .sidebar-credit a:hover { color: var(--lime); }
+
+    /* ---- Leaflet / Esri World Imagery ---- */
+    .leaf-map, .leaf-bg { position: absolute; inset: 0; z-index: 0; background: transparent; }
+    .leaf-bg { pointer-events: none; opacity: 0; transition: opacity .6s ease; }
+    .stage-bg.sat-ok .leaf-bg { opacity: 1; }
+    .leaf-map { opacity: 0; transition: opacity .6s ease; }
+    .map-stage.sat-ok .leaf-map { opacity: 1; }
+    .map-stage.sat-ok .map-svg, .stage-bg.sat-ok > .map-svg { opacity: 0; transition: opacity .8s ease .2s; }
+    .leaflet-container { font: inherit; background: transparent !important; outline: none; }
+    .leaflet-container a { color: var(--lime); }
+    .leaflet-tile-pane { filter: brightness(1.04) saturate(.86) contrast(1.06); }
+    .leaflet-tile { visibility: inherit; }
+    .leaf-map::after, .leaf-bg::after {
+      content: ""; position: absolute; inset: 0; z-index: 450; pointer-events: none;
+      background:
+        linear-gradient(rgba(11,56,64,.16), rgba(11,56,64,.16)),
+        linear-gradient(180deg, rgba(7,16,12,.46), rgba(7,16,12,0) 22%, rgba(7,16,12,0) 70%, rgba(7,16,12,.4)),
+        radial-gradient(115% 100% at 50% 46%, rgba(0,0,0,0) 58%, rgba(3,9,7,.42) 100%);
+    }
+    .map-stage::before { display: none; }
+    .leaf-map .leaflet-control-container .leaflet-bottom.leaflet-left { margin-bottom: 4px; margin-left: 4px; }
+    .leaflet-control-attribution {
+      background: rgba(8,16,11,.66) !important; color: rgba(255,255,255,.78) !important; font-size: 10px; line-height: 1.3;
+      padding: 3px 8px; border-radius: 8px; margin: 0 0 8px 8px !important; max-width: min(520px, 54vw);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    }
+    .leaflet-control-attribution a { color: var(--lime) !important; text-decoration: none; }
+    .leaflet-bar { border: 0 !important; box-shadow: none !important; margin: 0 12px 8px 12px !important; }
+    .leaflet-bar a {
+      width: 38px !important; height: 38px !important; line-height: 36px !important; font: 600 20px/36px inherit; color: #fff !important;
+      background: rgba(12,20,13,.74) !important; border: 1px solid rgba(255,255,255,.14) !important;
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    }
+    .leaflet-bar a:first-child { border-radius: 12px 12px 0 0 !important; border-bottom: 0 !important; }
+    .leaflet-bar a:last-child { border-radius: 0 0 12px 12px !important; }
+    .leaflet-bar a:hover { background: rgba(32,48,33,.92) !important; color: var(--lime) !important; }
+    .leaflet-control-scale { margin: 0 0 8px 12px !important; }
+    .leaflet-control-scale-line { background: rgba(8,16,11,.55) !important; color: #fff !important; border-color: rgba(255,255,255,.7) !important; font-size: 10px; text-shadow: none; }
+    .leaflet-marker-icon.pinwrap { background: none; border: 0; outline: none; width: 0 !important; height: 0 !important; overflow: visible; }
+    .leaflet-marker-icon.pinwrap:focus-visible .pin-chip { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .pinwrap .pin { position: absolute; left: 0; top: 0; cursor: pointer; pointer-events: auto; }
+    .leaf-map .parcel-poly { filter: drop-shadow(0 0 6px rgba(200,240,60,.55)); }
+    .map-hint { display: none; position: absolute; z-index: 5; left: 50%; bottom: 14px; transform: translateX(-50%); padding: 6px 12px; border-radius: 999px; font-size: 11.5px; color: #fff; background: rgba(8,16,11,.66); border: 1px solid rgba(255,255,255,.14); pointer-events: none; white-space: nowrap; }
+    @media (pointer: coarse) { .map-hint { display: block; } .leaflet-control-attribution { margin-bottom: 44px !important; } .leaflet-bar { margin-bottom: 44px !important; } }
+    @media (pointer: coarse) and (min-width: 1160px) { .map-hint { left: 40%; } }
+    .pinwrap .pin { transform: translate(-50%, calc(-100% + 8px)); }
+    .pin-chip b, .pin-chip em { pointer-events: none; }
+    @media (max-width: 700px) {
+      .leaflet-control-attribution { max-width: 62vw; font-size: 9px; }
+      .leaflet-control-scale { display: none; }
+      .map-hint { font-size: 11px; bottom: 12px; }
+    }
+    .lang-toggle button { min-width: 38px; }
   </style>
 </head>
 <body>
@@ -1068,6 +1138,7 @@
   <div class="toast-wrap" id="toasts"></div>
   <div id="modal-root"></div>
 
+<script src="vendor/leaflet/leaflet.js"></script>
 <script>
 (function () {
   "use strict";
@@ -1076,6 +1147,17 @@
     fr: {
       title: "RenoPath — maquette",
       wordmark: "RenoPath",
+      pebWord: "PEB",
+      unitYr: "an",
+      layers: "Calques",
+      language: "Langue",
+      menu: "Menu",
+      mapZoomIn: "Zoom avant",
+      mapZoomOut: "Zoom arrière",
+      mapHintTouch: "Utilisez deux doigts pour déplacer la carte",
+      mapNote: "Vue satellite · données d’exemple",
+      mapCredit: "Tuiles © Esri — Source : Esri, Maxar, Earthstar Geographics et la communauté des utilisateurs SIG",
+      imageryCredit: "Imagerie © Esri, Maxar, Earthstar Geographics",
       workingName: "Nom de travail",
       org: "Cabinet Horizon Syndic",
       role: "Compte syndic",
@@ -1300,6 +1382,17 @@
     en: {
       title: "RenoPath — mock-up",
       wordmark: "RenoPath",
+      pebWord: "PEB",
+      unitYr: "yr",
+      layers: "Layers",
+      language: "Language",
+      menu: "Menu",
+      mapZoomIn: "Zoom in",
+      mapZoomOut: "Zoom out",
+      mapHintTouch: "Use two fingers to move the map",
+      mapNote: "Satellite view · example data",
+      mapCredit: "Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+      imageryCredit: "Imagery © Esri, Maxar, Earthstar Geographics",
       workingName: "Working name",
       org: "Cabinet Horizon Syndic",
       role: "Syndic account",
@@ -1520,8 +1613,366 @@
       evidenceHint: "Proofs filed across the portfolio.",
       filterLabel: "Label {l}",
       clearFilter: "Clear",
+    },
+    nl: {
+      "title": "RenoPath — mock-up",
+      "wordmark": "RenoPath",
+      "workingName": "Werktitel",
+      "org": "Kantoor Horizon Syndic",
+      "role": "Syndicusaccount",
+      "user": "Sophie Lemaire",
+      "banner": "Voorbeeldgegevens — statische mock-up, geen enkel cijfer is echt.",
+      "example": "Voorbeeld",
+      "navModules": "Modules",
+      "navPortfolio": "Portefeuille",
+      "navCert": "Certificaatlezer",
+      "navPlan": "Renovatieplan",
+      "navDossier": "Conformiteitsdossier",
+      "navReminders": "Herinneringen en meldingen",
+      "navActive": "Actief gebouw",
+      "searchPh": "Zoeken…",
+      "headline": "De deadline, het plan en het bewijs van elk gebouw, in één tool.",
+      "portfolioLede": "Een portefeuille in Brussel en Wallonië: EPB-label, gewestelijke regel, deadline en voortgang. Alle cijfers zijn fictief.",
+      "kpiBuildings": "Gevolgde gebouwen",
+      "kpiAtRisk": "Risico (Brussel F/G)",
+      "kpiCompliant": "Voldoet aan de doelstelling 2033",
+      "kpiWallonia": "Wallonië, geen verplichting",
+      "kpiBuildingsSub": "Brussel en Wallonië",
+      "kpiAtRiskSub": "Moet 275 kWh/m²/jaar halen",
+      "kpiCompliantSub": "Drempel van 275 kWh/m²/jaar gehaald",
+      "kpiWalloniaSub": "Indicatief traject naar label A",
+      "filterRegion": "Gewest",
+      "filterStatus": "Status",
+      "all": "Alle",
+      "brussels": "Brussel",
+      "wallonia": "Wallonië",
+      "st_at_risk": "Risico",
+      "st_in_progress": "Werken bezig",
+      "st_planned": "Gepland",
+      "st_compliant": "Conform 2033",
+      "st_indicative": "Indicatief traject",
+      "st_review": "Te beoordelen",
+      "colBuilding": "Gebouw",
+      "colRegion": "Gewest",
+      "colPeb": "EPB",
+      "colValue": "kWh/m²/jaar",
+      "colDeadline": "Deadline",
+      "colCountdown": "Aftelling",
+      "colStatus": "Status",
+      "colProof": "Bewijs",
+      "addBuilding": "Gebouw toevoegen",
+      "emptyFilter": "Geen enkel gebouw komt overeen met deze filters.",
+      "units": "{n} wooneenheden",
+      "house": "Eengezinswoning",
+      "copro": "Mede-eigendom",
+      "deadlineNone": "Geen wettelijke verplichting",
+      "pathwayOnly": "Indicatief traject",
+      "countdownIn": "over {t}",
+      "years": "{n} jaar",
+      "year1": "1 jaar",
+      "months": "{n} maanden",
+      "month1": "1 maand",
+      "days": "{n} d",
+      "alreadyMet": "Doelstelling 2033 al gehaald",
+      "nextHorizon": "Horizon van 150 kWh vanaf 2045 op zijn vroegst",
+      "crumbsHome": "Portefeuille",
+      "certTitle": "Certificaatlezer",
+      "certLede": "Upload een EPB-certificaat. RenoPath leest het label en de waarde, herkent het gewest en toont de wettelijke deadline — of het ontbreken van een verplichting.",
+      "uploadTitle": "Een EPB-certificaat uploaden",
+      "uploadHint": "Sleep hier een pdf naartoe of kies een bestand. De analyse is gesimuleerd: er wordt niets geüpload.",
+      "chooseFile": "Bestand kiezen",
+      "parsing": "Certificaat wordt gelezen…",
+      "parsedOk": "Certificaat gelezen (simulatie).",
+      "currentCert": "Certificaat in het dossier",
+      "issued": "Afgegeven op",
+      "certifier": "Certificeerder",
+      "certNo": "Certificaatnr.",
+      "floorArea": "Vloeroppervlakte",
+      "ruleTitle": "Herkende regel en deadline",
+      "whyTitle": "Waarom deze deadline?",
+      "fieldRegion": "Gewest",
+      "fieldRule": "Regel",
+      "fieldTrigger": "Aanleiding",
+      "fieldDeadline": "Deadline",
+      "fieldTarget": "Doel",
+      "fieldGap": "Kloof",
+      "fieldSanction": "Sanctie",
+      "openPlan": "Renovatieplan bekijken",
+      "openDossier": "Dossier openen",
+      "ruleBrussels": "Elke private woning moet tegen 1 januari 2033 maximaal 275 kWh/m²/jaar halen (Leefmilieu Brussel). Dat komt momenteel overeen met maximaal klasse E, dus woningen met label F en G zullen niet meer toegelaten zijn.",
+      "ruleBrusselsMet": "Deze woning zit al onder de drempel van 275 kWh/m²/jaar (klasse E of beter). De doelstelling 2033 is gehaald. Vanaf 2045 op zijn vroegst wordt de doelstelling verscherpt naar 150 kWh/m²/jaar (maximaal klasse C). Een geldig EPB-certificaat wordt voor elk gebouw verplicht vanaf eind 2030 op zijn vroegst.",
+      "ruleWallonia": "Wallonië heeft nog geen renovatieverplichting. Sinds 1 september 2026 bevatten nieuwe Waalse EPB-certificaten een indicatief traject naar label A: aanbevolen werken, hun volgorde, het label na elke stap en, voor woningen, een indicatieve kostenschatting.",
+      "triggerAll": "Alle private woningen",
+      "triggerCert": "Certificaat afgegeven sinds 1 september 2026",
+      "sanctionBrussels": "Administratieve boete van €2,50 per kWh/m²/jaar kloof, waarbij de kloof wordt beperkt tot 125 kWh/m²/jaar.",
+      "sanctionNone": "—",
+      "fineIllust": "Illustratieve berekening (voorbeeldgegevens): €2,50 × {gap} = {amount}. Het charter zegt niet of dit bedrag met de vloeroppervlakte wordt vermenigvuldigd, dus er wordt geen totaal per gebouw getoond.",
+      "fineCapped": "De ruwe kloof ({raw} kWh/m²/jaar) wordt voor de boeteberekening beperkt tot 125.",
+      "gapUnit": "{n} kWh/m²/jaar",
+      "target275": "275 kWh/m²/jaar (≈ max. klasse E) tegen 1 jan. 2033",
+      "target150": "150 kWh/m²/jaar (≈ max. klasse C) vanaf 2045 op zijn vroegst",
+      "targetA": "Indicatief traject naar label A (geen verplichting)",
+      "walloniaAptNote": "Voor appartementen en woningen met collectieve installaties geeft het certificaat geen kostenraming en verwijst het naar een aanpak voor het hele gebouw, omdat werken een beslissing van de mede-eigendom vereisen.",
+      "walloniaHouseNote": "Voor deze woning kan het certificaat een indicatieve kostenschatting bevatten. Het traject wordt automatisch opgesteld: het is geen offerte en geen persoonlijk renovatieproject.",
+      "walloniaPathwayAuto": "Het traject wordt automatisch opgesteld; het is geen offerte.",
+      "newBuildingTitle": "Nieuw gebouw",
+      "newBuildingLede": "Voeg een gebouw toe door het EPB-certificaat te uploaden (Brussel of Wallonië).",
+      "demoParsedName": "EPB_simulatie_voorbeeld.pdf",
+      "planTitle": "Renovatieplan",
+      "planLede": "Geprioriteerde werken met indicatieve kosten en premies. Alle bedragen zijn fictief. Dit is geen offerte.",
+      "renolutionNotice": "De Brusselse RENOLUTION-premies zijn sinds 14 september 2026 opgeschort (Leefmilieu Brussel / Renolution). Er wordt daarom geen Brusselse premie in de totalen meegerekend.",
+      "walloniaGrantNote": "De Waalse premiebedragen hier zijn voorbeeldgegevens. De officiële premies hangen af van het soort werken en de plafonds van de SPW; de officiële tarieven worden niet weergegeven.",
+      "stageCost": "Indicatieve kost",
+      "stageGrant": "Premie",
+      "stageGrantSusp": "Premie opgeschort",
+      "afterLabel": "Label na de stap",
+      "afterValue": "Verbruik na de stap",
+      "totalCost": "Indicatieve totale kost",
+      "totalGrant": "Premies",
+      "totalNet": "Netto resterend (indic.)",
+      "suspended": "Opgeschort",
+      "grantZero": "€0 — premies opgeschort",
+      "openStage": "Details",
+      "sharePlan": "Delen met de mede-eigenaars",
+      "planShared": "Mock-up: de deellink van het renovatieplan is gekopieerd (simulatie).",
+      "dossierTitle": "Conformiteitsdossier",
+      "dossierLede": "Een levend dossier per gebouw met het bewijs dat elke renovatiestap is uitgevoerd, geëxporteerd als één gedateerde pdf voor een koper, een bank, een algemene vergadering of een overheid.",
+      "autoFiled": "Automatisch gearchiveerde documenten",
+      "reviewQueue": "Wachtrij voor menselijke controle",
+      "reviewHint": "Onduidelijke stukken worden niet geraden: ze wachten op een korte menselijke controle.",
+      "missingTitle": "Checklist ontbrekend bewijs",
+      "missingHint": "Vink stukken aan zodra ze in het dossier zitten. Ontbrekend bewijs blijft gemarkeerd.",
+      "historyTitle": "Manipulatiebestendige historiek",
+      "historyHint": "Tijdstip van upload en bestandshash, met een versiehistoriek waaraan enkel kan worden toegevoegd, zodat niets ongemerkt wordt gewijzigd.",
+      "exportPdf": "Pdf exporteren",
+      "shareLink": "Deellink",
+      "agVersion": "Versie voor de algemene vergadering",
+      "progressToDeadline": "Voortgang richting de deadline",
+      "proofsHeld": "{held} / {need} bewijsstukken in het dossier",
+      "suggestedMatch": "Voorgestelde koppeling",
+      "autoFromCert": "Afkomstig van het certificaat (module 01)",
+      "autoFromPlan": "Gekoppeld aan een stap van het plan (module 02)",
+      "hashOf": "hash",
+      "prevHash": "vorige",
+      "exportToast": "Mock-up: het afdrukvenster opent. Kies “Opslaan als pdf”.",
+      "shareTitle": "Tijdelijke deellink",
+      "shareBody": "Een beperkt geldige link voor een notaris, een koper of een team voor groene leningen. Enkel simulatie.",
+      "shareExpires": "Verloopt op {d} (14 dagen).",
+      "copyLink": "Link kopiëren",
+      "close": "Sluiten",
+      "copied": "Link gekopieerd (simulatie).",
+      "agToast": "Mock-up: hier zou een pakket voor de algemene vergadering worden gegenereerd (omslag, werkenplanning, bewijs per stap).",
+      "remindersTitle": "Herinneringen en meldingen",
+      "remindersLede": "Deadlines, ontbrekend bewijs en berichten voor eigenaars, kopers en overheden. Acties zijn gesimuleerd.",
+      "recOwners": "Eigenaars / mede-eigenaars",
+      "recBuyers": "Kopers",
+      "recAuthorities": "Overheden",
+      "recSyndic": "Syndicus (intern)",
+      "recAgent": "Vastgoedkantoor",
+      "chEmail": "E-mail",
+      "chApp": "Melding in de app",
+      "chLetter": "Brief",
+      "dueOn": "Uiterlijk {d}",
+      "snooze": "7 dagen uitstellen",
+      "markDone": "Afvinken",
+      "unsnooze": "Uitstel ongedaan maken",
+      "snoozedUntil": "Uitgesteld tot {d}",
+      "markedDone": "Herinnering afgevinkt.",
+      "reminderSnoozed": "Herinnering 7 dagen uitgesteld.",
+      "noReminders": "Geen herinneringen om te tonen.",
+      "upcoming": "Binnenkort",
+      "doneSection": "Afgehandeld",
+      "footer": "Statische mock-up · RenoPath v0.4 (ontwerp) · 23 november 2026 · Niet publiceren. Geen backend.",
+      "printCover": "Conformiteitsdossier",
+      "printSub": "Export van de mock-up — enkel voorbeeldgegevens",
+      "evBefore": "EPB vóór de werken",
+      "evAfter": "EPB na de werken",
+      "evAfterMissing": "Nieuw certificaat nog niet ingediend",
+      "m2": "m²",
+      "missingBadge": "Ontbreekt",
+      "navDashboard": "Overzicht",
+      "dashTitle": "Dashboard van de portefeuille",
+      "dashLede": "Trends, kerncijfers en visuele hulpmiddelen voor de hele portefeuille in Brussel en Wallonië. Alle cijfers zijn voorbeeldgegevens.",
+      "dashCta": "Gebouwen met risico bekijken",
+      "kpiAvgKwh": "Gemiddelde van de portefeuille",
+      "kpiAvgKwhSub": "Na de werken (indic.): {n} kWh/m²/jaar",
+      "vsYear": "t.o.v. vorig jaar",
+      "vs2025": "t.o.v. 2025",
+      "chartPeb": "Verdeling van de EPB-labels",
+      "chartEnergy": "Energietrend",
+      "chartTimeline": "Deadlines op de tijdlijn",
+      "chartCapex": "Geplande investeringen per jaar",
+      "chartEvidence": "Bewijs en verdeling per gewest",
+      "chartRegion": "Verdeling per gewest",
+      "chartClickHint": "Klik op een klasse, een gewest of een gebouw om te filteren of te openen.",
+      "buildingsShort": "gebouwen",
+      "layerEnergy": "Energie",
+      "layerBudget": "Budget",
+      "layerProofs": "Bewijs",
+      "layerTimeline": "Tijdlijn",
+      "mapTitle": "Kaart van de portefeuille",
+      "mapNote": "Satellietbeeld · voorbeeldgegevens",
+      "ovTitle": "Overzicht van de portefeuille",
+      "workMixTitle": "Verdeling van de werken",
+      "workMixSub": "Geplande investeringen per systeem",
+      "totalCapex": "Totale investering",
+      "spendTitle": "Geplande uitgaven",
+      "spendSub": "Investeringen per jaar, 2026–2031",
+      "projSelected": "Geselecteerd project",
+      "projCapex": "Investering",
+      "projGrants": "Premies",
+      "projProofs": "Bewijs",
+      "projCert": "Certificaat",
+      "projDossier": "Dossier",
+      "ms2033": "Brussel 275 · 2033",
+      "ms2045": "150 kWh vanaf 2045",
+      "ms2030": "EPB verplicht (op zijn vroegst)",
+      "histSeries": "Historiek (certificaten, voorbeeld)",
+      "projSeries": "Verwacht na de werken",
+      "cat_envelope": "Gebouwschil",
+      "cat_windows": "Ramen / ventilatie",
+      "cat_heating": "Verwarming",
+      "cat_cert": "Audit / certificaat",
+      "suspendedSeries": "RENOLUTION opgeschort",
+      "needsAttention": "Vraagt aandacht",
+      "byArea": "Per vloeroppervlakte",
+      "viewCards": "Kaarten",
+      "viewTable": "Tabel",
+      "pebScale": "EPB-schaal",
+      "kwhGauge": "Huidig en beoogd verbruik",
+      "scaleNow": "Nu",
+      "afterWorks": "Na de werken",
+      "ganttTitle": "Planning per stap",
+      "waterfallTitle": "Kostenwaterval",
+      "calTitle": "Herinneringskalender",
+      "calLater": "Later",
+      "evidenceHint": "Bewijsstukken die in de hele portefeuille zijn ingediend.",
+      "filterLabel": "Label {l}",
+      "clearFilter": "Wissen",
+      "unitYr": "jr",
+      "layers": "Lagen",
+      "language": "Taal",
+      "menu": "Menu",
+      "mapZoomIn": "Inzoomen",
+      "mapZoomOut": "Uitzoomen",
+      "pebWord": "EPB",
+      "mapHintTouch": "Gebruik twee vingers om de kaart te verplaatsen",
+      "mapCredit": "Tegels © Esri — Bron: Esri, Maxar, Earthstar Geographics en de GIS-gebruikersgemeenschap",
+      "imageryCredit": "Beeldmateriaal © Esri, Maxar, Earthstar Geographics"
     }
   };
+
+  const NLX = {
+ "Roof insulation": "Dakisolatie",
+ "Wall insulation": "Muurisolatie",
+ "Window replacement": "Vervanging van de ramen",
+ "Balanced ventilation": "Gebalanceerde ventilatie",
+ "Collective heat pump": "Collectieve warmtepomp",
+ "New PEB certificate": "Nieuw EPB-certificaat",
+ "Heat pump": "Warmtepomp",
+ "Additional wall insulation": "Bijkomende muurisolatie",
+ "Air-to-water heat pump": "Lucht-waterwarmtepomp",
+ "Loft insulation upgrade": "Verbetering van de zolderisolatie",
+ "Monitoring only (no works required for 2033 or the 150 kWh target)": "Enkel onderhoud en opvolging (geen werken nodig voor 2033 of de doelstelling van 150 kWh)",
+ "Heating and controls": "Verwarming en regeling",
+ "Works toward label A": "Afwerking richting label A",
+ "Wall and floor insulation": "Muur- en vloerisolatie",
+ "Windows and ventilation": "Ramen en ventilatie",
+ "Audit / whole-building approach": "Audit / aanpak voor het hele gebouw",
+ "Roof and cellar insulation": "Dak- en kelderisolatie",
+ "Envelope and common windows": "Gebouwschil en gemeenschappelijke ramen",
+ "Collective plant room": "Collectieve stookplaats",
+ "PEB certificate 12 March 2026": "EPB-certificaat van 12 maart 2026",
+ "Roof insulation quote — ToitSec SRL": "Offerte dakisolatie — ToitSec BV",
+ "Scan received by email (unknown sender)": "Scan ontvangen per e-mail (onbekende afzender)",
+ "Initial PEB certificate": "Oorspronkelijk EPB-certificaat",
+ "Stage 1 quote — roof insulation": "Offerte stap 1 — dakisolatie",
+ "Stage 1 invoice — roof insulation": "Factuur stap 1 — dakisolatie",
+ "Before/after photos for stage 1": "Foto’s voor en na stap 1",
+ "Insulation technical sheet": "Technische fiche isolatie",
+ "New PEB certificate after works": "Nieuw EPB-certificaat na de werken",
+ "PEB certificate 4 June 2025": "EPB-certificaat van 4 juni 2025",
+ "Roof insulation invoice — ToitSec SRL": "Factuur dakisolatie — ToitSec BV",
+ "Photos after roof insulation": "Foto’s na de dakisolatie",
+ "Wall insulation quote — FaçadePlus": "Offerte muurisolatie — FaçadePlus",
+ "Stage 1 invoice — roof": "Factuur stap 1 — dak",
+ "Stage 2 quote — walls": "Offerte stap 2 — muren",
+ "Stage 2 invoice — walls": "Factuur stap 2 — muren",
+ "First-stage quote": "Offerte eerste stap",
+ "First-stage invoice": "Factuur eerste stap",
+ "AGM of 14 March 2027: send the roadmap and the roof quote to co-owners.": "Algemene vergadering van 14 maart 2027: het renovatieplan en de dakofferte naar de mede-eigenaars sturen.",
+ "Missing proof: wall-insulation invoice (stage 2) once the works are voted.": "Ontbrekend bewijs: factuur muurisolatie (stap 2) zodra de werken zijn goedgekeurd.",
+ "Listing: attach the 2033 deadline (already met) and the optional works estimate.": "Verkoop: voeg de deadline van 2033 (al gehaald) en de raming van de optionele werken toe.",
+ "Prospective buyer: share the dossier (label C, 145 kWh/m²/yr) via an expiring link.": "Kandidaat-koper: het dossier (label C, 145 kWh/m²/jaar) delen via een tijdelijke link.",
+ "Send the indicative pathway to A before the AGM — recall that Wallonia has no mandate yet.": "Het indicatieve traject naar A vóór de algemene vergadering versturen — eraan herinneren dat Wallonië nog geen verplichting heeft.",
+ "Co-ownership decision required: the certificate (collective installation) does not cost the works.": "Beslissing van de mede-eigendom vereist: het certificaat (collectieve installatie) raamt de werken niet.",
+ "Watch: a valid PEB certificate will be mandatory for every Brussels building from end-2030 at the earliest.": "Opvolgen: een geldig EPB-certificaat wordt verplicht voor elk Brussels gebouw vanaf eind 2030 op zijn vroegst.",
+ "2033 objective already met (268 kWh). Recall the 150 kWh/m²/yr horizon from 2045 at the earliest.": "Doelstelling 2033 al gehaald (268 kWh). Herinner aan de horizon van 150 kWh/m²/jaar vanaf 2045 op zijn vroegst.",
+ "Certificates": "Certificaten",
+ "Quotes": "Offertes",
+ "Invoices": "Facturen",
+ "Photos / sheets": "Foto’s / fiches",
+ "High priority: cut roof losses before other envelope works.": "Hoge prioriteit: de warmteverliezen via het dak beperken vóór de andere gevelwerken.",
+ "External insulation of common façades, subject to the general meeting.": "Buitenisolatie van de gemeenschappelijke gevels, onder voorbehoud van de algemene vergadering.",
+ "High-performance frames on common parts and participating units.": "Hoogrendementsramen in de gemeenschappelijke delen en de deelnemende wooneenheden.",
+ "Collective system, to be coordinated with envelope works.": "Collectief systeem, af te stemmen met de werken aan de gebouwschil.",
+ "Replacement of the gas boiler in the plant room.": "Vervanging van de gasketel in de stookplaats.",
+ "Proof that the objective has been met, to be filed in the dossier.": "Bewijs dat de doelstelling is gehaald, in het dossier te bewaren.",
+ "Works completed in September 2026. Invoice filed in the dossier.": "Werken afgerond in september 2026. Factuur bewaard in het dossier.",
+ "Quote received; vote planned at the next general meeting.": "Offerte ontvangen; stemming gepland op de volgende algemene vergadering.",
+ "To start after wall insulation.": "Te starten na de muurisolatie.",
+ "Last technical step before the new certificate.": "Laatste technische stap vóór het nieuwe certificaat.",
+ "To be commissioned once works are complete.": "Aan te vragen zodra de werken klaar zijn.",
+ "Optional step toward the 150 kWh/m²/yr objective (2045 at the earliest).": "Optionele stap richting de doelstelling van 150 kWh/m²/jaar (2045 op zijn vroegst).",
+ "Would bring the home under the 150 kWh/m²/yr threshold.": "Zou de woning onder de drempel van 150 kWh/m²/jaar brengen.",
+ "Only needed after the optional works.": "Enkel nodig na de optionele werken.",
+ "Plan prepared for the 2027 AGM, toward the 150 kWh horizon.": "Plan opgesteld voor de algemene vergadering van 2027, richting de horizon van 150 kWh.",
+ "Long-term investment, outside the 2033 duty.": "Investering op lange termijn, buiten de verplichting van 2033.",
+ "After the voted works.": "Na de goedgekeurde werken.",
+ "Current use (145) is already under 150 kWh/m²/yr. The dossier keeps the certificate in force.": "Het huidige verbruik (145) ligt al onder 150 kWh/m²/jaar. Het dossier houdt het certificaat geldig.",
+ "Syndic proposal for a whole-building approach (the apartment certificate gives no cost).": "Voorstel van de syndicus voor een aanpak van het hele gebouw (het appartementscertificaat geeft geen kostenraming).",
+ "Subject to a general-meeting vote.": "Onder voorbehoud van een stemming op de algemene vergadering.",
+ "Next step on the indicative pathway to A.": "Volgende stap in het indicatieve traject naar A.",
+ "Indicative pathway only — not a quote.": "Enkel een indicatief traject — geen offerte.",
+ "Indicative range inspired by the certificate pathway (house). Example data.": "Indicatieve schatting gebaseerd op het traject van het certificaat (woning). Voorbeeldgegevens.",
+ "Second step on the indicative pathway to A.": "Tweede stap in het indicatieve traject naar A.",
+ "Order recommended by the certificate; costs are fictional.": "Volgorde aanbevolen door het certificaat; de kosten zijn fictief.",
+ "Last technical step of the indicative pathway.": "Laatste technische stap van het indicatieve traject.",
+ "The certificate (collective installation) gives no cost estimate. A co-ownership decision is required.": "Het certificaat (collectieve installatie) geeft geen kostenraming. Een beslissing van de mede-eigendom is vereist.",
+ "Syndic proposal — indicative amounts, not a quote.": "Voorstel van de syndicus — indicatieve bedragen, geen offerte.",
+ "To be costed after the whole-building approach.": "Te ramen na de aanpak voor het hele gebouw.",
+ "Indicative pathway to A, subject to a vote.": "Indicatief traject naar A, onder voorbehoud van een stemming.",
+ "PEB certificate filed": "EPB-certificaat ingediend",
+ "Rules engine: Brussels, deadline 1 Jan 2033, target 275 kWh/m²/yr": "Regelmotor: Brussel, deadline 1 jan. 2033, doel 275 kWh/m²/jaar",
+ "Indicative roadmap generated (6 stages)": "Indicatief renovatieplan opgesteld (6 stappen)",
+ "ToitSec quote filed under stage 1 (hash bb17d044…)": "Offerte ToitSec bewaard bij stap 1 (hash bb17d044…)",
+ "Unclear document sent to the review queue (not filed)": "Onduidelijk document naar de controlewachtrij gestuurd (niet gearchiveerd)",
+ "Rules engine: Brussels, deadline 1 Jan 2033": "Regelmotor: Brussel, deadline 1 jan. 2033",
+ "Stage 1 invoice filed — hash chain updated": "Factuur stap 1 bewaard — hashketen bijgewerkt",
+ "Region and rule detected": "Gewest en regel herkend",
+ "Résidence Les Acacias is off the 275 kWh path": "Résidence Les Acacias ligt niet op koers voor 275 kWh",
+ "Saint-Gilles: missing wall-insulation invoice": "Sint-Gillis: factuur muurisolatie ontbreekt",
+ "Résidence des Coteaux needs a co-ownership decision": "Résidence des Coteaux wacht op een beslissing van de mede-eigendom",
+ "Maison Outremeuse: pathway planned, not started": "Maison Outremeuse: traject gepland, nog niet gestart",
+ "Namur Centre: share the pathway before the AGM": "Namur Centre: het traject delen vóór de algemene vergadering",
+ "PEB F, 312 kWh/m²/yr — no works started. 2033 deadline.": "EPB F, 312 kWh/m²/jaar — nog geen werken gestart. Deadline 2033.",
+ "Roof is done (stage 1). Stage 2 evidence is still open.": "Het dak is klaar (stap 1). Het bewijs voor stap 2 ontbreekt nog.",
+ "PEB G, collective installation — the certificate gives no cost.": "EPB G, collectieve installatie — het certificaat geeft geen kostenraming.",
+ "PEB F, 338 kWh/m²/yr — indicative Walloon pathway to A.": "EPB F, 338 kWh/m²/jaar — indicatief Waals traject naar A.",
+ "No Walloon mandate yet — keep co-owners informed.": "Nog geen Waalse verplichting — houd de mede-eigenaars op de hoogte."
+};
+  function nlOf(en) {
+    if (NLX[en]) return NLX[en];
+    if (en.indexOf("PEB certificate ") === 0) return "EPB-certificaat " + en.slice(16);
+    return en;
+  }
+  function LT(fr, en) {
+    if (state.lang === "fr") return fr;
+    if (state.lang === "nl") return nlOf(en);
+    return en;
+  }
+  function LOC() { return state.lang === "fr" ? "fr-BE" : state.lang === "nl" ? "nl-BE" : "en-BE"; }
+  function LOCD() { return state.lang === "fr" ? "fr-BE" : state.lang === "nl" ? "nl-BE" : "en-GB"; }
 
   /* Stage and document copy lives on the building records below (FR + EN). */
 
@@ -1827,8 +2278,8 @@
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
   function t(key, params) {
-    const pack = I18N[state.lang] || I18N.fr;
-    let s = pack[key] || I18N.fr[key] || key;
+    const pack = I18N[state.lang] || I18N.en;
+    let s = pack[key] || I18N.en[key] || I18N.fr[key] || key;
     if (params) {
       Object.keys(params).forEach((k) => {
         s = s.split("{" + k + "}").join(params[k]);
@@ -1845,7 +2296,7 @@
       if (p.length === 3) return fmtYmd(p[0], p[1], p[2]);
       return iso;
     }
-    return new Intl.DateTimeFormat(state.lang === "fr" ? "fr-BE" : "en-GB", {
+    return new Intl.DateTimeFormat(LOCD(), {
       day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Brussels"
     }).format(d);
   }
@@ -1856,19 +2307,19 @@
 
   function fmtDateTime(iso) {
     const d = new Date(iso);
-    return new Intl.DateTimeFormat(state.lang === "fr" ? "fr-BE" : "en-GB", {
+    return new Intl.DateTimeFormat(LOCD(), {
       day: "numeric", month: "short", year: "numeric",
       hour: "2-digit", minute: "2-digit", timeZone: "Europe/Brussels"
     }).format(d);
   }
 
   function fmtMoney(n) {
-    const loc = state.lang === "fr" ? "fr-BE" : "en-BE";
+    const loc = LOC();
     return new Intl.NumberFormat(loc, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
   }
 
   function fmtNum(n) {
-    return new Intl.NumberFormat(state.lang === "fr" ? "fr-BE" : "en-BE").format(n);
+    return new Intl.NumberFormat(LOC()).format(n);
   }
 
   function tag() {
@@ -2156,7 +2607,7 @@
     const dots = bxl.map((b, i) => {
       const x = x2033;
       const y = padT + 14 + i * 16;
-      const tip = `${b.name} · PEB ${b.label} · ${fmtNum(b.kwh)} · 1 Jan 2033${meets2033(b) ? " · " + t("alreadyMet") : ""}`;
+      const tip = `${b.name} · ${t("pebWord")} ${b.label} · ${fmtNum(b.kwh)} · ${fmtDate("2033-01-01T12:00:00+01:00")}${meets2033(b) ? " · " + t("alreadyMet") : ""}`;
       return `<g class="hit" data-go-building="${b.id}" data-tip="${esc(tip)}">
         <circle cx="${x}" cy="${y}" r="7" fill="${PEB_COLORS[b.label]}" stroke="#0f1a12" stroke-width="1.5"/>
         <text class="axis" x="${x + 12}" y="${y + 4}" fill="#EEF2EA">${esc(b.name.split(" ").pop())}</text>
@@ -2165,7 +2616,7 @@
     const walDots = wal.map((b, i) => {
       const x = padL + inner - 8 - i * 18;
       const y = h - padB - 10;
-      const tip = `${b.name} · ${t("pathwayOnly")} · PEB ${b.label}`;
+      const tip = `${b.name} · ${t("pathwayOnly")} · ${t("pebWord")} ${b.label}`;
       return `<g class="hit" data-go-building="${b.id}" data-tip="${esc(tip)}">
         <circle cx="${x}" cy="${y}" r="6" fill="${PEB_COLORS[b.label]}" stroke="#0f1a12" stroke-width="1.5"/>
       </g>`;
@@ -2408,20 +2859,13 @@
     holder.innerHTML = `<svg id="rpMapDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><g id="rpMapG">${buildMapGroup()}</g></defs></svg>`;
     document.body.insertBefore(holder.firstChild, document.body.firstChild);
     const bg = document.getElementById("stageBg");
-    if (bg) bg.innerHTML = mapUseSvg();
+    if (bg) { bg.innerHTML = mapUseSvg() + '<div id="stageBgMap" class="leaf-bg"></div>'; initBackdropMap(); }
   }
 
   /* ---- data helpers ---- */
-  const MAP_POS = {
-    stgilles: [14, 32], ixelles: [36, 26], montgomery: [50, 40], acacias: [31, 50], uccle: [12, 67],
-    namur: [51, 59], "liege-house": [34, 76], coteaux: [54, 82], schaerbeek: [14, 87]
-  };
   const SHORT = { acacias: "Acacias", stgilles: "Saint-Gilles", ixelles: "Rue du Cygne", montgomery: "Montgomery", uccle: "Brugmann", namur: "Namur Centre", "liege-house": "Outremeuse", coteaux: "Coteaux", schaerbeek: "Schaerbeek" };
   function shortName(b) { return SHORT[b.id] || b.name.split(" ").pop(); }
-  function mapPos(b, i) {
-    const p = MAP_POS[b.id] || [16 + (i % 4) * 12, 34 + (i % 5) * 11];
-    return { xw: p[0], xn: Math.min(86, Math.round(10 + (p[0] - 10) * 1.65)), y: p[1] };
-  }
+
   const TONE = { at_risk: "#FF8A6B", in_progress: "#C8F03C", planned: "#FFC857", compliant: "#6FE3A5", indicative: "#AEB9AB", review: "#FFB199" };
   function bTotals(b) {
     let cost = 0, grant = 0;
@@ -2440,18 +2884,162 @@
     return `<span class="chip mini ${b.label}">${b.label}</span>${fmtNum(b.kwh)}`;
   }
 
-  function pinsHtml() {
-    const sel = state.mapSel;
-    const layer = state.mapLayer;
-    return buildings().map((b, i) => {
-      const p = mapPos(b, i);
-      const on = b.id === sel;
-      const parcel = on ? `<svg class="parcel" style="--xn:${p.xn}%;--xw:${p.xw}%;--y:${p.y}%" viewBox="0 0 170 132" aria-hidden="true"><polygon points="18,34 96,6 152,40 140,106 62,124 22,92"/></svg>` : "";
-      return `${parcel}<button class="pin${on ? " sel" : ""}" style="--xn:${p.xn}%;--xw:${p.xw}%;--y:${p.y}%;--c:${TONE[b.status] || "#fff"}" data-pin="${esc(b.id)}" aria-pressed="${on}" aria-label="${esc(b.name + " — " + t("st_" + b.status))}">
+
+
+  /* ---- v4: real satellite imagery (Esri World Imagery via Leaflet), geo-anchored pins ---- */
+  const ESRI_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+  const MAP_CENTER = [50.44089, 3.94958];
+  const GEO = {
+    acacias: [50.440992, 3.948537], stgilles: [50.441804, 3.946775], ixelles: [50.441697, 3.949711],
+    montgomery: [50.440073, 3.949000], uccle: [50.440073, 3.951304], namur: [50.442338, 3.949627],
+    "liege-house": [50.4412, 3.951543], coteaux: [50.439988, 3.946271], schaerbeek: [50.440787, 3.946082]
+  };
+  function geoOf(b, i) {
+    if (GEO[b.id]) return GEO[b.id];
+    const k = i || 0;
+    return [MAP_CENTER[0] + 0.0006 * ((k % 3) - 1), MAP_CENTER[1] + 0.0009 * ((k % 4) - 1.5)];
+  }
+  let heroMap = null, heroMarkers = {}, heroParcel = null, bgMap = null;
+  function isCoarse() { return !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches); }
+  function destroyHeroMapOnly() {
+    if (heroMap) { try { heroMap.remove(); } catch (e) {} }
+    heroMap = null; heroMarkers = {}; heroParcel = null;
+  }
+  function destroyHeroMap() {
+    if (heroMap) { try { heroMap.remove(); } catch (e) {} }
+    heroMap = null; heroMarkers = {}; heroParcel = null;
+    if (bgMap) { try { bgMap.remove(); } catch (e) {} bgMap = null; }
+  }
+  function makeSatLayer(onOk) {
+    const tl = L.tileLayer(ESRI_URL, { maxNativeZoom: 19, maxZoom: 19, minZoom: 14, detectRetina: false, keepBuffer: 2, updateWhenIdle: false, crossOrigin: false });
+    let ok = false;
+    tl.on("tileload", () => { if (!ok) { ok = true; onOk(); } });
+    tl.on("tileerror", (e) => { if (e && e.tile) e.tile.style.visibility = "hidden"; });
+    return tl;
+  }
+  function pinInner(b, on, layer) {
+    return `<span class="pin${on ? " sel" : ""}" style="--c:${TONE[b.status] || "#fff"}">
         <span class="pin-chip"><i class="pdot"></i><b>${esc(shortName(b))}</b><em>${layerChipHtml(b, layer)}</em></span>
-        <span class="pin-stem"></span><span class="pin-dot"></span>
-      </button>`;
-    }).join("");
+        <span class="pin-stem"></span><span class="pin-dot"></span></span>`;
+  }
+  function pinIcon(b, on, layer) {
+    return L.divIcon({ className: "pinwrap", html: pinInner(b, on, layer), iconSize: [0, 0], iconAnchor: [0, 0] });
+  }
+  function parcelRing(ll) {
+    const dLat = 1 / 111320, dLng = 1 / (111320 * Math.cos(ll[0] * Math.PI / 180));
+    return [[-16, -7], [-9, 11], [7, 14], [16, 2], [10, -12], [-8, -14]].map((p) => [ll[0] + p[1] * dLat, ll[1] + p[0] * dLng]);
+  }
+  function viewPadding() {
+    const wide = window.innerWidth >= 1160;
+    return { tl: [wide ? 124 : 78, 84], br: [wide ? 400 : 78, 74] };
+  }
+  function fitHero() {
+    if (!heroMap) return;
+    const pts = buildings().map((b, i) => geoOf(b, i));
+    const pad = viewPadding();
+    heroMap.invalidateSize(false);
+    heroMap.fitBounds(L.latLngBounds(pts), { paddingTopLeft: pad.tl, paddingBottomRight: pad.br, maxZoom: 18.5, animate: false });
+  }
+  function initHeroMap() {
+    const el = $("leafMap");
+    if (!el || typeof L === "undefined") return;
+    const stage = el.parentNode;
+    try {
+      const coarse = isCoarse();
+      heroMap = L.map(el, {
+        zoomControl: false, attributionControl: false, scrollWheelZoom: false, dragging: !coarse, touchZoom: true,
+        doubleClickZoom: true, boxZoom: false, keyboard: true, minZoom: 14, maxZoom: 19, zoomSnap: 0.5, zoomDelta: 0.5, bounceAtZoomLimits: false
+      });
+      L.control.attribution({ position: "bottomleft", prefix: '<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>' }).addTo(heroMap);
+      L.control.scale({ position: "bottomleft", imperial: false, maxWidth: 90 }).addTo(heroMap);
+      L.control.zoom({ position: window.innerWidth >= 1160 ? "bottomleft" : "bottomright", zoomInTitle: t("mapZoomIn"), zoomOutTitle: t("mapZoomOut") }).addTo(heroMap);
+      const tl = makeSatLayer(() => stage.classList.add("sat-ok"));
+      tl.options.attribution = esc(t("mapCredit"));
+      tl.addTo(heroMap);
+      heroMap.on("focus", () => heroMap.scrollWheelZoom.enable());
+      heroMap.on("blur", () => heroMap.scrollWheelZoom.disable());
+      buildings().forEach((b, i) => {
+        const m = L.marker(geoOf(b, i), { icon: pinIcon(b, b.id === state.mapSel, state.mapLayer), title: b.name + " — " + t("st_" + b.status), alt: b.name, keyboard: true, riseOnHover: true, zIndexOffset: b.id === state.mapSel ? 1000 : 0 });
+        m.on("click", () => selectProject(b.id));
+        m.addTo(heroMap);
+        heroMarkers[b.id] = m;
+      });
+      fitHero();
+      refreshParcel();
+    } catch (e) {
+      heroMap = null;
+      if (window.console) console.warn("satellite map unavailable", e);
+    }
+  }
+  function refreshParcel() {
+    if (!heroMap) return;
+    if (heroParcel) { heroParcel.remove(); heroParcel = null; }
+    const b = getBuilding(state.mapSel);
+    const m = b && heroMarkers[b.id];
+    if (!m) return;
+    heroParcel = L.polygon(parcelRing([m.getLatLng().lat, m.getLatLng().lng]), {
+      className: "parcel-poly", color: "#C8F03C", weight: 2, opacity: .95, fillColor: "#C8F03C", fillOpacity: .2, interactive: false
+    }).addTo(heroMap);
+  }
+  function selectProject(id) {
+    state.mapSel = id; state.buildingId = id;
+    refreshMap();
+    if (heroMap && heroMarkers[id]) {
+      const pad = viewPadding();
+      heroMap.panInside(heroMarkers[id].getLatLng(), { paddingTopLeft: [pad.tl[0] + 60, pad.tl[1] + 40], paddingBottomRight: [pad.br[0] + 40, pad.br[1] + 10], animate: true });
+    }
+    const s = $("sidebar"); if (s) renderSidebar(); bindSidebar();
+  }
+  function initBackdropMap() {
+    const el = document.getElementById("stageBgMap");
+    if (!el || typeof L === "undefined" || bgMap) return;
+    try {
+      bgMap = L.map(el, {
+        zoomControl: false, attributionControl: false, dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false,
+        boxZoom: false, keyboard: false, zoomAnimation: false, fadeAnimation: false, markerZoomAnimation: false, minZoom: 14, maxZoom: 19, zoomSnap: 1
+      }).setView(MAP_CENTER, 17);
+      makeSatLayer(() => el.parentNode.classList.add("sat-ok")).addTo(bgMap);
+    } catch (e) { bgMap = null; }
+  }
+
+  function pinsHtml() { return ""; }
+  function mapWrapInner() {
+    const b = getBuilding(state.mapSel) || buildings()[0];
+    const layers = [["energy", "layerEnergy"], ["budget", "layerBudget"], ["proofs", "layerProofs"], ["timeline", "layerTimeline"]];
+    return `<div class="map-stage" id="mapStage" role="group" aria-label="${esc(t("mapTitle") + " — " + t("mapNote"))}">
+        ${mapUseSvg()}
+        <div id="leafMap" class="leaf-map" aria-label="${esc(t("mapNote"))}"></div>
+        <div class="map-chips" role="group" aria-label="${esc(t("layers"))}">
+          ${layers.map((l) => `<button class="map-chip${state.mapLayer === l[0] ? " on" : ""}" data-layer="${l[0]}" aria-pressed="${state.mapLayer === l[0]}">${esc(t(l[1]))}</button>`).join("")}
+          <span class="map-tag">${tag()}</span>
+        </div>
+        <div class="map-hint">${esc(t("mapHintTouch"))}</div>
+      </div>
+      <div id="projSlot" style="display:contents">${projCardHtml(b)}</div>`;
+  }
+  function refreshMap() {
+    const w = $("mapWrap");
+    if (!w) return;
+    const slot = $("projSlot");
+    const b = getBuilding(state.mapSel) || buildings()[0];
+    if (slot) { slot.innerHTML = projCardHtml(b); bindGoIn(slot); }
+    w.querySelectorAll("[data-layer]").forEach((c) => {
+      const on = c.getAttribute("data-layer") === state.mapLayer;
+      c.classList.toggle("on", on); c.setAttribute("aria-pressed", String(on));
+    });
+    buildings().forEach((x) => {
+      const m = heroMarkers[x.id];
+      if (!m) return;
+      const on = x.id === state.mapSel;
+      m.setIcon(pinIcon(x, on, state.mapLayer));
+      m.setZIndexOffset(on ? 1000 : 0);
+    });
+    refreshParcel();
+  }
+  function bindMap(root) {
+    root.querySelectorAll("[data-layer]").forEach((c) => {
+      c.addEventListener("click", () => { state.mapLayer = c.getAttribute("data-layer"); refreshMap(); });
+    });
   }
 
   function houseArt(b) {
@@ -2496,7 +3084,7 @@
       <div class="proj-sub">${esc(typeLabel(b))} · ${fmtNum(b.area)} m² · ${esc(t(b.region))}</div>
       <div class="proj-metric">
         <span class="chip ${b.label}">${b.label}</span>
-        <span class="big">${fmtNum(b.kwh)}<small>kWh/m²/yr ${tag()}</small></span>
+        <span class="big">${fmtNum(b.kwh)}<small>kWh/m²/${t("unitYr")} ${tag()}</small></span>
       </div>
       <div class="proj-metric" style="margin-top:2px"><span class="trend">${esc(t("afterWorks"))} → ${afterL} · ${fmtNum(afterK)}</span></div>
       <div class="proj-meta">
@@ -2512,20 +3100,7 @@
     </aside>`;
   }
 
-  function mapWrapInner() {
-    const b = getBuilding(state.mapSel) || buildings()[0];
-    const layers = [["energy", "layerEnergy"], ["budget", "layerBudget"], ["proofs", "layerProofs"], ["timeline", "layerTimeline"]];
-    return `<div class="map-stage" role="group" aria-label="${esc(t("mapTitle"))}">
-        ${mapUseSvg()}
-        <div class="map-chips" role="group" aria-label="Layers">
-          ${layers.map((l) => `<button class="map-chip${state.mapLayer === l[0] ? " on" : ""}" data-layer="${l[0]}" aria-pressed="${state.mapLayer === l[0]}">${esc(t(l[1]))}</button>`).join("")}
-          <span class="map-tag">${tag()}</span>
-        </div>
-        ${pinsHtml()}
-        <div class="map-title"><span class="scale"></span>${esc(t("mapNote"))}</div>
-      </div>
-      ${projCardHtml(b)}`;
-  }
+
 
   function mixData() {
     const { years, data } = capexData();
@@ -2601,27 +3176,14 @@
       });
     });
   }
-  function refreshMap() {
-    const w = $("mapWrap");
-    if (!w) return;
-    w.innerHTML = mapWrapInner();
-    bindMap(w);
-    bindGoIn(w);
-  }
+
   function refreshSpend() {
     const w = $("spendBody");
     if (!w) return;
     w.innerHTML = spendHtml();
     bindSpend(w);
   }
-  function bindMap(root) {
-    root.querySelectorAll("[data-pin]").forEach((p) => {
-      p.addEventListener("click", () => { state.mapSel = p.getAttribute("data-pin"); state.buildingId = state.mapSel; refreshMap(); const s = $("sidebar"); if (s) renderSidebar(); bindSidebar(); });
-    });
-    root.querySelectorAll("[data-layer]").forEach((c) => {
-      c.addEventListener("click", () => { state.mapLayer = c.getAttribute("data-layer"); refreshMap(); });
-    });
-  }
+
   function bindSpend(root) {
     root.querySelectorAll("[data-spend]").forEach((c) => {
       c.addEventListener("click", () => { state.spendYear = parseInt(c.getAttribute("data-spend"), 10); refreshSpend(); });
@@ -2727,8 +3289,8 @@
             ${attentionItems().map((a) => `
               <button class="attn" data-go="${a.go}" data-id="${a.id}">
                 <span class="chip ${getBuilding(a.id).label}">${getBuilding(a.id).label}</span>
-                <span><span class="at">${esc(state.lang === "fr" ? a.title_fr : a.title_en)}</span>
-                <span class="as">${esc(state.lang === "fr" ? a.sub_fr : a.sub_en)}</span></span>
+                <span><span class="at">${esc(LT(a.title_fr, a.title_en))}</span>
+                <span class="as">${esc(LT(a.sub_fr, a.sub_en))}</span></span>
               </button>`).join("")}
           </div></div>
         </div>
@@ -2736,6 +3298,7 @@
       <p class="faint" style="margin-top:8px;font-size:12px">${esc(t("footer"))}</p>`;
     bindMap($("mapWrap"));
     bindSpend($("spendBody"));
+    initHeroMap();
   }
 
   function pebbleCard(b) {
@@ -2821,7 +3384,7 @@
       const yi = years.indexOf(m.year);
       const x = l + (yi < 0 ? 0 : yi * col) + 4;
       const y = top + i * rowH;
-      const title = state.lang === "fr" ? s.fr : s.en;
+      const title = LT(s.fr, s.en);
       const fill = s.done ? "#4FD08A" : CAT_COLORS[m.cat] || "#E9EFE3";
       return `<text class="axis" x="8" y="${y + 16}" fill="#EEF2EA">${esc(title.length > 28 ? title.slice(0, 27) + "…" : title)}</text>
         <rect class="hit" x="${x}" y="${y + 6}" width="${col - 8}" height="16" rx="4" fill="${fill}" data-tip="${esc(title + " · " + m.year + " · " + fmtMoney(s.cost))}"/>`;
@@ -2832,7 +3395,7 @@
 
   function waterfallGraphic(b) {
     const brussels = b.region === "brussels";
-    const items = b.stages.map((s) => ({ label: state.lang === "fr" ? s.fr : s.en, v: s.cost }));
+    const items = b.stages.map((s) => ({ label: LT(s.fr, s.en), v: s.cost }));
     const grants = b.stages.reduce((s, x) => s + (x.grant || 0), 0);
     const gross = items.reduce((s, x) => s + x.v, 0);
     const netGrant = brussels ? 0 : grants;
@@ -2876,7 +3439,7 @@
       const items = checks.filter(cat.ids);
       const held = items.filter((c) => c.done).length;
       const need = items.length || 0;
-      return { label: state.lang === "fr" ? cat.fr : cat.en, held, need, pct: need ? Math.round(held / need * 100) : 0 };
+      return { label: LT(cat.fr, cat.en), held, need, pct: need ? Math.round(held / need * 100) : 0 };
     });
   }
 
@@ -2896,7 +3459,7 @@
       const x = 8 + i * cell;
       const isToday = key === "2026-11-23" || key === iso(new Date());
       const cls = "cal-day" + (hits.length ? " has" : "") + (isToday ? " today" : "");
-      const tip = hits.length ? hits.map((r) => (state.lang === "fr" ? r.fr : r.en)).join(" · ") : fmtDate(key);
+      const tip = hits.length ? hits.map((r) => (LT(r.fr, r.en))).join(" · ") : fmtDate(key);
       const later = false;
       return `<g class="hit" data-tip="${esc(tip)}" ${hits.length ? `data-scroll-reminder="${hits[0].id}"` : ""}>
         <rect class="${cls}" x="${x}" y="24" width="${cell - 4}" height="${cell - 2}" rx="6"/>
@@ -2940,7 +3503,7 @@
   }
 
   function setLang(lang) {
-    state.lang = lang === "fr" ? "fr" : "en";
+    state.lang = (lang === "fr" || lang === "nl") ? lang : "en";
     document.documentElement.lang = state.lang;
     document.title = t("title");
     try { localStorage.setItem("renopath-lang-v2", state.lang); } catch (e) {}
@@ -2958,8 +3521,8 @@
     $("sidebar").innerHTML = `
       <div class="brand">
         <div class="brand-mark">${icon("leaf")}</div>
-        <div>
-          <div class="brand-name">${esc(t("wordmark"))}<span>.</span></div>
+        <div class="brand-lock">
+          <img class="brand-logo" src="brand/renopath-logo-light.svg" alt="${esc(t("wordmark"))}" width="104" height="40" />
           <div class="brand-sub">${esc(t("workingName"))}</div>
         </div>
       </div>
@@ -2978,10 +3541,12 @@
         </div>
       </nav>
       <div class="sidebar-foot">
-        <div class="lang-toggle" role="group" aria-label="Language">
-          <button class="${state.lang === "fr" ? "on" : ""}" data-lang="fr">FR</button>
-          <button class="${state.lang === "en" ? "on" : ""}" data-lang="en">EN</button>
+        <div class="lang-toggle" role="group" aria-label="${esc(t("language"))}">
+          <button class="${state.lang === "fr" ? "on" : ""}" data-lang="fr" lang="fr" aria-pressed="${state.lang === "fr"}">FR</button>
+          <button class="${state.lang === "en" ? "on" : ""}" data-lang="en" lang="en" aria-pressed="${state.lang === "en"}">EN</button>
+          <button class="${state.lang === "nl" ? "on" : ""}" data-lang="nl" lang="nl" aria-pressed="${state.lang === "nl"}">NL</button>
         </div>
+        <div class="sidebar-credit">${esc(t("imageryCredit"))}</div>
       </div>`;
     $("sidebar").classList.toggle("open", state.sidebarOpen);
     $("scrim").classList.toggle("on", state.sidebarOpen);
@@ -3008,7 +3573,8 @@
       ? `<b>${esc(t("navDashboard"))}</b>`
       : `${esc(t("navDashboard"))} / <b>${esc(crumbs[state.view] || "")}</b>${extra}`;
     $("topbar").innerHTML = `
-      <button class="menu-btn" id="menuBtn" aria-label="Menu">${icon("menu")}</button>
+      <button class="menu-btn" id="menuBtn" aria-label="${esc(t("menu"))}">${icon("menu")}</button>
+      <div class="top-lock"><span class="tl-mark">${icon("leaf")}</span><img src="brand/renopath-logo-light.svg" alt="${esc(t("wordmark"))}" width="78" height="30" /></div>
       <div class="crumbs">${trail}</div>
       <div class="topbar-right">
         <label class="search">${icon("search")}<input id="q" type="search" placeholder="${esc(t("searchPh"))}" value="${esc(state.query)}" /></label>
@@ -3163,7 +3729,7 @@
             <span class="chip ${b.label}">${b.label}</span>
             <div>
               <div class="kwh">${fmtNum(b.kwh)}</div>
-              <div class="unit">kWh/m²/${state.lang === "fr" ? "an" : "yr"}</div>
+              <div class="unit">kWh/m²/${t("unitYr")}</div>
             </div>
           </div>
           <div style="margin-top:14px">
@@ -3196,7 +3762,7 @@
     const capped = Math.min(gap, 125);
     let fineHtml = "";
     if (brussels && !met && gap > 0) {
-      const amount = new Intl.NumberFormat(state.lang === "fr" ? "fr-BE" : "en-BE", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(2.5 * capped);
+      const amount = new Intl.NumberFormat(LOC(), { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(2.5 * capped);
       fineHtml = `<p class="fine-note">${esc(t("fineIllust", { gap: capped, amount }))}${gap > 125 ? " " + esc(t("fineCapped", { raw: gap })) : ""}</p>`;
     }
     let extra = "";
@@ -3316,8 +3882,8 @@
   }
 
   function stageHtml(b, s, brussels) {
-    const title = state.lang === "fr" ? s.fr : s.en;
-    const detail = state.lang === "fr" ? s.frD : s.enD;
+    const title = LT(s.fr, s.en);
+    const detail = LT(s.frD, s.enD);
     const grantTxt = brussels
       ? (s.grant
           ? `<div class="grant">${fmtMoney(s.grant)} · ${esc(t("suspended"))}</div>`
@@ -3344,13 +3910,13 @@
       return `<label class="check ${c.done ? "done" : ""}">
         <input type="checkbox" data-check="${esc(b.id + ":" + c.id)}" ${c.done ? "checked" : ""} />
         <div>
-          <div class="ct">${esc(state.lang === "fr" ? c.fr : c.en)}</div>
+          <div class="ct">${esc(LT(c.fr, c.en))}</div>
           ${c.done ? "" : `<span class="badge missing">${esc(t("missingBadge"))}</span>`}
         </div>
       </label>`;
     }).join("");
     const docRow = (d) => {
-      const name = state.lang === "fr" ? d.fr : d.en;
+      const name = LT(d.fr, d.en);
       const badge = d.tag === "cert" ? t("autoFromCert") : d.tag === "plan" ? t("autoFromPlan") + (d.step ? " · " + d.step : "") : t("reviewQueue");
       return `<div class="doc">
         <div class="di">${icon("file")}</div>
@@ -3362,7 +3928,7 @@
       <div class="log-row">
         <div class="idx">#${String(e.i).padStart(3, "0")}</div>
         <div>
-          <div class="act">${esc(state.lang === "fr" ? e.act_fr : e.act_en)}</div>
+          <div class="act">${esc(LT(e.act_fr, e.act_en))}</div>
           <div class="when">${fmtDateTime(e.at)}</div>
           <div class="hash">${esc(t("hashOf"))} sha256:${esc(e.hash)}</div>
           <div class="prev">${esc(t("prevHash"))} ${esc(e.prev)}</div>
@@ -3370,7 +3936,7 @@
       </div>`).join("");
 
     const progressNote = b.region === "brussels"
-      ? (meets2033(b) ? t("alreadyMet") : formatSpan(b.deadline) + " · 1 Jan 2033")
+      ? (meets2033(b) ? t("alreadyMet") : formatSpan(b.deadline) + " · " + fmtDate("2033-01-01T12:00:00+01:00"))
       : t("deadlineNone");
 
     $("main").innerHTML = `
@@ -3399,7 +3965,7 @@
             <div class="peb-pair">
               <div>
                 <div class="unit">${esc(t("evBefore"))}</div>
-                <div class="peb-big" style="margin-top:6px"><span class="chip ${b.label}">${b.label}</span><div><div class="kwh" style="font-size:22px">${fmtNum(b.kwh)}</div><div class="unit">kWh/m²/${state.lang === "fr" ? "an" : "yr"}</div></div></div>
+                <div class="peb-big" style="margin-top:6px"><span class="chip ${b.label}">${b.label}</span><div><div class="kwh" style="font-size:22px">${fmtNum(b.kwh)}</div><div class="unit">kWh/m²/${t("unitYr")}</div></div></div>
               </div>
               <div>
                 <div class="unit">${esc(t("evAfter"))}</div>
@@ -3465,7 +4031,7 @@
     const snoozeNote = r.snooze ? ` · ${t("snoozedUntil", { d: fmtDate(r.snooze) })}` : "";
     return `<div class="remind ${r.done ? "done" : ""}">
       <div>
-        <div class="rt">${esc(state.lang === "fr" ? r.fr : r.en)}</div>
+        <div class="rt">${esc(LT(r.fr, r.en))}</div>
         <div class="rm">
           <button class="icon-btn" style="padding:0;color:var(--teal-700);font-weight:700" data-go="building" data-id="${esc(b.id)}">${esc(b.name)}</button>
           · ${esc(t(r.rec))} · ${esc(t(r.ch))}
@@ -3655,6 +4221,7 @@
   }
 
   function render() {
+    destroyHeroMapOnly();
     parseHash();
     renderSidebar();
     renderBanner();
@@ -3686,10 +4253,10 @@
 
   try {
     const saved = localStorage.getItem("renopath-lang-v2");
-    if (saved === "en" || saved === "fr") state.lang = saved;
+    if (saved === "en" || saved === "fr" || saved === "nl") state.lang = saved;
   } catch (e) {}
   const params = new URLSearchParams(location.search);
-  if (params.get("lang") === "en" || params.get("lang") === "fr") state.lang = params.get("lang");
+  if (["en", "fr", "nl"].indexOf(params.get("lang")) >= 0) state.lang = params.get("lang");
 
   window.addEventListener("hashchange", () => render());
   window.addEventListener("popstate", () => render());
