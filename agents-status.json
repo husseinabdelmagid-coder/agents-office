@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-11-26T14:27:20Z",
+  "updatedAt": "2026-11-26T14:30:05Z",
   "source": "grok-gateway-sse+health+voice-calls+sim",
   "box": {
     "reachable": true,
     "isBusy": true,
     "busyOnlyAwaitingApproval": false,
-    "activeAgentId": "2335cf8d-309f-4f2d-b512-3715a9bbff07",
-    "activeAgentName": "Da Vinci",
+    "activeAgentId": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
+    "activeAgentName": "Eve \u00b7 Personal assistant",
     "lastBusyAt": "2026-11-25T17:01:20.274000Z",
     "liveFeed": "ok"
   },
@@ -15,9 +15,9 @@
       "id": "e0d3f0e6-e6a5-4b4d-a002-87befa812360",
       "name": "Eve \u00b7 Personal assistant",
       "title": "Personal assistant",
-      "status": "idle",
-      "task": "Standing by",
-      "task_title": null,
+      "status": "working",
+      "task": "Assistant task",
+      "task_title": "Assistant task",
       "color": "#8a6fd1"
     },
     {
@@ -69,9 +69,9 @@
       "id": "2335cf8d-309f-4f2d-b512-3715a9bbff07",
       "name": "Da Vinci",
       "title": "Photo & Video Studio",
-      "status": "working",
-      "task": "Creative task",
-      "task_title": "Creative task",
+      "status": "idle",
+      "task": "Standing by",
+      "task_title": null,
       "color": "#e0559b"
     }
   ]
